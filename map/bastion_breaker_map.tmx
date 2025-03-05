@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="48">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="52">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -19,18 +19,45 @@
   <image source="Objet/obstacle.png" width="128" height="96"/>
  </tileset>
  <tileset firstgid="259" name="lava " tilewidth="32" tileheight="32" tilecount="14" columns="7">
-  <image source="Ground/lava .png" width="224" height="64"/>
+  <image source="Ground/lava.png" width="224" height="64"/>
  </tileset>
  <tileset firstgid="273" name="checkpoint" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="Objet/checkpoint.png" width="32" height="32"/>
  </tileset>
- <layer id="2" name="Ground" width="100" height="20">
+ <layer id="10" name="Ground" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0bEJACAMRcGM7gxObKu1xBC5g1fnQyIAAAAAAIBbM7nMWz8ayb28Jf/o1q56i07VWzq0ANo42xk=
+   eJztz9ENwDAIA9GM7tG7QKQUMKSq7kn+5lgLAAAAAAAAf6XNME+HYYYCQx8lBy8Z9nVq3uStTJOrz6XSEO3svpXtcrS5VDsind23sm3uPyscLW87u2/dnMsD3OezgQ==
   </data>
  </layer>
- <objectgroup id="8" name="Checkpoints">
-  <object id="47" gid="273" x="1212" y="489.917" width="36.5" height="50"/>
+ <layer id="2" name="Floor" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0VsKgCAQRmGX2ppCSHqNWscsrYESBkIq8UJ0Pvgpekk8zgEAAAAAAJSz6jbdfG7qe5zfih10ou8Sv2sPoUk7qQ4WTep70sGiSR1vO1hfaTJWXsl/5XSw7poE3ZI55Ek1Ccek8XHgrk1o0Z/e/+D16R0tkLYDAL5LZg==
+  </data>
+ </layer>
+ <objectgroup id="9" name="Hill">
+  <object id="48" name="Hill45" type="Slide" x="1696" y="321.333">
+   <properties>
+    <property name="climb" type="float" value="1"/>
+    <property name="difficulty" type="bool" value="false"/>
+    <property name="slide" type="float" value="1"/>
+   </properties>
+   <polygon points="0,0 -321.333,159.333 -1.33333,159.333"/>
+  </object>
+  <object id="51" name="Hill26" type="Slide" x="1762" y="318.667">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="difficulty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 -2.66667,258 254,256.667"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Checkpoint" class="Checkpoint">
+  <object id="47" name="checkpoint1" type="Checkpoint" gid="273" x="1217" y="481.917" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="6" name="Bastion" width="100" height="20">
   <data encoding="base64" compression="zlib">
