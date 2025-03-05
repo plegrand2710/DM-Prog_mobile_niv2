@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="48">
+ <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
+  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
+ </tileset>
+ <tileset firstgid="55" name="winter_" tilewidth="32" tileheight="32" spacing="2" tilecount="54" columns="6">
+  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/winter_.png" width="224" height="320"/>
+ </tileset>
+ <tileset firstgid="109" name="RockTile" tilewidth="32" tileheight="32" tilecount="36" columns="6">
+  <image source="Ground/RockTile.png" width="192" height="192"/>
+ </tileset>
+ <tileset firstgid="145" name="rock" tilewidth="32" tileheight="32" tilecount="32" columns="8">
+  <image source="Ground/rock.png" width="258" height="128"/>
+ </tileset>
+ <tileset firstgid="177" name="summer_" tilewidth="32" tileheight="32" tilecount="70" columns="7">
+  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/summer_.png" width="224" height="320"/>
+ </tileset>
+ <tileset firstgid="247" name="obstacle" tilewidth="32" tileheight="32" tilecount="12" columns="4">
+  <image source="Objet/obstacle.png" width="128" height="96"/>
+ </tileset>
+ <tileset firstgid="259" name="lava " tilewidth="32" tileheight="32" tilecount="14" columns="7">
+  <image source="Ground/lava .png" width="224" height="64"/>
+ </tileset>
+ <tileset firstgid="273" name="checkpoint" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="Objet/checkpoint.png" width="32" height="32"/>
+ </tileset>
+ <layer id="2" name="Ground" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0bEJACAMRcGM7gxObKu1xBC5g1fnQyIAAAAAAIBbM7nMWz8ayb28Jf/o1q56i07VWzq0ANo42xk=
+  </data>
+ </layer>
+ <objectgroup id="8" name="Checkpoints">
+  <object id="47" gid="273" x="1212" y="489.917" width="36.5" height="50"/>
+ </objectgroup>
+ <layer id="6" name="Bastion" width="100" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt00EJADAMBMEoqYP6t9dvBBRyhBlYCVsFAPDHaTHvtpjnjyz+yOKPLP7I4o8s/sjijyz+AAC2eCVPBGY=
+  </data>
+ </layer>
+ <objectgroup id="7" name="Bastion">
+  <object id="46" name="Bastion" type="Destructible" x="1088.67" y="159.333" width="92.6667" height="319.333">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="Obstacle">
+  <object id="12" name="box" gid="254" x="352" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="30" name="box" gid="254" x="367" y="448.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="31" name="box" gid="254" x="400.5" y="449" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="32" name="box" gid="254" x="383.5" y="417.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="28" name="box" gid="254" x="385" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="29" name="box" gid="254" x="416" y="480.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="19" name="barrel" gid="250" x="513.5" y="482" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="33" name="barrel" gid="250" x="546" y="481.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="34" name="barrel" gid="250" x="578.5" y="482" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="35" name="barrel" gid="250" x="528.5" y="450" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="36" name="barrel" gid="250" x="562" y="450.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="37" name="barrel" gid="250" x="545.5" y="417.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Dangers">
+  <object id="41" name="Lava" type="Mortal" gid="262" x="767.333" y="640" width="32" height="32">
+   <properties>
+    <property name="kill_player" value="true"/>
+   </properties>
+  </object>
+  <object id="43" name="Lava" type="Mortal" gid="262" x="800.667" y="640.667" width="32" height="32">
+   <properties>
+    <property name="kill_player" value="true"/>
+   </properties>
+  </object>
+  <object id="44" name="Lava" type="Mortal" gid="262" x="833.333" y="640" width="32" height="32">
+   <properties>
+    <property name="kill_player" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
