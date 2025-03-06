@@ -231,15 +231,16 @@
   <object id="173" name="enemy_helicopter_2" type="Enemy" x="5952" y="256" width="96" height="96">
    <properties>
     <property name="HP" type="int" value="50"/>
-    <property name="path_start_x" type="int" value="0"/>
-    <property name="path_start_y" type="int" value="0"/>
+    <property name="height_y" type="int" value="256"/>
+    <property name="path_end_x" type="int" value="6976"/>
+    <property name="path_start_x" type="int" value="5952"/>
     <property name="patrol" type="bool" value="true"/>
     <property name="speed" type="float" value="2"/>
     <property name="sprite" value="helicopter.gif"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="23" name="Platforms">
+ <objectgroup id="23" name="Platforms" class="UnstablePlatform">
   <object id="174" name="unstable_platform_1" type="UnstablePlatform" x="5920" y="480" width="160" height="32">
    <properties>
     <property name="instability" type="float" value="2.5"/>
