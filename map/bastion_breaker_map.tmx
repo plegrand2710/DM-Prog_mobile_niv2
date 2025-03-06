@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="115">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="116">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -168,6 +168,11 @@
    </properties>
   </object>
   <object id="69" name="checkpoint2" type="Checkpoint" gid="273" x="2814.75" y="481.333" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="115" name="checkpoint3" type="Checkpoint" gid="273" x="4096" y="480" width="36.5" height="34.6667">
    <properties>
     <property name="actif" type="bool" value="false"/>
    </properties>
