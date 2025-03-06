@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="17" nextobjectid="116">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="118">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -29,12 +29,12 @@
  </tileset>
  <layer id="10" name="Ground" width="150" height="20">
   <data encoding="base64" compression="zlib">
-   eJztztEJwDAMQ8GO7tG7QKHEjRUKd6BvvesCAAAAAACAWfUw6KqXwYpaGLyp5uBJbRgZNbzkV6fpRF9Hqm1Xd7Jl+qvblW7rSPbt6E62TH912079rkg3fu1Otkx//WUdp5tXu2+m7wuQ
+   eJztzjEOwCAMBEGe7qenTYEEWMFOMSNdfTsGAAAAAAAA3BWTQVYsBifiYLASycFMfDBqxOVVfmWaOvoyqtqy7Z0d1d+7XdVtGZV9mfbOjurv3bau3xPVjX/fW3fLX5bR3Xy6BzWDG5A=
   </data>
  </layer>
  <layer id="2" name="Floor" width="150" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0lEKgkAUhtFZamsKIek1ch2ztC6UNASaik6Y58CP4ov34UsJAAAAAADg7R7rYtfXLr89h53re4rleM/99+gqa4u5hnoqaYuppvRU0hZj5vZU0lZd54235r+W9FT61lYbu1XYEjXu2uLuoxhqq30uVz6HP/LZlqZYS3R0auLZJE3BXjwATltnag==
+   eJzt0lEKgkAUhlGX2ppKSHqNWscsrQspDcHUKDZhnQM/ii/eh6/rAAAAAAAAHi6xa+w07vjdc9i4qadYivc0fY+ukraYq9RTTlvUqukppy1emdtTTltt7T+8Nf+1pKfcu7aG2LnBlmhxV2mH7Fl7378ptTXclxqfww95bktTrCU62vXx7DtNwVbcACwqank=
   </data>
  </layer>
  <layer id="6" name="Bastion" width="150" height="20">
@@ -179,10 +179,14 @@
   </object>
  </objectgroup>
  <objectgroup id="11" name="Enemies">
-  <object id="60" name="enemy1" type="Enemy" x="2369.33" y="414" width="128" height="64">
+  <object id="60" name="enemy_tank" type="Enemy" x="2369.33" y="414" width="128" height="64">
    <properties>
     <property name="HP" type="int" value="50"/>
-    <property name="sprite" value="tank_enemy.png"/>
+   </properties>
+  </object>
+  <object id="116" name="enemy_helicopter" type="Enemy" x="4481.33" y="160" width="160" height="64">
+   <properties>
+    <property name="HP" type="int" value="50"/>
    </properties>
   </object>
  </objectgroup>
