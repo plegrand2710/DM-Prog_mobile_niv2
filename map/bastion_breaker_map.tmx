@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="26" nextobjectid="187">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="27" nextobjectid="188">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -71,11 +71,19 @@
   <object id="184" name="tnt_1" type="TNT" gid="411" x="7328" y="224" width="32" height="32">
    <properties>
     <property name="blast_radius" type="float" value="4"/>
-    <property name="damage" type="int" value="2000"/>
+    <property name="damage" type="int" value="500"/>
     <property name="pushable" type="bool" value="true"/>
     <property name="respawn_time" type="int" value="20"/>
     <property name="spawn_x" type="int" value="7328"/>
     <property name="spawn_y" type="int" value="224"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="26" name="Boss">
+  <object id="187" name="boss_1" x="8384" y="224" width="96" height="258">
+   <properties>
+    <property name="HP" type="int" value="1000"/>
+    <property name="damage" type="int" value="50"/>
    </properties>
   </object>
  </objectgroup>
