@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="70">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="16" nextobjectid="113">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -27,14 +27,104 @@
  <tileset firstgid="274" name="tank_enemy" tilewidth="32" tileheight="32" tilecount="6" columns="3">
   <image source="Enemies/tank_enemy.png" width="100" height="64"/>
  </tileset>
- <layer id="10" name="Ground" width="100" height="20">
+ <layer id="10" name="Ground" width="150" height="20">
   <data encoding="base64" compression="zlib">
-   eJztz0EKwDAMA0E/XU/vPQRCQ6yoZQf2bLkKAAAAAAAAf6VJ8NMieOhF6KPNcJYOlE7NOW/tbErc11nqv6Pbe1wl/5y6y/FzBWz5Qg+aLdeB
+   eJztzsEJgFAMREFLT+k2IMgPyYowA++azXUBAAAAAADArnoIuuolOFEHwZtqBk9qIDJqueRW56cv/uuYuJFUyyW3un+lf+uYuJFUyyW3ur99tXtq4kZKLZfc+ktdEzdSbkWE0IE=
   </data>
  </layer>
- <layer id="2" name="Floor" width="100" height="20">
+ <objectgroup id="15" name="Ice">
+  <object id="87" name="ice_bridge" type="Breakable" gid="106" x="2976" y="511.5" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="101" name="ice_bridge" type="Breakable" gid="106" x="3008" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="102" name="ice_bridge" type="Breakable" gid="106" x="3040" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="103" name="ice_bridge" type="Breakable" gid="106" x="3072" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="104" name="ice_bridge" type="Breakable" gid="106" x="3104" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="105" name="ice_bridge" type="Breakable" gid="106" x="3136" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="106" name="ice_bridge" type="Breakable" gid="106" x="3168" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="107" name="ice_bridge" type="Breakable" gid="106" x="3200" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="108" name="ice_bridge" type="Breakable" gid="106" x="3232" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="109" name="ice_bridge" type="Breakable" gid="106" x="3264" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="110" name="ice_bridge" type="Breakable" gid="106" x="3296" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="111" name="ice_bridge" type="Breakable" gid="106" x="3328" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="112" name="ice_bridge" type="Breakable" gid="106" x="3360" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="2" name="Floor" width="150" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0VsKgCAQRmGX2ppCSHqNWscsrYESBkK64IXwfPBT9JJ4nAMAAAAAAMhn1W26+dzU9jjdih10ou8Sv2sPoUk9qQ4WTcp70sGiSRlvO1h/aTIWXs5/felg3TUJuqXxepNqEo5J5ePAXZvQoj29/8Hr0ztaIG0HWglW3A==
+   eJzt0lEKgkAYhdFZamsKIek1ch2ztH4oaQg0lXHCOAcuDj7oPHwpAQAAAAAAvN1jQ+z62uW31+Hgxp5iOc55fB9dZW2x1lRPJW2x1JKeStpiztqeStpq67zzav5rS0+lb231sVuDbVHjG+xnqq3+udz4OvyRz7Y0RS3R0amLZ5c0BUfxAKfIVPM=
+  </data>
+ </layer>
+ <layer id="6" name="Bastion" width="150" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0zENACAQBEGU4AD/9mi/pGWyk5yALW6tJEmSJHmzx36mdCjO2M+UDoXyc6VDofxc6VAoP1c6FMrPlQ6F8nOlQ6H8XOlQKD9XOhTKz5WOJEmSJL4LOVIIyw==
+  </data>
+ </layer>
+ <layer id="14" name="Lava" width="150" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0EsKhDAURcEE/9qt7n+1PohidNizhio4vEBmNyUAAAAAAAAAAAAA+N2QU+pzuRRNbNFGXbVNfd/vMZrs97DmO4o5tliiT/Q9txmq2rPrb4v2P9vvAKBAAUo=
   </data>
  </layer>
  <objectgroup id="9" name="Hill">
@@ -83,11 +173,6 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="6" name="Bastion" width="100" height="20">
-  <data encoding="base64" compression="zlib">
-   eJzt0rEJACAAA0EncQP3X8/WWmw8/iADPGSMJEmSN+axnykd69jPlA7lV0qH8iulQ/mV0qH8SulQfqV0KL9SOpRfKR3Kr5SOJElybwO8OgjL
-  </data>
- </layer>
  <objectgroup id="7" name="Bastion">
   <object id="46" name="Bastion1" type="Destructible" x="1088.67" y="159.333" width="92.6667" height="319.333">
    <properties>
@@ -192,20 +277,15 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Dangers">
-  <object id="41" name="Lava" type="Mortal" gid="262" x="767.333" y="640" width="32" height="32">
+ <objectgroup id="5" name="Lava">
+  <object id="70" name="lava" type="Mortal" x="768" y="575.833" width="95.5" height="63.1667">
    <properties>
-    <property name="kill_player" value="true"/>
+    <property name="kill_player" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="43" name="Lava" type="Mortal" gid="262" x="800.667" y="640.667" width="32" height="32">
+  <object id="71" name="lava" type="Mortal" x="2977.25" y="576.417" width="415.5" height="63.1667">
    <properties>
-    <property name="kill_player" value="true"/>
-   </properties>
-  </object>
-  <object id="44" name="Lava" type="Mortal" gid="262" x="833.333" y="640" width="32" height="32">
-   <properties>
-    <property name="kill_player" value="true"/>
+    <property name="kill_player" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>
