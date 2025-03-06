@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="52">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="70">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -24,18 +24,21 @@
  <tileset firstgid="273" name="checkpoint" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="Objet/checkpoint.png" width="32" height="32"/>
  </tileset>
+ <tileset firstgid="274" name="tank_enemy" tilewidth="32" tileheight="32" tilecount="6" columns="3">
+  <image source="Enemies/tank_enemy.png" width="100" height="64"/>
+ </tileset>
  <layer id="10" name="Ground" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJztz9ENwDAIA9GM7tG7QKQUMKSq7kn+5lgLAAAAAAAAf6XNME+HYYYCQx8lBy8Z9nVq3uStTJOrz6XSEO3svpXtcrS5VDsind23sm3uPyscLW87u2/dnMsD3OezgQ==
+   eJztz0EKwDAMA0E/XU/vPQRCQ6yoZQf2bLkKAAAAAAAAf6VJ8NMieOhF6KPNcJYOlE7NOW/tbErc11nqv6Pbe1wl/5y6y/FzBWz5Qg+aLdeB
   </data>
  </layer>
  <layer id="2" name="Floor" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0VsKgCAQRmGX2ppCSHqNWscsrYESBkIq8UJ0Pvgpekk8zgEAAAAAAJSz6jbdfG7qe5zfih10ou8Sv2sPoUk7qQ4WTep70sGiSR1vO1hfaTJWXsl/5XSw7poE3ZI55Ek1Ccek8XHgrk1o0Z/e/+D16R0tkLYDAL5LZg==
+   eJzt0VsKgCAQRmGX2ppCSHqNWscsrYESBkK64IXwfPBT9JJ4nAMAAAAAAMhn1W26+dzU9jjdih10ou8Sv2sPoUk9qQ4WTcp70sGiSRlvO1h/aTIWXs5/felg3TUJuqXxepNqEo5J5ePAXZvQoj29/8Hr0ztaIG0HWglW3A==
   </data>
  </layer>
  <objectgroup id="9" name="Hill">
-  <object id="48" name="Hill45" type="Slide" x="1696" y="321.333">
+  <object id="48" name="Hill1" type="Slide" x="1696" y="321.333">
    <properties>
     <property name="climb" type="float" value="1"/>
     <property name="difficulty" type="bool" value="false"/>
@@ -43,13 +46,21 @@
    </properties>
    <polygon points="0,0 -321.333,159.333 -1.33333,159.333"/>
   </object>
-  <object id="51" name="Hill26" type="Slide" x="1762" y="318.667">
+  <object id="51" name="Hill2" type="Slide" x="1762" y="320">
    <properties>
     <property name="climb" type="float" value="0.5"/>
     <property name="difficulty" type="bool" value="true"/>
     <property name="slide" type="float" value="1.5"/>
    </properties>
-   <polygon points="0,0 -2.66667,258 254,256.667"/>
+   <polygon points="0,0 -2.66667,256.667 254,255.34"/>
+  </object>
+  <object id="52" name="Hill3" type="Slide" x="2079.33" y="576">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="diffuculty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 96.6667,3.33333 96.6667,-96"/>
   </object>
  </objectgroup>
  <objectgroup id="8" name="Checkpoint" class="Checkpoint">
@@ -58,14 +69,32 @@
     <property name="actif" type="bool" value="false"/>
    </properties>
   </object>
+  <object id="69" name="checkpoint2" type="Checkpoint" gid="273" x="2814.75" y="481.333" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="Enemies">
+  <object id="60" name="enemy1" type="Enemy" x="2369.33" y="414" width="96" height="64">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+    <property name="sprite" value="tank_enemy.png"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer id="6" name="Bastion" width="100" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt00EJADAMBMEoqYP6t9dvBBRyhBlYCVsFAPDHaTHvtpjnjyz+yOKPLP7I4o8s/sjijyz+AAC2eCVPBGY=
+   eJzt0rEJACAAA0EncQP3X8/WWmw8/iADPGSMJEmSN+axnykd69jPlA7lV0qH8iulQ/mV0qH8SulQfqV0KL9SOpRfKR3Kr5SOJElybwO8OgjL
   </data>
  </layer>
  <objectgroup id="7" name="Bastion">
-  <object id="46" name="Bastion" type="Destructible" x="1088.67" y="159.333" width="92.6667" height="319.333">
+  <object id="46" name="Bastion1" type="Destructible" x="1088.67" y="159.333" width="92.6667" height="319.333">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="68" name="Bastion2" type="Destructible" x="2688.33" y="157.667" width="92.6667" height="319.333">
    <properties>
     <property name="HP" type="int" value="200"/>
    </properties>
@@ -128,6 +157,36 @@
    </properties>
   </object>
   <object id="37" name="barrel" gid="250" x="545.5" y="417.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="62" name="box" gid="254" x="2304" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="63" name="box" gid="254" x="2240" y="480.333" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="64" name="box" gid="254" x="2272" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="65" name="box" gid="254" x="2256.67" y="448" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="66" name="box" gid="254" x="2288.67" y="448.667" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="67" name="box" gid="254" x="2271.25" y="415.75" width="32" height="32">
    <properties>
     <property name="destructible" value="true"/>
    </properties>
