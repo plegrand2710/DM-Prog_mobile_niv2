@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="250" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="24" nextobjectid="179">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="26" nextobjectid="187">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -30,19 +30,25 @@
  <tileset firstgid="275" name="water" tilewidth="32" tileheight="32" tilecount="112" columns="8">
   <image source="Ground/TileSet_V1.png" width="256" height="448"/>
  </tileset>
- <layer id="10" name="Ground" width="250" height="20">
+ <tileset firstgid="387" name="Ladders" tilewidth="32" tileheight="32" tilecount="24" columns="6">
+  <image source="Objet/tileset_ladders.png" width="192" height="128"/>
+ </tileset>
+ <tileset firstgid="411" name="tnt" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="Objet/tnt.png" width="32" height="32"/>
+ </tileset>
+ <layer id="10" name="Ground" width="270" height="20">
   <data encoding="base64" compression="zlib">
-   eJztzkEOwzAIRcEcnaP3ApVsYweadEZ6W/jXBQAAAAAAAAAAAABUii8B7xCDgOeKhYBniWTA74sDwT+Km6v8ldnUsS+jatvO9o47u7+6xKDqf7tV/sruqt6WUbkvu/3EjZU7p3ZXi4k6fu5U+Su7revviuqNdzbS9bdCTNb1N1vlr6eU0b35ZCNdfyvEZKd9ABHjZhA=
+   eJzt0UEOwyAMRcEc3UfvqrtEFEPsKpmR/hY/ieMAAAAAAAAAAAAAAIBnipMBnInBAL5iYsC7RXLA+8SGAevi5lXeyjR19GVUta20d7yzeqtL2M9/1t1y1VXdllHZl23f8cbMO7u6q4VN/Vd3y1Vb190Z1Y13bqTrboWw6b/qbvmXZXQ379xI190K8ZB9ADlqthA=
   </data>
  </layer>
- <layer id="2" name="Floor" width="250" height="20">
+ <layer id="2" name="Floor" width="270" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1dEKgjAYBlAftWcqIek26jn2aG2UMAJJRddW58CH4o2/c592HQAAAAAAAAAAAFCTW8w95vLK+bvjABsa+x0T4nkYr8eeB12Htk31O6fr0KY5/c7pOrRjab9zus4/O+6cLe+1pt+5T10fYq4FskaJuaZyyo5bzFjiecc9U+u3Pe21ub1huamuD8+EwuOws/hOD7V13V4r473r1v23pa7X8o9Mc9hr5aR338dj31l3ANr3APCDhb8=
+   eJzt1VEKgkAUBVCX2ppKKPqNWodL6w0lDIFU4kxjngMXwx9fzPPadQAAAAAAAAAAAACwDtfILXJ+5vjbcYCGjX0RGeL3MN6P3hh0B5Cb6ouc7gCST/oipztgu77ti5zugOXsC2fJZ83pi9y77jhFLhUyR425pnLIrkvMWOP/jjvT6rci7Vrpd6/We70FU91xemSoPA6FxZnuWusOu7ZOr93hHP9b6o5WvpFpDru2XmmX+rj2nXMEgNLu1lycjw==
   </data>
  </layer>
- <layer id="14" name="Lava" width="250" height="20">
+ <layer id="14" name="Lava" width="270" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt09EKgyAYBlCltkar9Yp71B5tP1hLdrGxq0DOgQ9Fb/RDUwIAAAAAAAAAAAAAAAAAAAAAgN+GnNI1l5Giiy76yKXqph4/57fGuuu+3Dn21rPPx/8e+QjFGF3cI1Nk3roZqvRb9r2lse6W8p/f95urNxLrz7PP16IXLQ0C5Q==
+   eJzt1NEKgyAYBlCltkar9Yp71B5tP1hLdrFdyuIc+FD0Rj/ElAAAAAAAAAAAAAAAAAAAAAAAAIB/NeSUrrmMFF100UcuVTf1+Dm/nay77sudY29tfT7ae+QjFGN0cY9MkXnrZqjSb9n3lpN1t5T/4X2/uXojsf5sfT5+ewGKfALl
   </data>
  </layer>
  <objectgroup id="22" name="WaterZones">
@@ -51,6 +57,25 @@
     <property name="buoyancy" type="float" value="0.5"/>
     <property name="drag" type="float" value="0.8"/>
     <property name="jump_boost" type="float" value="1.5"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="24" name="Ladders">
+  <object id="182" name="ladder_1" type="Ladder" x="7293.64" y="223" width="36.7143" height="256">
+   <properties>
+    <property name="height" type="int" value="8"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="25" name="Explosives">
+  <object id="184" name="tnt_1" type="TNT" gid="411" x="7328" y="224" width="32" height="32">
+   <properties>
+    <property name="blast_radius" type="float" value="4"/>
+    <property name="damage" type="int" value="2000"/>
+    <property name="pushable" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="20"/>
+    <property name="spawn_x" type="int" value="7328"/>
+    <property name="spawn_y" type="int" value="224"/>
    </properties>
   </object>
  </objectgroup>
@@ -65,7 +90,7 @@
   </object>
  </objectgroup>
  <objectgroup id="16" name="WindZones">
-  <object id="113" name="wind_zone" type="Wind" x="3521.33" y="320" width="320.33" height="160">
+  <object id="113" name="wind_zone" type="Wind" x="3488.33" y="193" width="383.33" height="287">
    <properties>
     <property name="force" type="float" value="-2"/>
     <property name="weight_limit" type="int" value="100"/>
@@ -249,6 +274,7 @@
     <property name="slippery" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="181" name="tnt_platform" type="Platform" x="7264" y="222.667" width="96" height="32"/>
  </objectgroup>
  <objectgroup id="18" name="Chains">
   <object id="118" name="chain_link_1" type="ChainLink" gid="274" x="4574.67" y="256" width="32" height="32">
@@ -357,6 +383,11 @@
     <property name="HP" type="int" value="200"/>
    </properties>
   </object>
+  <object id="180" name="Bastion5" type="Destructible" x="7776" y="160" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="2000"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="4" name="Obstacle">
   <object id="12" name="box" gid="254" x="352" y="480" width="32" height="32">
@@ -450,6 +481,16 @@
    </properties>
   </object>
   <object id="158" name="bridge_lock" type="Breakable" gid="255" x="5280" y="192" width="32" height="32"/>
+  <object id="185" name="barrel" gid="250" x="4925" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="186" name="barrel" gid="250" x="4960" y="479" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="20" name="FallingBlock">
   <object id="129" name="falling_block_1" type="FallingBlock" x="4480" y="350" width="224" height="96"/>
