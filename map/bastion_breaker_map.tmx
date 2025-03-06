@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="250" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="23" nextobjectid="173">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="250" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="24" nextobjectid="179">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -228,6 +228,26 @@
     <property name="sprite" value="helicopter.gif"/>
    </properties>
   </object>
+  <object id="173" name="enemy_helicopter_2" type="Enemy" x="5952" y="256" width="96" height="96">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+    <property name="path_start_x" type="int" value="0"/>
+    <property name="path_start_y" type="int" value="0"/>
+    <property name="patrol" type="bool" value="true"/>
+    <property name="speed" type="float" value="2"/>
+    <property name="sprite" value="helicopter.gif"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="23" name="Platforms">
+  <object id="174" name="unstable_platform_1" type="UnstablePlatform" x="5920" y="480" width="160" height="32">
+   <properties>
+    <property name="instability" type="float" value="2.5"/>
+    <property name="linked_top" value="chain_link_15"/>
+    <property name="max_angle" type="float" value="70"/>
+    <property name="slippery" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="18" name="Chains">
   <object id="118" name="chain_link_1" type="ChainLink" gid="274" x="4574.67" y="256" width="32" height="32">
@@ -288,6 +308,30 @@
    <properties>
     <property name="linked_bottom" value="drawbridge_1"/>
     <property name="linked_top" value="chain_link_10"/>
+   </properties>
+  </object>
+  <object id="175" name="chain_link_12" type="ChainLink" gid="274" x="5984" y="384" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_13"/>
+    <property name="linked_top" value="enemy_helicpter_2"/>
+   </properties>
+  </object>
+  <object id="176" name="chain_link_14" type="ChainLink" gid="274" x="5984" y="448" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_15"/>
+    <property name="linked_top" value="chain_link_13"/>
+   </properties>
+  </object>
+  <object id="177" name="chain_link_13" type="ChainLink" gid="274" x="5984" y="416" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_14"/>
+    <property name="linked_top" value="chain_link_12"/>
+   </properties>
+  </object>
+  <object id="178" name="chain_link_15" type="ChainLink" gid="274" x="5984" y="480" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="unstable_platform_1"/>
+    <property name="linked_top" value="chain_link_14"/>
    </properties>
   </object>
  </objectgroup>
