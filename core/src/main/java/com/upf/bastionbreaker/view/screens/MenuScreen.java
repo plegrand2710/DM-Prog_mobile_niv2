@@ -8,12 +8,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -23,7 +23,6 @@ public class MenuScreen implements Screen {
     private TextureAtlas backgroundAtlas;
     private TextureAtlas gameAtlas;
     private TextureRegion background;
-    private TextureRegion logo;
     private TextureRegion buttonContainer;
     private Stage stage;
     private ImageButton gyroButton;
@@ -40,11 +39,13 @@ public class MenuScreen implements Screen {
         backgroundAtlas = new TextureAtlas(Gdx.files.internal("atlas/background/background.atlas"));
         gameAtlas = new TextureAtlas(Gdx.files.internal("atlas/game/game.atlas"));
         background = backgroundAtlas.findRegion("backgroundScreenResize");
-        logo = gameAtlas.findRegion("bastion_breaker_logo");
         buttonContainer = gameAtlas.findRegion("Button-Dummy@2x");
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
 
         TextureRegionDrawable buttonContainerDrawable = new TextureRegionDrawable(buttonContainer);
         Image buttonContainerImage = new Image(buttonContainerDrawable);
@@ -54,13 +55,15 @@ public class MenuScreen implements Screen {
         float containerHeight = buttonContainer.getRegionHeight() * containerScale;
 
         buttonContainerImage.setSize(containerWidth, containerHeight);
+        float containerX = (screenWidth - containerWidth) / 2;
+        float containerY = (0.3472f * screenHeight) - 200;;
 
-        float containerX = (Gdx.graphics.getWidth() - containerWidth) / 2;
-        float containerY = ((Gdx.graphics.getHeight() - containerHeight) / 2) + 100;
+        Gdx.app.log("DEBUG_MENU", "screenHeight = " + Gdx.graphics.getHeight());
+
+
         buttonContainerImage.setPosition(containerX, containerY);
 
         stage.addActor(buttonContainerImage);
-
 
         TextureRegionDrawable logoDrawable = new TextureRegionDrawable(gameAtlas.findRegion("bastion_breaker_logo"));
         Image logoImage = new Image(logoDrawable);
@@ -70,42 +73,59 @@ public class MenuScreen implements Screen {
         float logoHeight = gameAtlas.findRegion("bastion_breaker_logo").getRegionHeight() * logoScale;
 
         logoImage.setSize(logoWidth, logoHeight);
-
-        float logoX = (Gdx.graphics.getWidth() - logoWidth) / 2;
-        float logoY = containerY + buttonContainer.getRegionHeight() + 60;
-
+        float logoX = (screenWidth - logoWidth) / 2;
+        float logoY = containerY + containerHeight * 0.45f;
         logoImage.setPosition(logoX, logoY);
         stage.addActor(logoImage);
 
-
         TextureRegionDrawable gyroDrawable = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Default"));
-        ImageButton gyroButton = new ImageButton(gyroDrawable);
-        float gyroX = containerX + 295;
-        float gyroY = (containerY + buttonContainer.getRegionHeight() / 2) + 100;
-        gyroButton.setPosition(gyroX, gyroY);
-        stage.addActor(gyroButton);
-
         TextureRegionDrawable touchpadDrawable = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Default"));
-        ImageButton touchpadButton = new ImageButton(touchpadDrawable);
-        float touchpadX = containerX + 295;
-        float touchpadY = gyroY - 100;
-        touchpadButton.setPosition(touchpadX, touchpadY);
+        TextureRegionDrawable gyroHover = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Hover"));
+        TextureRegionDrawable touchpadHover = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Hover"));
+
+        gyroButton = new ImageButton(gyroDrawable);
+        touchpadButton = new ImageButton(touchpadDrawable);
+
+        float buttonWidth = containerWidth * 0.6f;
+        float buttonHeight = containerHeight * 0.20f;
+        float buttonX = containerX + (containerWidth - buttonWidth) / 2;
+        float gyroY = containerY + containerHeight * 0.25f;
+        float touchpadY = gyroY - buttonHeight * 0.8f;
+
+        gyroButton.setSize(buttonWidth, buttonHeight);
+        gyroButton.setPosition(buttonX, gyroY);
+        touchpadButton.setSize(buttonWidth, buttonHeight);
+        touchpadButton.setPosition(buttonX, touchpadY);
+
+        stage.addActor(gyroButton);
         stage.addActor(touchpadButton);
 
-        BitmapFont font = new BitmapFont();
+        font = new BitmapFont();
         font.getData().setScale(2);
-
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
+
         Label gyroLabel = new Label("Gyroscopie", labelStyle);
-        gyroLabel.setPosition(gyroX + 8, gyroY + 35);
+        gyroLabel.setPosition(buttonX + buttonWidth * 0.33f, gyroY + buttonHeight * 0.4f);
         stage.addActor(gyroLabel);
 
         Label touchpadLabel = new Label("TouchPad", labelStyle);
-        touchpadLabel.setPosition(touchpadX + 10, touchpadY + 35);
+        touchpadLabel.setPosition(buttonX + buttonWidth * 0.35f, touchpadY + buttonHeight * 0.4f);
         stage.addActor(touchpadLabel);
 
+        gyroButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gyroButton.getStyle().imageUp = gyroHover;
+            }
+        });
 
+        touchpadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                touchpadButton.getStyle().imageUp = touchpadHover;
+            }
+        });
     }
 
     @Override
