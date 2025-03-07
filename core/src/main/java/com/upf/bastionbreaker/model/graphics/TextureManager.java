@@ -11,7 +11,7 @@ public class TextureManager {
 
         // Charger les atlas
         assetManager.load("atlas/background/background.atlas", TextureAtlas.class);
-        assetManager.load("atlas/game/game.atlas", TextureAtlas.class); // 🔹 Ajout de l’`atlas` du jeu
+        assetManager.load("atlas/game/game.atlas", TextureAtlas.class); // Ajout de l’`atlas` du jeu
 
         assetManager.finishLoading(); // Charge tout avant d’aller plus loin
     }
