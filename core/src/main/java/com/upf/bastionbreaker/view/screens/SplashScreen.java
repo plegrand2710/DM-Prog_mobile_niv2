@@ -47,6 +47,8 @@ public class SplashScreen implements Screen {
                 Gdx.app.log("DEBUGsplashScreen", "run");
 
                 game.setScreen(new MenuScreen(game));
+                Gdx.app.log("DEBUGsplashScreen", "menuscreen");
+
             }
         }, 3);
     }
@@ -57,7 +59,6 @@ public class SplashScreen implements Screen {
         batch.begin();
 
         batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.app.log("DEBUGsplashScreen", "dessin fond");
 
 
         if (logo != null) {
@@ -70,13 +71,10 @@ public class SplashScreen implements Screen {
         }
 
 
-        Gdx.app.log("DEBUGsplashScreen", "dessin logo");
-
         float magazineX = (Gdx.graphics.getWidth() - magazineDummy.getRegionWidth()) / 2;
         float magazineY = (Gdx.graphics.getHeight() / 2) - 300;
         batch.draw(magazineDummy, magazineX, magazineY);
 
-        Gdx.app.log("DEBUGsplashScreen", "dessin cahrgement");
 
         timer += delta;
         if (timer > 0.3f && bulletsLoaded < 8) {
