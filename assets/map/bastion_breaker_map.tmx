@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="30" nextobjectid="199">
+ <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
+  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
+ </tileset>
+ <tileset firstgid="55" name="winter_" tilewidth="32" tileheight="32" spacing="2" tilecount="54" columns="6">
+  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/winter_.png" width="224" height="320"/>
+ </tileset>
+ <tileset firstgid="109" name="RockTile" tilewidth="32" tileheight="32" tilecount="36" columns="6">
+  <image source="Ground/RockTile.png" width="192" height="192"/>
+ </tileset>
+ <tileset firstgid="145" name="rock" tilewidth="32" tileheight="32" tilecount="32" columns="8">
+  <image source="Ground/rock.png" width="258" height="128"/>
+ </tileset>
+ <tileset firstgid="177" name="summer_" tilewidth="32" tileheight="32" tilecount="70" columns="7">
+  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/summer_.png" width="224" height="320"/>
+ </tileset>
+ <tileset firstgid="247" name="obstacle" tilewidth="32" tileheight="32" tilecount="12" columns="4">
+  <image source="Objet/obstacle.png" width="128" height="96"/>
+ </tileset>
+ <tileset firstgid="259" name="lava " tilewidth="32" tileheight="32" tilecount="14" columns="7">
+  <image source="Ground/lava.png" width="224" height="64"/>
+ </tileset>
+ <tileset firstgid="273" name="checkpoint" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="Objet/checkpoint.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="274" name="chain" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="Objet/chain.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="275" name="water" tilewidth="32" tileheight="32" tilecount="112" columns="8">
+  <image source="Ground/TileSet_V1.png" width="256" height="448"/>
+ </tileset>
+ <tileset firstgid="387" name="Ladders" tilewidth="32" tileheight="32" tilecount="24" columns="6">
+  <image source="Objet/tileset_ladders.png" width="192" height="128"/>
+ </tileset>
+ <tileset firstgid="411" name="tnt" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="Objet/tnt.png" width="32" height="32"/>
+ </tileset>
+ <layer id="10" name="Ground" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0UEOwyAMRcEc3UfvqrtEFEPsKpmR/hY/ieMAAAAAAAAAAAAAAIBnipMBnInBAL5iYsC7RXLA+8SGAevi5lXeyjR19GVUta20d7yzeqtL2M9/1t1y1VXdllHZl23f8cbMO7u6q4VN/Vd3y1Vb190Z1Y13bqTrboWw6b/qbvmXZXQ379xI190K8ZB9ADlqthA=
+  </data>
+ </layer>
+ <layer id="2" name="Floor" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1VEKgkAUBVCX2ppKKPqNWodL6w0lDIFU4kxjngMXwx9fzPPadQAAAAAAAAAAAACwDtfILXJ+5vjbcYCGjX0RGeL3MN6P3hh0B5Cb6ouc7gCST/oipztgu77ti5zugOXsC2fJZ83pi9y77jhFLhUyR425pnLIrkvMWOP/jjvT6rci7Vrpd6/We70FU91xemSoPA6FxZnuWusOu7ZOr93hHP9b6o5WvpFpDru2XmmX+rj2nXMEgNLu1lycjw==
+  </data>
+ </layer>
+ <layer id="14" name="Lava" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1NEKgyAYBlCltkar9Yp71B5tP1hLdrFdyuIc+FD0Rj/ElAAAAAAAAAAAAAAAAAAAAAAAAIB/NeSUrrmMFF100UcuVTf1+Dm/nay77sudY29tfT7ae+QjFGN0cY9MkXnrZqjSb9n3lpN1t5T/4X2/uXojsf5sfT5+ewGKfALl
+  </data>
+ </layer>
+ <objectgroup id="22" name="WaterZones">
+  <object id="166" name="water_1" type="Water" x="5984" y="544" width="1056" height="96">
+   <properties>
+    <property name="buoyancy" type="float" value="0.5"/>
+    <property name="drag" type="float" value="0.8"/>
+    <property name="jump_boost" type="float" value="1.5"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="29" name="Water" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1DEKACAMA0B9rY/w864KUsdSuYNsWZPWAAAAAAAAAAAAAAAAAAAAAAAA4DR7foBasj/Db0A9tx2PLdHeR5DXV+zdXyzcYi7x
+  </data>
+ </layer>
+ <objectgroup id="24" name="Ladders">
+  <object id="182" name="ladder_1" type="Ladder" x="7293.64" y="223" width="36.7143" height="256">
+   <properties>
+    <property name="height" type="int" value="8"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="25" name="Explosives">
+  <object id="184" name="tnt_1" type="TNT" gid="411" x="7328" y="224" width="32" height="32">
+   <properties>
+    <property name="blast_radius" type="float" value="4"/>
+    <property name="damage" type="int" value="500"/>
+    <property name="pushable" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="20"/>
+    <property name="spawn_x" type="int" value="7328"/>
+    <property name="spawn_y" type="int" value="224"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="26" name="Boss">
+  <object id="187" name="boss_1" x="8384" y="224" width="96" height="258">
+   <properties>
+    <property name="HP" type="int" value="1000"/>
+    <property name="damage" type="int" value="50"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="21" name="Bridges">
+  <object id="155" name="drawbridge_1" type="Drawbridge" x="5112.02" y="293.174" width="288" height="32" rotation="45">
+   <properties>
+    <property name="fall_speed" type="float" value="3"/>
+    <property name="state" value="closed"/>
+    <property name="x_position" type="int" value="5296"/>
+    <property name="y_position " type="int" value="496"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="16" name="WindZones">
+  <object id="113" name="wind_zone" type="Wind" x="3488.33" y="193" width="383.33" height="287">
+   <properties>
+    <property name="force" type="float" value="-2"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="15" name="Ice">
+  <object id="87" name="ice_bridge" type="Breakable" gid="106" x="2976" y="511.5" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="101" name="ice_bridge" type="Breakable" gid="106" x="3008" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="102" name="ice_bridge" type="Breakable" gid="106" x="3040" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="103" name="ice_bridge" type="Breakable" gid="106" x="3072" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="104" name="ice_bridge" type="Breakable" gid="106" x="3104" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="105" name="ice_bridge" type="Breakable" gid="106" x="3136" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="106" name="ice_bridge" type="Breakable" gid="106" x="3168" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="107" name="ice_bridge" type="Breakable" gid="106" x="3200" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="108" name="ice_bridge" type="Breakable" gid="106" x="3232" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="109" name="ice_bridge" type="Breakable" gid="106" x="3264" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="110" name="ice_bridge" type="Breakable" gid="106" x="3296" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="111" name="ice_bridge" type="Breakable" gid="106" x="3328" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="112" name="ice_bridge" type="Breakable" gid="106" x="3360" y="512" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="27" name="FlyingBox">
+  <object id="188" name="flyingbox_1" type="FlyingBox" gid="258" x="960" y="352" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="shield"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="192" name="flyingbox_2" type="FlyingBox" gid="258" x="1728" y="160" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="shield"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="193" name="flyingbox_3" type="FlyingBox" gid="258" x="2560" y="288" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="heal"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="194" name="flyingbox_4" type="FlyingBox" gid="258" x="3773.33" y="268" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="shield"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="195" name="flyingbox_5" type="FlyingBox" gid="258" x="4864" y="224" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="heal"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="196" name="flyingbox_6" type="FlyingBox" gid="258" x="6496" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="shield"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+  <object id="197" name="flyingbox_7" type="FlyingBox" gid="258" x="7296" y="128" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="drop_type" value="shield"/>
+    <property name="respawn_time" type="int" value="60"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="Hill">
+  <object id="48" name="hill_1" type="Slide" x="1696" y="321.333">
+   <properties>
+    <property name="climb" type="float" value="1"/>
+    <property name="difficulty" type="bool" value="false"/>
+    <property name="slide" type="float" value="1"/>
+   </properties>
+   <polygon points="0,0 -321.333,159.333 -1.33333,159.333"/>
+  </object>
+  <object id="51" name="hill_2" type="Slide" x="1762" y="320">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="difficulty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 -2.66667,256.667 254,255.34"/>
+  </object>
+  <object id="52" name="hill_3" type="Slide" x="2079.33" y="576">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="diffuculty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 96.6667,3.33333 96.6667,-96"/>
+  </object>
+  <object id="169" name="hill_4" type="Slide" x="5888.66" y="479.333">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="difficulty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 -0.664936,62.0003 63.3351,61.6798"/>
+  </object>
+  <object id="170" name="hill_5" type="Slide" x="7137.01" y="480.182" rotation="90">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="difficulty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 -0.694373,65.5003 66.139,65.1617"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Checkpoint" class="Checkpoint">
+  <object id="47" name="checkpoint1" type="Checkpoint" gid="273" x="1217" y="481.917" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="69" name="checkpoint2" type="Checkpoint" gid="273" x="2814.75" y="481.333" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="115" name="checkpoint3" type="Checkpoint" gid="273" x="4096" y="480" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="165" name="checkpoint4" type="Checkpoint" gid="273" x="5440" y="480" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="198" name="checkpoint0" type="Checkpoint" gid="273" x="64" y="480" width="36.5" height="34.6667">
+   <properties>
+    <property name="actif" type="bool" value="false"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="Enemies">
+  <object id="60" name="enemy_tank" type="Enemy" x="2369.33" y="414" width="128" height="64">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+   </properties>
+  </object>
+  <object id="116" name="enemy_helicopter_1" type="Enemy" x="4544" y="128" width="96" height="96">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+    <property name="sprite" value="helicopter.gif"/>
+   </properties>
+  </object>
+  <object id="173" name="enemy_helicopter_2" type="Enemy" x="5952" y="256" width="96" height="96">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+    <property name="height_y" type="int" value="256"/>
+    <property name="path_end_x" type="int" value="6976"/>
+    <property name="path_start_x" type="int" value="5952"/>
+    <property name="patrol" type="bool" value="true"/>
+    <property name="speed" type="float" value="2"/>
+    <property name="sprite" value="helicopter.gif"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="23" name="Platforms" class="UnstablePlatform">
+  <object id="174" name="unstable_platform_1" type="UnstablePlatform" x="5920" y="480" width="160" height="32">
+   <properties>
+    <property name="instability" type="float" value="2.5"/>
+    <property name="linked_top" value="chain_link_15"/>
+    <property name="max_angle" type="float" value="70"/>
+    <property name="slippery" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="181" name="tnt_platform" type="Platform" x="7264" y="222.667" width="96" height="32"/>
+ </objectgroup>
+ <objectgroup id="18" name="Chains">
+  <object id="118" name="chain_link_1" type="ChainLink" gid="274" x="4574.67" y="256" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_2"/>
+    <property name="linked_top" value="enemy_helicopter_1"/>
+   </properties>
+  </object>
+  <object id="125" name="chain_link_2" type="ChainLink" gid="274" x="4574.67" y="288" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_3"/>
+    <property name="linked_top" value="chain_link_1"/>
+   </properties>
+  </object>
+  <object id="126" name="chain_link_3" type="ChainLink" gid="274" x="4574.67" y="320" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_4"/>
+    <property name="linked_top" value="chain_link_2"/>
+   </properties>
+  </object>
+  <object id="127" name="chain_link_4" type="ChainLink" gid="274" x="4574.67" y="352" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="falling_block_1"/>
+    <property name="linked_top" value="chain_link_3"/>
+   </properties>
+  </object>
+  <object id="159" name="chain_link_5" type="ChainLink" gid="274" x="5245.37" y="204.5" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chain_link_2"/>
+    <property name="linked_top" value="bridge_lock"/>
+   </properties>
+  </object>
+  <object id="160" name="chain_link_7" type="ChainLink" gid="274" x="5199.5" y="250.5" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chain_link_8"/>
+    <property name="linked_top" value="chain_link_6"/>
+   </properties>
+  </object>
+  <object id="161" name="chain_link_6" type="ChainLink" gid="274" x="5222" y="227.5" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chain_link_5"/>
+    <property name="linked_top" value="enemy_helicopter"/>
+   </properties>
+  </object>
+  <object id="162" name="chain_link_8" type="ChainLink" gid="274" x="5177.5" y="273" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chain_link_9"/>
+    <property name="linked_top" value="chain_link_7"/>
+   </properties>
+  </object>
+  <object id="163" name="chain_link_9" type="ChainLink" gid="274" x="5157" y="297.5" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chain_link_10"/>
+    <property name="linked_top" value="chain_link_8"/>
+   </properties>
+  </object>
+  <object id="164" name="chain_link_11" type="ChainLink" gid="274" x="5135.5" y="320" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="drawbridge_1"/>
+    <property name="linked_top" value="chain_link_10"/>
+   </properties>
+  </object>
+  <object id="175" name="chain_link_12" type="ChainLink" gid="274" x="5984" y="384" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_13"/>
+    <property name="linked_top" value="enemy_helicpter_2"/>
+   </properties>
+  </object>
+  <object id="176" name="chain_link_14" type="ChainLink" gid="274" x="5984" y="448" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_15"/>
+    <property name="linked_top" value="chain_link_13"/>
+   </properties>
+  </object>
+  <object id="177" name="chain_link_13" type="ChainLink" gid="274" x="5984" y="416" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chain_link_14"/>
+    <property name="linked_top" value="chain_link_12"/>
+   </properties>
+  </object>
+  <object id="178" name="chain_link_15" type="ChainLink" gid="274" x="5984" y="480" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="unstable_platform_1"/>
+    <property name="linked_top" value="chain_link_14"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Bastion">
+  <object id="46" name="Bastion1" type="Destructible" x="1088.67" y="159.333" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="68" name="Bastion2" type="Destructible" x="2688.33" y="157.667" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="114" name="Bastion3" type="Destructible" x="3968" y="160" width="92.6667" height="319.333">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="153" name="Bastion4" type="Destructible" x="5312" y="160" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="180" name="Bastion5" type="Destructible" x="7776" y="160" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="2000"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="Obstacle">
+  <object id="12" name="box" gid="254" x="352" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="30" name="box" gid="254" x="367" y="448.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="31" name="box" gid="254" x="400.5" y="449" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="32" name="box" gid="254" x="383.5" y="417.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="28" name="box" gid="254" x="385" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="29" name="box" gid="254" x="416" y="480.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="19" name="barrel" gid="250" x="513.5" y="482" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="33" name="barrel" gid="250" x="546" y="481.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="34" name="barrel" gid="250" x="578.5" y="482" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="35" name="barrel" gid="250" x="528.5" y="450" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="36" name="barrel" gid="250" x="562" y="450.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="37" name="barrel" gid="250" x="545.5" y="417.5" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="62" name="box" gid="254" x="2304" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="63" name="box" gid="254" x="2240" y="480.333" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="64" name="box" gid="254" x="2272" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="65" name="box" gid="254" x="2256.67" y="448" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="66" name="box" gid="254" x="2288.67" y="448.667" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="67" name="box" gid="254" x="2271.25" y="415.75" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="158" name="bridge_lock" type="Breakable" gid="255" x="5280" y="192" width="32" height="32"/>
+  <object id="185" name="barrel" gid="250" x="4925" y="480" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+  <object id="186" name="barrel" gid="250" x="4960" y="479" width="32" height="32">
+   <properties>
+    <property name="destructible" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="20" name="FallingBlock">
+  <object id="129" name="falling_block_1" type="FallingBlock" x="4480" y="350" width="224" height="96"/>
+ </objectgroup>
+ <objectgroup id="5" name="Lava">
+  <object id="70" name="lava" type="Mortal" x="768" y="575.833" width="95.5" height="63.1667">
+   <properties>
+    <property name="kill_player" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="71" name="lava" type="Mortal" x="2977.25" y="576.417" width="415.5" height="63.1667">
+   <properties>
+    <property name="kill_player" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="152" name="lava" type="Mortal" x="5024" y="576.038" width="256" height="64">
+   <properties>
+    <property name="kill_player" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
