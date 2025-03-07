@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="30" nextobjectid="199">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="31" nextobjectid="199">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
-  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/dungeon_.png" width="288" height="192"/>
+  <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
  <tileset firstgid="55" name="winter_" tilewidth="32" tileheight="32" spacing="2" tilecount="54" columns="6">
-  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/winter_.png" width="224" height="320"/>
+  <image source="Ground/winter_.png" width="224" height="320"/>
  </tileset>
  <tileset firstgid="109" name="RockTile" tilewidth="32" tileheight="32" tilecount="36" columns="6">
   <image source="Ground/RockTile.png" width="192" height="192"/>
@@ -13,32 +13,35 @@
   <image source="Ground/rock.png" width="258" height="128"/>
  </tileset>
  <tileset firstgid="177" name="summer_" tilewidth="32" tileheight="32" tilecount="70" columns="7">
-  <image source="fourSeasonsPlatformer_ [tileset, version 2.0]/midground_/summer_.png" width="224" height="320"/>
+  <image source="Ground/summer_.png" width="224" height="320"/>
  </tileset>
  <tileset firstgid="247" name="obstacle" tilewidth="32" tileheight="32" tilecount="12" columns="4">
-  <image source="Objet/obstacle.png" width="128" height="96"/>
+  <image source="object/obstacle.png" width="128" height="96"/>
  </tileset>
  <tileset firstgid="259" name="lava " tilewidth="32" tileheight="32" tilecount="14" columns="7">
   <image source="Ground/lava.png" width="224" height="64"/>
  </tileset>
  <tileset firstgid="273" name="checkpoint" tilewidth="32" tileheight="32" tilecount="1" columns="1">
-  <image source="Objet/checkpoint.png" width="32" height="32"/>
+  <image source="object/checkpoint.png" width="32" height="32"/>
  </tileset>
  <tileset firstgid="274" name="chain" tilewidth="32" tileheight="32" tilecount="1" columns="1">
-  <image source="Objet/chain.png" width="32" height="32"/>
+  <image source="object/chain.png" width="32" height="32"/>
  </tileset>
  <tileset firstgid="275" name="water" tilewidth="32" tileheight="32" tilecount="112" columns="8">
   <image source="Ground/TileSet_V1.png" width="256" height="448"/>
  </tileset>
  <tileset firstgid="387" name="Ladders" tilewidth="32" tileheight="32" tilecount="24" columns="6">
-  <image source="Objet/tileset_ladders.png" width="192" height="128"/>
+  <image source="object/tileset_ladders.png" width="192" height="128"/>
  </tileset>
  <tileset firstgid="411" name="tnt" tilewidth="32" tileheight="32" tilecount="1" columns="1">
-  <image source="Objet/tnt.png" width="32" height="32"/>
+  <image source="object/tnt.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="412" name="bushes" tilewidth="32" tileheight="32" tilecount="40" columns="8">
+  <image source="decor/bushes.png" width="256" height="160"/>
  </tileset>
  <layer id="10" name="Ground" width="270" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt0UEOwyAMRcEc3UfvqrtEFEPsKpmR/hY/ieMAAAAAAAAAAAAAAIBnipMBnInBAL5iYsC7RXLA+8SGAevi5lXeyjR19GVUta20d7yzeqtL2M9/1t1y1VXdllHZl23f8cbMO7u6q4VN/Vd3y1Vb190Z1Y13bqTrboWw6b/qbvmXZXQ379xI190K8ZB9ADlqthA=
+   eJzt1lGqwjAQBdAU/wTFJbqUWYpLcWn2IYIflabTmjzsOXChH23nhkBIKQAAAAAAAAAAAAAA8JtiIgBTYiYAL7EgwL5FMsD+xAYB1osvp+WsTKce/TJadVvTvcd/1s7qJaR6z3p3+dQr2+04TGfp7BqZft/IFh3ntO7dWsii/erd5VO3zLevM+IwlNt5KPe/jM/3mrMjI7vG/5g5vea2EDvOZXim5t13vXtvlfe7xXhWlNOY8/P5WnPvyOi95i0zp9fcFuJH8gBFTa1t
   </data>
  </layer>
  <layer id="2" name="Floor" width="270" height="20">
@@ -51,6 +54,16 @@
    eJzt1NEKgyAYBlCltkar9Yp71B5tP1hLdrFdyuIc+FD0Rj/ElAAAAAAAAAAAAAAAAAAAAAAAAIB/NeSUrrmMFF100UcuVTf1+Dm/nay77sudY29tfT7ae+QjFGN0cY9MkXnrZqjSb9n3lpN1t5T/4X2/uXojsf5sfT5+ewGKfALl
   </data>
  </layer>
+ <layer id="29" name="Water" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1DEKACAMA0B9rY/w864KUsdSuYNsWZPWAAAAAAAAAAAAAAAAAAAAAAAA4DR7foBasj/Db0A9tx2PLdHeR5DXV+zdXyzcYi7x
+  </data>
+ </layer>
+ <layer id="30" name="Decor" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt2E0LgkAQgOH219elDp26VFBRVERfJ4sK64+1Iosii6upOer7wLCQkbPb7LDa6wEAAAAAAAAA6vJSYQAB6iEf1gsAADipWAi10LktVTQCSFf1M0Dw+33he3Gn89uraGybYwvnhPaT3jfMOeOi4yo8V6ArBsL3ojln3HTchecKdMXIshe3gvanOWe8dXwE5YXmk1TnTWN7TjkLWk9zzuC8gbJJqvOmGQrvG+acEYxrS17jCnNd/fDbkt9zZsntVFL+/1qHWYH7VFXnyblPLPd56M+egmvFJr7Wyb4RzDm5nnXuBZ5PAAAoxlNRZPkuumvD/5/LVK/XXIVjMprOV1G4+oLfgvkCKC7eN9L6gue4juJs71yBOqTV4kFl7xuu612o+S+NDEUQ
+  </data>
+ </layer>
  <objectgroup id="22" name="WaterZones">
   <object id="166" name="water_1" type="Water" x="5984" y="544" width="1056" height="96">
    <properties>
@@ -60,11 +73,6 @@
    </properties>
   </object>
  </objectgroup>
- <layer id="29" name="Water" width="270" height="20">
-  <data encoding="base64" compression="zlib">
-   eJzt1DEKACAMA0B9rY/w864KUsdSuYNsWZPWAAAAAAAAAAAAAAAAAAAAAAAA4DR7foBasj/Db0A9tx2PLdHeR5DXV+zdXyzcYi7x
-  </data>
- </layer>
  <objectgroup id="24" name="Ladders">
   <object id="182" name="ladder_1" type="Ladder" x="7293.64" y="223" width="36.7143" height="256">
    <properties>
@@ -212,7 +220,7 @@
     <property name="respawn_time" type="int" value="60"/>
    </properties>
   </object>
-  <object id="194" name="flyingbox_4" type="FlyingBox" gid="258" x="3773.33" y="268" width="32" height="32">
+  <object id="194" name="flyingbox_4" type="FlyingBox" gid="258" x="3776" y="256" width="32" height="32">
    <properties>
     <property name="HP" type="int" value="1"/>
     <property name="drop_type" value="shield"/>
