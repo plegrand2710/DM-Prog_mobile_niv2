@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MapRenderer {
@@ -13,6 +13,12 @@ public class MapRenderer {
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport viewport;
+
+    public static final float TILE_SIZE = 32f; // Taille d'une tuile
+    public static final int MAP_WIDTH_TILES = 270; // Largeur de la carte en tuiles
+    public static final int MAP_HEIGHT_TILES = 20; // Hauteur de la carte en tuiles
+    public static final float VIEWPORT_WIDTH = 34; // Largeur visible en tuiles
+    public static final float VIEWPORT_HEIGHT = 17; // Hauteur visible en tuiles
 
     public MapRenderer(String mapPath) {
         try {
@@ -26,14 +32,14 @@ public class MapRenderer {
             }
 
             // Rendu de la carte
-            mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / 32f); // Ajustement à la taille des tuiles
+            mapRenderer = new OrthogonalTiledMapRenderer(map, 1 / TILE_SIZE); // Ajustement à l'échelle
 
-            // Initialisation de la caméra et de la viewport
+            // Initialisation de la caméra
             camera = new OrthographicCamera();
-            viewport = new ExtendViewport(640 / 32f, 360 / 32f, camera); // Taille ajustée pour la résolution
+            viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera); // Viewport mobile
 
-            // Centrer la caméra sur le début de la carte
-            camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+            // Positionner la caméra **en bas à gauche** (0, 0)
+            camera.position.set(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 0);
             camera.update();
 
         } catch (Exception e) {

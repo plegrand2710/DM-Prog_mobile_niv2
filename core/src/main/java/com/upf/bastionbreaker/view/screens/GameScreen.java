@@ -67,8 +67,8 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         System.out.println("🔄 Resize GameScreen : " + width + "x" + height);
         if (mapRenderer != null) {
-            mapRenderer.getCamera().viewportWidth = width / 32f;
-            mapRenderer.getCamera().viewportHeight = height / 32f;
+            mapRenderer.getCamera().viewportWidth = MapRenderer.VIEWPORT_WIDTH;
+            mapRenderer.getCamera().viewportHeight = MapRenderer.VIEWPORT_HEIGHT;
             mapRenderer.getCamera().update();
         }
     }
