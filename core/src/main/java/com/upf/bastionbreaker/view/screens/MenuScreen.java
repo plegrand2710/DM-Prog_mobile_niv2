@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.upf.bastionbreaker.view.ui.PauseMenu;
 
 public class MenuScreen implements Screen {
     private Game game;
@@ -28,10 +29,15 @@ public class MenuScreen implements Screen {
     private ImageButton gyroButton;
     private ImageButton touchpadButton;
     private BitmapFont font;
+    private PauseMenu pauseMenu;
 
     public MenuScreen(Game game) {
         this.game = game;
+        this.pauseMenu = new PauseMenu(); 
     }
+
+
+
 
     @Override
     public void show() {
@@ -56,13 +62,11 @@ public class MenuScreen implements Screen {
 
         buttonContainerImage.setSize(containerWidth, containerHeight);
         float containerX = (screenWidth - containerWidth) / 2;
-        float containerY = (0.3472f * screenHeight) - 200;;
+        float containerY = (0.3472f * screenHeight) - 200;
 
         Gdx.app.log("DEBUG_MENU", "screenHeight = " + Gdx.graphics.getHeight());
 
-
         buttonContainerImage.setPosition(containerX, containerY);
-
         stage.addActor(buttonContainerImage);
 
         TextureRegionDrawable logoDrawable = new TextureRegionDrawable(gameAtlas.findRegion("bastion_breaker_logo"));
@@ -80,8 +84,6 @@ public class MenuScreen implements Screen {
 
         TextureRegionDrawable gyroDrawable = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Default"));
         TextureRegionDrawable touchpadDrawable = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Default"));
-        TextureRegionDrawable gyroHover = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Hover"));
-        TextureRegionDrawable touchpadHover = new TextureRegionDrawable(gameAtlas.findRegion("Rect-Rect-Hover"));
 
         gyroButton = new ImageButton(gyroDrawable);
         touchpadButton = new ImageButton(touchpadDrawable);
@@ -116,14 +118,16 @@ public class MenuScreen implements Screen {
         gyroButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gyroButton.getStyle().imageUp = gyroHover;
-            }
+                Gdx.app.log("DEBUG_MENU", "⚡ Changement d'écran vers PauseMenu");
+                pauseMenu.togglePause();
+          }
         });
 
         touchpadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                touchpadButton.getStyle().imageUp = touchpadHover;
+                Gdx.app.log("DEBUG_MENU", "⚡ Changement d'écran vers PauseMenu");
+                pauseMenu.togglePause();
             }
         });
     }
@@ -137,6 +141,8 @@ public class MenuScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+        pauseMenu.render(delta);
+
     }
 
     @Override
