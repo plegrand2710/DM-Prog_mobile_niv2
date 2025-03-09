@@ -33,7 +33,7 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(Game game) {
         this.game = game;
-        this.pauseMenu = new PauseMenu(); 
+        this.pauseMenu = new PauseMenu();
     }
 
 
@@ -120,7 +120,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("DEBUG_MENU", "⚡ Changement d'écran vers PauseMenu");
                 pauseMenu.togglePause();
-          }
+            }
         });
 
         touchpadButton.addListener(new ClickListener() {
