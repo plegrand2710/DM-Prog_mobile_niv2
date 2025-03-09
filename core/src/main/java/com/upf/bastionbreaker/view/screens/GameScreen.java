@@ -16,6 +16,7 @@ import com.upf.bastionbreaker.model.entities.Bastion;
 import com.upf.bastionbreaker.model.entities.TNT;
 import com.upf.bastionbreaker.model.entities.FallingBlock;
 import com.upf.bastionbreaker.model.entities.Drawbridge;
+import com.upf.bastionbreaker.model.entities.UnstablePlatform;
 import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,8 +38,9 @@ public class GameScreen implements Screen {
     private List<TNT> tnts;
     private List<FallingBlock> fallingBlocks;
     private List<Drawbridge> drawbridges;
+    private List<UnstablePlatform> unstablePlatforms;
 
-    // Dictionnaire pour retrouver rapidement un maillon via son nom
+    // Dictionnaire pour retrouver un ChainLink via son nom (en minuscules)
     private Map<String, ChainLink> chainLinkMap;
 
     private Player player;
@@ -85,7 +87,6 @@ public class GameScreen implements Screen {
                 ChainLink link = new ChainLink(obj);
                 chainLinks.add(link);
                 if (obj.getName() != null) {
-                    // Stocke la clé en minuscules pour simplifier la comparaison
                     chainLinkMap.put(obj.getName().toLowerCase(), link);
                 }
             }
@@ -113,13 +114,21 @@ public class GameScreen implements Screen {
             }
             System.out.println("📌 FallingBlocks chargés : " + fallingBlocks.size());
 
-            // Charger les Drawbridges (assurez-vous que le nom du calque correspond exactement)
+            // Charger les Drawbridges
             drawbridges = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Drawbridges")) {
                 Drawbridge db = new Drawbridge(obj);
                 drawbridges.add(db);
             }
             System.out.println("📌 Drawbridges chargés : " + drawbridges.size());
+
+            // Charger les UnstablePlatforms
+            unstablePlatforms = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("UnstablePlatforms")) {
+                UnstablePlatform up = new UnstablePlatform(obj);
+                unstablePlatforms.add(up);
+            }
+            System.out.println("📌 UnstablePlatforms chargés : " + unstablePlatforms.size());
 
             // Lier les FallingBlocks à leur maillon support
             for (FallingBlock fb : fallingBlocks) {
@@ -139,6 +148,17 @@ public class GameScreen implements Screen {
                     ChainLink support = chainLinkMap.get(supportName.toLowerCase());
                     if (support != null) {
                         db.setSupportingLink(support);
+                    }
+                }
+            }
+
+            // Lier les UnstablePlatforms à leur chain link support si besoin
+            for (UnstablePlatform up : unstablePlatforms) {
+                String supportName = up.getLinkedTopName();
+                if (supportName != null && !supportName.isEmpty()) {
+                    ChainLink support = chainLinkMap.get(supportName.toLowerCase());
+                    if (support != null) {
+                        up.setLinkedChain(support);
                     }
                 }
             }
@@ -183,13 +203,11 @@ public class GameScreen implements Screen {
         // Mise à jour de la TNT
         for (TNT tnt : tnts) {
             tnt.update(delta);
-            // Exemple d'interaction : si le joueur (mode Robot) touche la TNT, la pousser
             if (player.getBounds().overlaps(tnt.getBounds())) {
                 if (!player.isTank() && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
             }
-            // Ajoutez ici la détection de collision avec un projectile pour déclencher tnt.explode()
         }
 
         // Mise à jour des FallingBlocks
@@ -200,6 +218,11 @@ public class GameScreen implements Screen {
         // Mise à jour des Drawbridges
         for (Drawbridge db : drawbridges) {
             db.update(delta);
+        }
+
+        // Mise à jour des UnstablePlatforms
+        for (UnstablePlatform up : unstablePlatforms) {
+            up.update(delta, player.getBounds());
         }
 
         // Rendu de tous les objets
@@ -230,6 +253,9 @@ public class GameScreen implements Screen {
         }
         for (Drawbridge db : drawbridges) {
             db.render(batch);
+        }
+        for (UnstablePlatform up : unstablePlatforms) {
+            up.render(batch);
         }
         // Rendu du joueur (à compléter selon votre implémentation)
         batch.end();

@@ -40,7 +40,7 @@ public class MapManager {
             "FallingBlock",
             "Bastion",
             "Chains",
-            "Platforms",
+            "UnstablePlatforms",
             "Enemies",
             "Checkpoints",
             "Obstacles",

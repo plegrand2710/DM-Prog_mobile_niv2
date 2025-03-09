@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="37" nextobjectid="324">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="38" nextobjectid="330">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -116,7 +116,7 @@
    <properties>
     <property name="fall_speed" type="float" value="3"/>
     <property name="linked_top" value="chainlink8"/>
-    <property name="sprint" value="drawbridge"/>
+    <property name="sprite" value="drawbridge"/>
     <property name="state" value="closed"/>
     <property name="x_position" type="int" value="5296"/>
     <property name="y_position " type="int" value="496"/>
@@ -652,16 +652,16 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="23" name="Platforms" class="UnstablePlatform">
+ <objectgroup id="23" name="UnstablePlatforms" class="UnstablePlatform">
   <object id="174" name="unstable_platform" type="UnstablePlatform" x="5920" y="480" width="160" height="32">
    <properties>
     <property name="instability" type="float" value="2.5"/>
     <property name="linked_top" value="chainlink15"/>
-    <property name="max_angle" type="float" value="45"/>
+    <property name="max_angle" type="float" value="10"/>
     <property name="slippery" type="bool" value="true"/>
+    <property name="sprite" value="unstable_platform"/>
    </properties>
   </object>
-  <object id="181" name="tnt_platform" type="Platform" x="7264" y="222.667" width="96" height="32"/>
  </objectgroup>
  <objectgroup id="18" name="Chains">
   <object id="263" name="chainlink9" type="ChainLink" x="5984" y="352" width="32" height="32">
