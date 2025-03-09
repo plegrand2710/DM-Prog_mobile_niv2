@@ -12,8 +12,9 @@ import com.upf.bastionbreaker.model.entities.Obstacle;
 import com.upf.bastionbreaker.model.entities.FlyingBox;
 import com.upf.bastionbreaker.model.entities.IceBridge;
 import com.upf.bastionbreaker.model.entities.ChainLink;
-import com.upf.bastionbreaker.model.entities.Player;
 import com.upf.bastionbreaker.model.entities.Bastion;
+import com.upf.bastionbreaker.model.entities.TNT;
+import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +32,9 @@ public class GameScreen implements Screen {
     private List<IceBridge> iceBridges;
     private List<ChainLink> chainLinks;
     private List<Bastion> bastions;
+    private List<TNT> tnts;
 
-    // On peut stocker un dictionnaire (nom -> maillon) pour retrouver facilement linked_top, linked_bottom
+    // Dictionnaire pour retrouver rapidement un maillon via son nom
     private Map<String, ChainLink> chainLinkMap;
 
     private Player player;
@@ -40,7 +42,6 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         System.out.println("✅ Initialisation de GameScreen...");
-
         TextureManager.load();
 
         try {
@@ -76,24 +77,29 @@ public class GameScreen implements Screen {
             List<GameObject> chainObjects = mapManager.getObjects("Chains");
             chainLinks = new ArrayList<>();
             chainLinkMap = new HashMap<>();
-
             for (GameObject obj : chainObjects) {
                 ChainLink link = new ChainLink(obj);
                 chainLinks.add(link);
-
-                // On suppose que chaque maillon a un "name" unique dans Tiled
+                // On suppose que chaque maillon possède un nom unique dans Tiled
                 if (obj.getName() != null) {
                     chainLinkMap.put(obj.getName(), link);
                 }
             }
             System.out.println("🔗 ChainLinks chargés : " + chainLinks.size());
 
+            // Charger les Bastions
             bastions = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Bastion")) {
                 bastions.add(new Bastion(obj));
             }
             System.out.println("📌 Bastions chargés : " + bastions.size());
 
+            // Charger les TNT depuis le calque "Explosives"
+            tnts = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("Explosives")) {
+                tnts.add(new TNT(obj));
+            }
+            System.out.println("📌 TNT chargées : " + tnts.size());
 
             // Créer le joueur
             player = new Player();
@@ -130,12 +136,25 @@ public class GameScreen implements Screen {
         // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Mettre à jour la logique de la chaîne
+        // Mettre à jour la logique des ChainLinks
         updateChainLinks(delta);
 
-        // Rendu
+        // Mettre à jour la TNT et gérer ses interactions
+        for (TNT tnt : tnts) {
+            tnt.update(delta);
+            // Exemple d'interaction :
+            // Si le joueur est en mode Robot (non Tank) et touche la TNT, alors la pousser.
+            if (player.getBounds().overlaps(tnt.getBounds())) {
+                if (!player.isTank() && tnt.isPushable()) {
+                    // Pousser la TNT d'une petite quantité (valeur à ajuster selon la physique du jeu)
+                    tnt.push(0.1f, 0);
+                }
+            }
+            // Ici, vous pouvez ajouter la détection de collision avec un projectile pour déclencher tnt.explode()
+        }
+
+        // Rendu des objets
         batch.begin();
-        // Obstacles, Checkpoints, etc.
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
         }
@@ -148,36 +167,30 @@ public class GameScreen implements Screen {
         for (IceBridge ice : iceBridges) {
             ice.render(batch);
         }
-        // Rendu des maillons de chaîne
         for (ChainLink link : chainLinks) {
             link.render(batch);
         }
-
         for (Bastion bastion : bastions) {
             bastion.render(batch);
         }
-
+        for (TNT tnt : tnts) {
+            tnt.render(batch);
+        }
         batch.end();
     }
 
     private void updateChainLinks(float delta) {
-        // Ex. : si un maillon "top" est détruit, tous ceux qui dépendent de lui tombent
-        // On met d’abord à jour chaque maillon (chute, etc.)
+        // Mettre à jour chaque maillon (ex : appliquer la gravité via PhysicManager)
         for (ChainLink link : chainLinks) {
             link.update(delta);
         }
-
-        // Puis on vérifie si le maillon supérieur est détruit : si oui, on fait tomber celui-ci
+        // Vérifier si le maillon supérieur est détruit ou en chute, pour déclencher la chute du maillon courant
         for (ChainLink link : chainLinks) {
             if (!link.isDestroyed() && !link.isFalling()) {
                 String topName = link.getLinkedTop();
                 if (topName != null) {
                     ChainLink topLink = chainLinkMap.get(topName);
-                    // Si le maillon supérieur est détruit ou null, on fait tomber le maillon actuel
-                    if (topLink == null || topLink.isDestroyed()) {
-                        link.fall();
-                    } else if (topLink.isFalling()) {
-                        // Si le maillon supérieur est en chute, ce maillon tombe aussi
+                    if (topLink == null || topLink.isDestroyed() || topLink.isFalling()) {
                         link.fall();
                     }
                 }
@@ -196,8 +209,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {}
+
     @Override
     public void resume() {}
+
     @Override
     public void hide() {}
 
