@@ -38,7 +38,7 @@ public class MapManager {
         String[] objectLayers = {
             "Obstacles", "Checkpoints", "Enemies", "Bastion",
             "FlyingBox", "Ice", "WaterZones", "WindZones", "Platforms",
-            "Chains", "Explosives", "Lava", "Ladders", "Bridges"
+            "Chains", "Explosives", "Lava", "Ladders", "Bridges", "FallingBlock"
         };
 
         for (String layerName : objectLayers) {

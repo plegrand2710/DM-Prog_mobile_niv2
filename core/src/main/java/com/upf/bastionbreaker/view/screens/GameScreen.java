@@ -14,6 +14,7 @@ import com.upf.bastionbreaker.model.entities.IceBridge;
 import com.upf.bastionbreaker.model.entities.ChainLink;
 import com.upf.bastionbreaker.model.entities.Bastion;
 import com.upf.bastionbreaker.model.entities.TNT;
+import com.upf.bastionbreaker.model.entities.FallingBlock;
 import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class GameScreen implements Screen {
     private List<ChainLink> chainLinks;
     private List<Bastion> bastions;
     private List<TNT> tnts;
+    private List<FallingBlock> fallingBlocks;
 
     // Dictionnaire pour retrouver rapidement un maillon via son nom
     private Map<String, ChainLink> chainLinkMap;
@@ -101,6 +103,23 @@ public class GameScreen implements Screen {
             }
             System.out.println("📌 TNT chargées : " + tnts.size());
 
+            // Charger les FallingBlocks depuis le calque "FallingBlock"
+            fallingBlocks = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("FallingBlock")) {
+                FallingBlock block = new FallingBlock(obj);
+                fallingBlocks.add(block);
+            }
+            System.out.println("📌 FallingBlocks chargés : " + fallingBlocks.size());
+
+            // Lier chaque FallingBlock à son maillon supérieur via la propriété "linked_top"
+            // Supposons que FallingBlock possède une méthode getLinkedTopName() (à ajouter si nécessaire)
+            for (FallingBlock block : fallingBlocks) {
+                String topName = block.getLinkedTopName();
+                if (topName != null && chainLinkMap.containsKey(topName)) {
+                    block.setLinkedChain(chainLinkMap.get(topName));
+                }
+            }
+
             // Créer le joueur
             player = new Player();
             player.setPosition(5, 5);
@@ -136,24 +155,27 @@ public class GameScreen implements Screen {
         // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Mettre à jour la logique des ChainLinks
+        // Mise à jour de la logique des ChainLinks
         updateChainLinks(delta);
 
-        // Mettre à jour la TNT et gérer ses interactions
+        // Mise à jour des TNT
         for (TNT tnt : tnts) {
             tnt.update(delta);
-            // Exemple d'interaction :
-            // Si le joueur est en mode Robot (non Tank) et touche la TNT, alors la pousser.
+            // Exemple d'interaction : si le joueur (en mode Robot) touche la TNT, la pousser
             if (player.getBounds().overlaps(tnt.getBounds())) {
                 if (!player.isTank() && tnt.isPushable()) {
-                    // Pousser la TNT d'une petite quantité (valeur à ajuster selon la physique du jeu)
                     tnt.push(0.1f, 0);
                 }
             }
-            // Ici, vous pouvez ajouter la détection de collision avec un projectile pour déclencher tnt.explode()
+            // Ici, ajouter la détection de collision avec un projectile pour déclencher tnt.explode()
         }
 
-        // Rendu des objets
+        // Mise à jour des FallingBlocks
+        for (FallingBlock block : fallingBlocks) {
+            block.update(delta);
+        }
+
+        // Rendu de tous les objets
         batch.begin();
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
@@ -176,11 +198,14 @@ public class GameScreen implements Screen {
         for (TNT tnt : tnts) {
             tnt.render(batch);
         }
+        for (FallingBlock block : fallingBlocks) {
+            block.render(batch);
+        }
         batch.end();
     }
 
     private void updateChainLinks(float delta) {
-        // Mettre à jour chaque maillon (ex : appliquer la gravité via PhysicManager)
+        // Mettre à jour chaque maillon (ex: appliquer la gravité via PhysicManager)
         for (ChainLink link : chainLinks) {
             link.update(delta);
         }
