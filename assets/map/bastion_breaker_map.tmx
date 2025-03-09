@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="35" nextobjectid="199">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="37" nextobjectid="199">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -39,12 +39,20 @@
  <tileset firstgid="412" name="bushes" tilewidth="32" tileheight="32" tilecount="40" columns="8">
   <image source="decor/bushes.png" width="256" height="160"/>
  </tileset>
+ <tileset firstgid="452" name="ground" tilewidth="32" tileheight="32" tilecount="40" columns="8">
+  <image source="background/ground.png" width="283" height="160"/>
+ </tileset>
  <imagelayer id="34" name="Background" repeatx="1">
   <image source="background/background.png" width="1080" height="500"/>
  </imagelayer>
  <layer id="10" name="Ground" width="270" height="20">
   <data encoding="base64" compression="zlib">
    eJzt1lGqwjAQBdAU/wTFJbqUWYpLcWn2IYIflabTmjzsOXChH23nhkBIKQAAAAAAAAAAAAAA8JtiIgBTYiYAL7EgwL5FMsD+xAYB1osvp+WsTKce/TJadVvTvcd/1s7qJaR6z3p3+dQr2+04TGfp7BqZft/IFh3ntO7dWsii/erd5VO3zLevM+IwlNt5KPe/jM/3mrMjI7vG/5g5vea2EDvOZXim5t13vXtvlfe7xXhWlNOY8/P5WnPvyOi95i0zp9fcFuJH8gBFTa1t
+  </data>
+ </layer>
+ <layer id="36" name="Soil" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1DkOgDAMBMDw/3fxL0ooOFJYeCPNSK5je62MAQAAAAAAAAAAAAAAAAAAAMzat7MSXPu5K95V7O4rg+ocZt7rKJ6l7Skhy5VvrKrHP2ft/h+S80yVuKvuHFe+s4oeV5kVAIA+B3adiCE=
   </data>
  </layer>
  <layer id="2" name="Floor" width="270" height="20">
