@@ -11,10 +11,12 @@ import com.upf.bastionbreaker.model.entities.Checkpoint;
 import com.upf.bastionbreaker.model.entities.Obstacle;
 import com.upf.bastionbreaker.model.entities.FlyingBox;
 import com.upf.bastionbreaker.model.entities.IceBridge;
+import com.upf.bastionbreaker.model.entities.ChainLink;
 import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
@@ -26,6 +28,10 @@ public class GameScreen implements Screen {
     private List<Obstacle> obstacles;
     private List<FlyingBox> flyingBoxes;
     private List<IceBridge> iceBridges;
+    private List<ChainLink> chainLinks;
+
+    // On peut stocker un dictionnaire (nom -> maillon) pour retrouver facilement linked_top, linked_bottom
+    private Map<String, ChainLink> chainLinkMap;
 
     private Player player;
 
@@ -41,42 +47,49 @@ public class GameScreen implements Screen {
             System.out.println("✅ MapManager chargé avec succès !");
 
             // Charger les checkpoints
-            List<GameObject> checkpointObjects = mapManager.getCheckpoints();
             checkpoints = new ArrayList<>();
-            for (GameObject obj : checkpointObjects) {
+            for (GameObject obj : mapManager.getCheckpoints()) {
                 checkpoints.add(new Checkpoint(obj));
             }
-            System.out.println("📌 Checkpoints chargés : " + checkpoints.size());
 
             // Charger les obstacles
-            List<GameObject> obstacleObjects = mapManager.getObjects("Obstacles");
             obstacles = new ArrayList<>();
-            for (GameObject obj : obstacleObjects) {
+            for (GameObject obj : mapManager.getObjects("Obstacles")) {
                 obstacles.add(new Obstacle(obj));
             }
-            System.out.println("📌 Obstacles chargés : " + obstacles.size());
 
             // Charger les FlyingBox
-            List<GameObject> flyingBoxObjects = mapManager.getObjects("FlyingBox");
             flyingBoxes = new ArrayList<>();
-            for (GameObject obj : flyingBoxObjects) {
+            for (GameObject obj : mapManager.getObjects("FlyingBox")) {
                 flyingBoxes.add(new FlyingBox(obj));
             }
-            System.out.println("📌 FlyingBox chargées : " + flyingBoxes.size());
 
-            // Charger les Ice Bridges depuis le calque "Ice"
-            List<GameObject> iceObjects = mapManager.getObjects("Ice");
+            // Charger les IceBridges
             iceBridges = new ArrayList<>();
-            for (GameObject obj : iceObjects) {
+            for (GameObject obj : mapManager.getObjects("Ice")) {
                 iceBridges.add(new IceBridge(obj));
             }
-            System.out.println("📌 Ice Bridges chargés : " + iceBridges.size());
 
-            // Créer le joueur et définir sa position/taille (à adapter)
+            // Charger les ChainLinks
+            List<GameObject> chainObjects = mapManager.getObjects("Chains");
+            chainLinks = new ArrayList<>();
+            chainLinkMap = new HashMap<>();
+
+            for (GameObject obj : chainObjects) {
+                ChainLink link = new ChainLink(obj);
+                chainLinks.add(link);
+
+                // On suppose que chaque maillon a un "name" unique dans Tiled
+                if (obj.getName() != null) {
+                    chainLinkMap.put(obj.getName(), link);
+                }
+            }
+            System.out.println("🔗 ChainLinks chargés : " + chainLinks.size());
+
+            // Créer le joueur
             player = new Player();
             player.setPosition(5, 5);
             player.setSize(1, 1);
-            // Vous pouvez basculer entre mode Tank et Robot en appelant player.setTankMode(true/false);
 
         } catch (Exception e) {
             System.out.println("❌ ERREUR : Impossible de charger la carte !");
@@ -103,32 +116,17 @@ public class GameScreen implements Screen {
         if (mapRenderer != null) {
             mapRenderer.update(delta);
             mapRenderer.render();
-        } else {
-            System.out.println("❌ ERREUR : mapRenderer est NULL !");
         }
 
         // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Vérifier les collisions avec les Ice Bridges
-        // Utilisation d'un Iterator pour pouvoir retirer l'élément en cas de collision
-        Iterator<IceBridge> it = iceBridges.iterator();
-        while (it.hasNext()) {
-            IceBridge iceBridge = it.next();
-            if (iceBridge.getBounds().overlaps(player.getBounds())) {
-                // Si le joueur est trop lourd (poids > limite du pont) et le pont est fragile, il s'effondre
-                if (player.getWeight() > iceBridge.getWeightLimit() && iceBridge.isFragile()) {
-                    if (player.isTank()) {
-                        System.out.println("💥 Le pont de glace s’écroule !");
-                    }
-                    // Le pont est détruit et ne réapparaît pas
-                    it.remove();
-                }
-            }
-        }
+        // Mettre à jour la logique de la chaîne
+        updateChainLinks(delta);
 
-        // Rendu des objets
+        // Rendu
         batch.begin();
+        // Obstacles, Checkpoints, etc.
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
         }
@@ -138,15 +136,43 @@ public class GameScreen implements Screen {
         for (FlyingBox box : flyingBoxes) {
             box.render(batch);
         }
-        for (IceBridge iceBridge : iceBridges) {
-            iceBridge.render(batch);
+        for (IceBridge ice : iceBridges) {
+            ice.render(batch);
+        }
+        // Rendu des maillons de chaîne
+        for (ChainLink link : chainLinks) {
+            link.render(batch);
         }
         batch.end();
     }
 
+    private void updateChainLinks(float delta) {
+        // Ex. : si un maillon "top" est détruit, tous ceux qui dépendent de lui tombent
+        // On met d’abord à jour chaque maillon (chute, etc.)
+        for (ChainLink link : chainLinks) {
+            link.update(delta);
+        }
+
+        // Puis on vérifie si le maillon supérieur est détruit : si oui, on fait tomber celui-ci
+        for (ChainLink link : chainLinks) {
+            if (!link.isDestroyed() && !link.isFalling()) {
+                String topName = link.getLinkedTop();
+                if (topName != null) {
+                    ChainLink topLink = chainLinkMap.get(topName);
+                    // Si le maillon supérieur est détruit ou null, on fait tomber le maillon actuel
+                    if (topLink == null || topLink.isDestroyed()) {
+                        link.fall();
+                    } else if (topLink.isFalling()) {
+                        // Si le maillon supérieur est en chute, ce maillon tombe aussi
+                        link.fall();
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void resize(int width, int height) {
-        System.out.println("🔄 Resize GameScreen : " + width + "x" + height);
         if (mapRenderer != null) {
             mapRenderer.getCamera().viewportWidth = MapRenderer.VIEWPORT_WIDTH;
             mapRenderer.getCamera().viewportHeight = MapRenderer.VIEWPORT_HEIGHT;
@@ -156,16 +182,13 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {}
-
     @Override
     public void resume() {}
-
     @Override
     public void hide() {}
 
     @Override
     public void dispose() {
-        System.out.println("🚀 Nettoyage de GameScreen...");
         if (mapManager != null) mapManager.dispose();
         if (mapRenderer != null) mapRenderer.dispose();
         if (batch != null) batch.dispose();
