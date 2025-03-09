@@ -8,6 +8,7 @@ import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.entities.Checkpoint;
+import com.upf.bastionbreaker.model.entities.Obstacle; // Import de la classe Obstacle
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,9 @@ public class GameScreen implements Screen {
     private MapManager mapManager; // Gestionnaire de la carte
     private SpriteBatch batch;
 
-    // Liste des checkpoints à afficher
+    // Listes des checkpoints et obstacles à afficher
     private List<Checkpoint> checkpoints;
+    private List<Obstacle> obstacles;
 
     @Override
     public void show() {
@@ -26,19 +28,25 @@ public class GameScreen implements Screen {
         TextureManager.load();
 
         try {
-            // Charger la carte `.tmx` via `MapManager`
+            // Charger la carte `.tmx` via MapManager
             mapManager = new MapManager("assets/map/bastion_breaker_map.tmx");
             System.out.println("✅ MapManager chargé avec succès !");
 
             // Charger les checkpoints
             List<GameObject> checkpointObjects = mapManager.getCheckpoints();
             checkpoints = new ArrayList<>();
-
             for (GameObject obj : checkpointObjects) {
                 checkpoints.add(new Checkpoint(obj));
             }
-
             System.out.println("📌 Checkpoints chargés : " + checkpoints.size());
+
+            // Charger les obstacles
+            List<GameObject> obstacleObjects = mapManager.getObjects("Obstacles");
+            obstacles = new ArrayList<>();
+            for (GameObject obj : obstacleObjects) {
+                obstacles.add(new Obstacle(obj));
+            }
+            System.out.println("📌 Obstacles chargés : " + obstacles.size());
 
         } catch (Exception e) {
             System.out.println("❌ ERREUR : Impossible de charger la carte !");
@@ -66,14 +74,19 @@ public class GameScreen implements Screen {
             mapRenderer.update(delta);
             mapRenderer.render();
         } else {
-            System.out.println("❌ ERREUR : `mapRenderer` est NULL !");
+            System.out.println("❌ ERREUR : mapRenderer est NULL !");
         }
 
-        // Synchroniser le SpriteBatch avec la caméra afin que la projection soit cohérente
+        // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Dessiner les objets (checkpoints)
+        // Dessiner les obstacles et les checkpoints
         batch.begin();
+        // Dessiner d'abord les obstacles
+        for (Obstacle obstacle : obstacles) {
+            obstacle.render(batch);
+        }
+        // Dessiner ensuite les checkpoints (ou dans l'ordre souhaité)
         for (Checkpoint checkpoint : checkpoints) {
             checkpoint.render(batch);
         }
