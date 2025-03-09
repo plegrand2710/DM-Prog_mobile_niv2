@@ -464,7 +464,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="229" name="barrel" x="576" y="448" width="32" height="32">
@@ -472,7 +472,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="230" name="barrel" x="544" y="448" width="32" height="32">
@@ -480,7 +480,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="231" name="barrel" x="576" y="416" width="32" height="32">
@@ -488,7 +488,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="232" name="barrel" x="544" y="416" width="32" height="32">
@@ -496,7 +496,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="233" name="barrel" x="576" y="384" width="32" height="32">
@@ -504,7 +504,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="234" name="barrel" x="4896" y="448" width="32" height="32">
@@ -512,7 +512,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="235" name="barrel" x="4928" y="448" width="32" height="32">
@@ -520,7 +520,7 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="236" name="barrel" x="4928" y="416" width="32" height="32">
@@ -528,14 +528,14 @@
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
     <property name="movable" type="bool" value="true"/>
-    <property name="sprite" value="box"/>
+    <property name="sprite" value="barrel"/>
    </properties>
   </object>
   <object id="237" name="bridgelock" x="5280" y="160" width="32" height="32">
    <properties>
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
-    <property name="movable" type="bool" value="true"/>
+    <property name="movable" type="bool" value="false"/>
     <property name="sprite" value="box"/>
    </properties>
   </object>
@@ -595,7 +595,7 @@
     <property name="sprite" value="checkpoint"/>
    </properties>
   </object>
-  <object id="308" name="checkpoint0" type="CheckPoint" x="64" y="448" width="32" height="32">
+  <object id="308" name="checkpoint0" type="CheckPoint" x="160" y="448" width="32" height="32">
    <properties>
     <property name="active" type="bool" value="false"/>
     <property name="sprite" value="checkpoint"/>

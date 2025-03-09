@@ -59,6 +59,13 @@ public class MapManager {
     }
 
     /**
+     * Ajout d'une méthode pour récupérer uniquement les checkpoints.
+     */
+    public List<GameObject> getCheckpoints() {
+        return getObjects("Checkpoints");
+    }
+
+    /**
      * Récupère les objets d'un calque en toute sécurité.
      * Vérifie que le calque existe et contient bien des objets.
      */

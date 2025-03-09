@@ -7,35 +7,45 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.map.GameObject;
-import com.upf.bastionbreaker.model.entities.Obstacle;
+import com.upf.bastionbreaker.model.entities.Checkpoint;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
-    private MapManager mapManager; // Gestionnaire de carte TMX
+    private MapManager mapManager; // Gestionnaire de la carte
     private SpriteBatch batch;
-    private List<Obstacle> obstacles; // Liste des obstacles à afficher
+
+    // Liste des checkpoints à afficher
+    private List<Checkpoint> checkpoints;
 
     @Override
     public void show() {
         System.out.println("✅ Initialisation de GameScreen...");
 
         TextureManager.load();
-        batch = new SpriteBatch();
-        obstacles = new ArrayList<>();
 
         try {
             // Charger la carte `.tmx` via `MapManager`
             mapManager = new MapManager("assets/map/bastion_breaker_map.tmx");
             System.out.println("✅ MapManager chargé avec succès !");
+
+            // Charger les checkpoints
+            List<GameObject> checkpointObjects = mapManager.getCheckpoints();
+            checkpoints = new ArrayList<>();
+
+            for (GameObject obj : checkpointObjects) {
+                checkpoints.add(new Checkpoint(obj));
+            }
+
+            System.out.println("📌 Checkpoints chargés : " + checkpoints.size());
+
         } catch (Exception e) {
-            System.out.println("❌ ERREUR : Impossible de charger MapManager !");
+            System.out.println("❌ ERREUR : Impossible de charger la carte !");
             e.printStackTrace();
         }
 
         try {
-            // Charger et afficher la carte
             mapRenderer = new MapRenderer(mapManager.getTiledMap());
             System.out.println("✅ Map rendue avec succès !");
         } catch (Exception e) {
@@ -43,61 +53,7 @@ public class GameScreen implements Screen {
             e.printStackTrace();
         }
 
-        // Charger et stocker les obstacles
-        chargerObstacles();
-
-        // Affichage des objets chargés depuis la carte TMX
-        afficherObjets("Obstacles");
-        afficherObjets("Checkpoints");
-        afficherObjets("Enemies");
-        afficherObjets("Bastion");
-        afficherObjets("FlyingBox");
-        afficherObjets("WaterZones");
-        afficherObjets("WindZones");
-        afficherObjets("Platforms");
-        afficherObjets("Chains");
-        afficherObjets("Explosives");
-        afficherObjets("Lava");
-        afficherObjets("Ladders");
-        afficherObjets("Bridges");
-    }
-
-    /**
-     * Charge et initialise tous les obstacles en récupérant leurs propriétés depuis la carte.
-     */
-    private void chargerObstacles() {
-        List<GameObject> obstacleObjects = mapManager.getObjects("Obstacles");
-        if (obstacleObjects.isEmpty()) {
-            System.out.println("⚠️ Aucun obstacle trouvé.");
-            return;
-        }
-
-        for (GameObject obj : obstacleObjects) {
-            Obstacle obstacle = new Obstacle(
-                obj.getName(),
-                obj.getX(),
-                obj.getY(),
-                obj.getWidth(),
-                obj.getHeight(),
-                obj.getProperties()
-            );
-
-            obstacles.add(obstacle);
-        }
-
-        System.out.println("✅ " + obstacles.size() + " obstacles chargés !");
-    }
-
-    /**
-     * Affiche les objets chargés d'un calque donné dans la console.
-     */
-    private void afficherObjets(String layerName) {
-        List<GameObject> objets = mapManager.getObjects(layerName);
-        if (objets.isEmpty()) {
-            System.out.println("⚠️  Aucun objet dans '" + layerName + "'.");
-        } else {
-            System.out.println("📌 " + objets.size() + " objets chargés depuis '" + layerName + "'.");
-        }
+        batch = new SpriteBatch();
     }
 
     @Override
@@ -113,10 +69,13 @@ public class GameScreen implements Screen {
             System.out.println("❌ ERREUR : `mapRenderer` est NULL !");
         }
 
-        // Rendu des obstacles
+        // Synchroniser le SpriteBatch avec la caméra afin que la projection soit cohérente
+        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
+
+        // Dessiner les objets (checkpoints)
         batch.begin();
-        for (Obstacle obstacle : obstacles) {
-            obstacle.render(batch);
+        for (Checkpoint checkpoint : checkpoints) {
+            checkpoint.render(batch);
         }
         batch.end();
     }
