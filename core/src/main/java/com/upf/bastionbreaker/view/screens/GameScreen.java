@@ -5,8 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
-import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.map.GameObject;
+import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.entities.Checkpoint;
 import com.upf.bastionbreaker.model.entities.Obstacle;
 import com.upf.bastionbreaker.model.entities.FlyingBox;
@@ -15,6 +15,7 @@ import com.upf.bastionbreaker.model.entities.ChainLink;
 import com.upf.bastionbreaker.model.entities.Bastion;
 import com.upf.bastionbreaker.model.entities.TNT;
 import com.upf.bastionbreaker.model.entities.FallingBlock;
+import com.upf.bastionbreaker.model.entities.Drawbridge;
 import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class GameScreen implements Screen {
     private List<Bastion> bastions;
     private List<TNT> tnts;
     private List<FallingBlock> fallingBlocks;
+    private List<Drawbridge> drawbridges;
 
     // Dictionnaire pour retrouver rapidement un maillon via son nom
     private Map<String, ChainLink> chainLinkMap;
@@ -82,9 +84,9 @@ public class GameScreen implements Screen {
             for (GameObject obj : chainObjects) {
                 ChainLink link = new ChainLink(obj);
                 chainLinks.add(link);
-                // On suppose que chaque maillon possède un nom unique dans Tiled
                 if (obj.getName() != null) {
-                    chainLinkMap.put(obj.getName(), link);
+                    // Stocke la clé en minuscules pour simplifier la comparaison
+                    chainLinkMap.put(obj.getName().toLowerCase(), link);
                 }
             }
             System.out.println("🔗 ChainLinks chargés : " + chainLinks.size());
@@ -96,27 +98,48 @@ public class GameScreen implements Screen {
             }
             System.out.println("📌 Bastions chargés : " + bastions.size());
 
-            // Charger les TNT depuis le calque "Explosives"
+            // Charger les TNT (Explosives)
             tnts = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Explosives")) {
                 tnts.add(new TNT(obj));
             }
             System.out.println("📌 TNT chargées : " + tnts.size());
 
-            // Charger les FallingBlocks depuis le calque "FallingBlock"
+            // Charger les FallingBlocks
             fallingBlocks = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("FallingBlock")) {
-                FallingBlock block = new FallingBlock(obj);
-                fallingBlocks.add(block);
+                FallingBlock fb = new FallingBlock(obj);
+                fallingBlocks.add(fb);
             }
             System.out.println("📌 FallingBlocks chargés : " + fallingBlocks.size());
 
-            // Lier chaque FallingBlock à son maillon supérieur via la propriété "linked_top"
-            // Supposons que FallingBlock possède une méthode getLinkedTopName() (à ajouter si nécessaire)
-            for (FallingBlock block : fallingBlocks) {
-                String topName = block.getLinkedTopName();
-                if (topName != null && chainLinkMap.containsKey(topName)) {
-                    block.setLinkedChain(chainLinkMap.get(topName));
+            // Charger les Drawbridges (assurez-vous que le nom du calque correspond exactement)
+            drawbridges = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("Drawbridges")) {
+                Drawbridge db = new Drawbridge(obj);
+                drawbridges.add(db);
+            }
+            System.out.println("📌 Drawbridges chargés : " + drawbridges.size());
+
+            // Lier les FallingBlocks à leur maillon support
+            for (FallingBlock fb : fallingBlocks) {
+                String topName = fb.getLinkedTopName();
+                if (topName != null && !topName.isEmpty()) {
+                    ChainLink support = chainLinkMap.get(topName.toLowerCase());
+                    if (support != null) {
+                        fb.setLinkedChain(support);
+                    }
+                }
+            }
+
+            // Lier les Drawbridges à leur chain link support
+            for (Drawbridge db : drawbridges) {
+                String supportName = db.getLinkedTopName();
+                if (supportName != null && !supportName.isEmpty()) {
+                    ChainLink support = chainLinkMap.get(supportName.toLowerCase());
+                    if (support != null) {
+                        db.setSupportingLink(support);
+                    }
                 }
             }
 
@@ -152,27 +175,31 @@ public class GameScreen implements Screen {
             mapRenderer.render();
         }
 
-        // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
         // Mise à jour de la logique des ChainLinks
         updateChainLinks(delta);
 
-        // Mise à jour des TNT
+        // Mise à jour de la TNT
         for (TNT tnt : tnts) {
             tnt.update(delta);
-            // Exemple d'interaction : si le joueur (en mode Robot) touche la TNT, la pousser
+            // Exemple d'interaction : si le joueur (mode Robot) touche la TNT, la pousser
             if (player.getBounds().overlaps(tnt.getBounds())) {
                 if (!player.isTank() && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
             }
-            // Ici, ajouter la détection de collision avec un projectile pour déclencher tnt.explode()
+            // Ajoutez ici la détection de collision avec un projectile pour déclencher tnt.explode()
         }
 
         // Mise à jour des FallingBlocks
-        for (FallingBlock block : fallingBlocks) {
-            block.update(delta);
+        for (FallingBlock fb : fallingBlocks) {
+            fb.update(delta);
+        }
+
+        // Mise à jour des Drawbridges
+        for (Drawbridge db : drawbridges) {
+            db.update(delta);
         }
 
         // Rendu de tous les objets
@@ -198,23 +225,25 @@ public class GameScreen implements Screen {
         for (TNT tnt : tnts) {
             tnt.render(batch);
         }
-        for (FallingBlock block : fallingBlocks) {
-            block.render(batch);
+        for (FallingBlock fb : fallingBlocks) {
+            fb.render(batch);
         }
+        for (Drawbridge db : drawbridges) {
+            db.render(batch);
+        }
+        // Rendu du joueur (à compléter selon votre implémentation)
         batch.end();
     }
 
     private void updateChainLinks(float delta) {
-        // Mettre à jour chaque maillon (ex: appliquer la gravité via PhysicManager)
         for (ChainLink link : chainLinks) {
             link.update(delta);
         }
-        // Vérifier si le maillon supérieur est détruit ou en chute, pour déclencher la chute du maillon courant
         for (ChainLink link : chainLinks) {
             if (!link.isDestroyed() && !link.isFalling()) {
                 String topName = link.getLinkedTop();
                 if (topName != null) {
-                    ChainLink topLink = chainLinkMap.get(topName);
+                    ChainLink topLink = chainLinkMap.get(topName.toLowerCase());
                     if (topLink == null || topLink.isDestroyed() || topLink.isFalling()) {
                         link.fall();
                     }
@@ -234,10 +263,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {}
-
     @Override
     public void resume() {}
-
     @Override
     public void hide() {}
 
