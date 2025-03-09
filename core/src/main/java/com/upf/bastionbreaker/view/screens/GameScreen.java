@@ -8,7 +8,6 @@ import com.upf.bastionbreaker.model.graphics.TextureManager;
 
 public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
-    private ParallaxBackground parallaxBackground;
     private SpriteBatch batch;
 
     @Override
@@ -26,15 +25,6 @@ public class GameScreen implements Screen {
             e.printStackTrace();
         }
 
-        try {
-            // Charger le background parallaxe
-            parallaxBackground = new ParallaxBackground();
-            System.out.println("✅ Parallaxe chargé avec succès !");
-        } catch (Exception e) {
-            System.out.println("❌ ERREUR : Impossible de charger le background parallaxe !");
-            e.printStackTrace();
-        }
-
         batch = new SpriteBatch();
     }
 
@@ -43,17 +33,6 @@ public class GameScreen implements Screen {
         // Nettoyer l'écran et définir une couleur de fond
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        batch.begin();
-
-        if (parallaxBackground != null) {
-            parallaxBackground.update(mapRenderer.getCamera().position.x);
-            parallaxBackground.render(batch);
-        } else {
-            System.out.println("❌ ERREUR : `parallaxBackground` est NULL !");
-        }
-
-        batch.end();
 
         if (mapRenderer != null) {
             mapRenderer.update(delta);
