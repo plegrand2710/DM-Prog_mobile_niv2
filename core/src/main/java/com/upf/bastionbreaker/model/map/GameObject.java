@@ -47,11 +47,31 @@ public class GameObject {
             '}';
     }
 
-    // Getters pour accéder aux valeurs si besoin
-    public String getName() { return name; }
-    public String getType() { return type; }
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public float getWidth() { return width; }
-    public float getHeight() { return height; }
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
 }

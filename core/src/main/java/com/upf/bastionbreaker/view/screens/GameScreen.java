@@ -7,12 +7,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.map.GameObject;
+import com.upf.bastionbreaker.model.entities.Obstacle;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
     private MapManager mapManager; // Gestionnaire de carte TMX
     private SpriteBatch batch;
+    private List<Obstacle> obstacles; // Liste des obstacles à afficher
 
     @Override
     public void show() {
@@ -20,6 +23,7 @@ public class GameScreen implements Screen {
 
         TextureManager.load();
         batch = new SpriteBatch();
+        obstacles = new ArrayList<>();
 
         try {
             // Charger la carte `.tmx` via `MapManager`
@@ -39,6 +43,9 @@ public class GameScreen implements Screen {
             e.printStackTrace();
         }
 
+        // Charger et stocker les obstacles
+        chargerObstacles();
+
         // Affichage des objets chargés depuis la carte TMX
         afficherObjets("Obstacles");
         afficherObjets("Checkpoints");
@@ -53,6 +60,32 @@ public class GameScreen implements Screen {
         afficherObjets("Lava");
         afficherObjets("Ladders");
         afficherObjets("Bridges");
+    }
+
+    /**
+     * Charge et initialise tous les obstacles en récupérant leurs propriétés depuis la carte.
+     */
+    private void chargerObstacles() {
+        List<GameObject> obstacleObjects = mapManager.getObjects("Obstacles");
+        if (obstacleObjects.isEmpty()) {
+            System.out.println("⚠️ Aucun obstacle trouvé.");
+            return;
+        }
+
+        for (GameObject obj : obstacleObjects) {
+            Obstacle obstacle = new Obstacle(
+                obj.getName(),
+                obj.getX(),
+                obj.getY(),
+                obj.getWidth(),
+                obj.getHeight(),
+                obj.getProperties()
+            );
+
+            obstacles.add(obstacle);
+        }
+
+        System.out.println("✅ " + obstacles.size() + " obstacles chargés !");
     }
 
     /**
@@ -79,6 +112,13 @@ public class GameScreen implements Screen {
         } else {
             System.out.println("❌ ERREUR : `mapRenderer` est NULL !");
         }
+
+        // Rendu des obstacles
+        batch.begin();
+        for (Obstacle obstacle : obstacles) {
+            obstacle.render(batch);
+        }
+        batch.end();
     }
 
     @Override
