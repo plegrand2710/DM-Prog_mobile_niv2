@@ -302,7 +302,7 @@
    <polygon points="0,0 -0.694373,65.5003 66.139,65.1617"/>
   </object>
  </objectgroup>
- <objectgroup id="8" name="Checkpoint" class="Checkpoint">
+ <objectgroup id="8" name="Checkpoints" class="Checkpoint">
   <object id="47" name="checkpoint1" type="Checkpoint" gid="273" x="1217" y="481.917" width="36.5" height="34.6667">
    <properties>
     <property name="actif" type="bool" value="false"/>
@@ -477,7 +477,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="Obstacle">
+ <objectgroup id="4" name="Obstacles" class="Obstacle">
   <object id="12" name="box" gid="254" x="352" y="480" width="32" height="32">
    <properties>
     <property name="destructible" value="true"/>
