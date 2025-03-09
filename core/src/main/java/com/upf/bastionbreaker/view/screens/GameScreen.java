@@ -8,18 +8,23 @@ import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.entities.Checkpoint;
-import com.upf.bastionbreaker.model.entities.Obstacle; // Import de la classe Obstacle
+import com.upf.bastionbreaker.model.entities.Obstacle;
+import com.upf.bastionbreaker.model.entities.FlyingBox;
+import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
-    private MapManager mapManager; // Gestionnaire de la carte
+    private MapManager mapManager;
     private SpriteBatch batch;
 
-    // Listes des checkpoints et obstacles à afficher
+    // Listes des objets à afficher
     private List<Checkpoint> checkpoints;
     private List<Obstacle> obstacles;
+    private List<FlyingBox> flyingBoxes;
+
+    private Player player;
 
     @Override
     public void show() {
@@ -28,7 +33,7 @@ public class GameScreen implements Screen {
         TextureManager.load();
 
         try {
-            // Charger la carte `.tmx` via MapManager
+            // Charger la carte via MapManager
             mapManager = new MapManager("assets/map/bastion_breaker_map.tmx");
             System.out.println("✅ MapManager chargé avec succès !");
 
@@ -48,6 +53,19 @@ public class GameScreen implements Screen {
             }
             System.out.println("📌 Obstacles chargés : " + obstacles.size());
 
+            // Charger les FlyingBox
+            List<GameObject> flyingBoxObjects = mapManager.getObjects("FlyingBox");
+            flyingBoxes = new ArrayList<>();
+            for (GameObject obj : flyingBoxObjects) {
+                flyingBoxes.add(new FlyingBox(obj));
+            }
+            System.out.println("📌 FlyingBox chargées : " + flyingBoxes.size());
+
+            // Créer le joueur et définir sa position/taille (à adapter)
+            player = new Player();
+            player.setPosition(5, 5);
+            player.setSize(1, 1);
+
         } catch (Exception e) {
             System.out.println("❌ ERREUR : Impossible de charger la carte !");
             e.printStackTrace();
@@ -66,7 +84,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Nettoyer l'écran et définir une couleur de fond
+        // Effacer l'écran
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -80,15 +98,24 @@ public class GameScreen implements Screen {
         // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Dessiner les obstacles et les checkpoints
+        // Mettre à jour et gérer les FlyingBox (respawn et collision)
+        for (FlyingBox box : flyingBoxes) {
+            box.update(delta);
+            if (box.isActive() && box.getBounds().overlaps(player.getBounds())) {
+                box.onCollected(player);
+            }
+        }
+
+        // Rendu des objets
         batch.begin();
-        // Dessiner d'abord les obstacles
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
         }
-        // Dessiner ensuite les checkpoints (ou dans l'ordre souhaité)
         for (Checkpoint checkpoint : checkpoints) {
             checkpoint.render(batch);
+        }
+        for (FlyingBox box : flyingBoxes) {
+            box.render(batch);
         }
         batch.end();
     }
