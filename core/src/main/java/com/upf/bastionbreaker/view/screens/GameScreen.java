@@ -13,6 +13,7 @@ import com.upf.bastionbreaker.model.entities.FlyingBox;
 import com.upf.bastionbreaker.model.entities.IceBridge;
 import com.upf.bastionbreaker.model.entities.ChainLink;
 import com.upf.bastionbreaker.model.entities.Player;
+import com.upf.bastionbreaker.model.entities.Bastion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class GameScreen implements Screen {
     private List<FlyingBox> flyingBoxes;
     private List<IceBridge> iceBridges;
     private List<ChainLink> chainLinks;
+    private List<Bastion> bastions;
 
     // On peut stocker un dictionnaire (nom -> maillon) pour retrouver facilement linked_top, linked_bottom
     private Map<String, ChainLink> chainLinkMap;
@@ -85,6 +87,13 @@ public class GameScreen implements Screen {
                 }
             }
             System.out.println("🔗 ChainLinks chargés : " + chainLinks.size());
+
+            bastions = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("Bastion")) {
+                bastions.add(new Bastion(obj));
+            }
+            System.out.println("📌 Bastions chargés : " + bastions.size());
+
 
             // Créer le joueur
             player = new Player();
@@ -143,6 +152,11 @@ public class GameScreen implements Screen {
         for (ChainLink link : chainLinks) {
             link.render(batch);
         }
+
+        for (Bastion bastion : bastions) {
+            bastion.render(batch);
+        }
+
         batch.end();
     }
 

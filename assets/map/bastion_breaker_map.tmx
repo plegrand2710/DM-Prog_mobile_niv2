@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="37" nextobjectid="319">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="37" nextobjectid="321">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -95,7 +95,17 @@
   <object id="294" name="tnt" type="TNT" x="7328" y="192" width="32" height="32">
    <properties>
     <property name="HP" type="int" value="1"/>
-    <property name="blast_radius" type="float" value="4"/>
+    <property name="blast_radius" type="float" value="5"/>
+    <property name="damage" type="int" value="1000"/>
+    <property name="pushable" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="30"/>
+    <property name="sprite" value="tnt"/>
+   </properties>
+  </object>
+  <object id="320" name="tnt" type="TNT" x="224" y="320" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="blast_radius" type="float" value="5"/>
     <property name="damage" type="int" value="1000"/>
     <property name="pushable" type="bool" value="true"/>
     <property name="respawn_time" type="int" value="30"/>
@@ -743,13 +753,6 @@
    <properties>
     <property name="linked_bottom" value="drawbridge1"/>
     <property name="linked_top" value="chainlink7"/>
-    <property name="sprite" value="chain"/>
-   </properties>
-  </object>
-  <object id="318" name="chainlink1" type="ChainLink" x="256" y="352" width="32" height="32">
-   <properties>
-    <property name="linked_bottom" value="chainlink2"/>
-    <property name="linked_top" value="enemy_helicopter_1"/>
     <property name="sprite" value="chain"/>
    </properties>
   </object>
