@@ -10,8 +10,10 @@ import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.entities.Checkpoint;
 import com.upf.bastionbreaker.model.entities.Obstacle;
 import com.upf.bastionbreaker.model.entities.FlyingBox;
+import com.upf.bastionbreaker.model.entities.IceBridge;
 import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GameScreen implements Screen {
@@ -23,6 +25,7 @@ public class GameScreen implements Screen {
     private List<Checkpoint> checkpoints;
     private List<Obstacle> obstacles;
     private List<FlyingBox> flyingBoxes;
+    private List<IceBridge> iceBridges;
 
     private Player player;
 
@@ -61,10 +64,19 @@ public class GameScreen implements Screen {
             }
             System.out.println("📌 FlyingBox chargées : " + flyingBoxes.size());
 
+            // Charger les Ice Bridges depuis le calque "Ice"
+            List<GameObject> iceObjects = mapManager.getObjects("Ice");
+            iceBridges = new ArrayList<>();
+            for (GameObject obj : iceObjects) {
+                iceBridges.add(new IceBridge(obj));
+            }
+            System.out.println("📌 Ice Bridges chargés : " + iceBridges.size());
+
             // Créer le joueur et définir sa position/taille (à adapter)
             player = new Player();
             player.setPosition(5, 5);
             player.setSize(1, 1);
+            // Vous pouvez basculer entre mode Tank et Robot en appelant player.setTankMode(true/false);
 
         } catch (Exception e) {
             System.out.println("❌ ERREUR : Impossible de charger la carte !");
@@ -98,11 +110,20 @@ public class GameScreen implements Screen {
         // Synchroniser le SpriteBatch avec la caméra
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Mettre à jour et gérer les FlyingBox (respawn et collision)
-        for (FlyingBox box : flyingBoxes) {
-            box.update(delta);
-            if (box.isActive() && box.getBounds().overlaps(player.getBounds())) {
-                box.onCollected(player);
+        // Vérifier les collisions avec les Ice Bridges
+        // Utilisation d'un Iterator pour pouvoir retirer l'élément en cas de collision
+        Iterator<IceBridge> it = iceBridges.iterator();
+        while (it.hasNext()) {
+            IceBridge iceBridge = it.next();
+            if (iceBridge.getBounds().overlaps(player.getBounds())) {
+                // Si le joueur est trop lourd (poids > limite du pont) et le pont est fragile, il s'effondre
+                if (player.getWeight() > iceBridge.getWeightLimit() && iceBridge.isFragile()) {
+                    if (player.isTank()) {
+                        System.out.println("💥 Le pont de glace s’écroule !");
+                    }
+                    // Le pont est détruit et ne réapparaît pas
+                    it.remove();
+                }
             }
         }
 
@@ -116,6 +137,9 @@ public class GameScreen implements Screen {
         }
         for (FlyingBox box : flyingBoxes) {
             box.render(batch);
+        }
+        for (IceBridge iceBridge : iceBridges) {
+            iceBridge.render(batch);
         }
         batch.end();
     }

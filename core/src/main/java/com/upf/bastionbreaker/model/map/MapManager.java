@@ -37,7 +37,7 @@ public class MapManager {
     private void loadAllObjects() {
         String[] objectLayers = {
             "Obstacles", "Checkpoints", "Enemies", "Bastion",
-            "FlyingBox", "WaterZones", "WindZones", "Platforms",
+            "FlyingBox", "Ice", "WaterZones", "WindZones", "Platforms",
             "Chains", "Explosives", "Lava", "Ladders", "Bridges"
         };
 

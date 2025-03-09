@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="37" nextobjectid="314">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="37" nextobjectid="318">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -224,14 +224,6 @@
  </objectgroup>
  <objectgroup id="27" name="FlyingBox">
   <object id="244" name="flyingbox_heal" type="FlyingBox" x="960" y="256" width="32" height="32">
-   <properties>
-    <property name="HP" type="int" value="20"/>
-    <property name="destructible" type="bool" value="true"/>
-    <property name="respawn_time" type="int" value="60"/>
-    <property name="sprite" value="flyingbox"/>
-   </properties>
-  </object>
-  <object id="245" name="flyingbox_shield" type="FlyingBox" x="608" y="448" width="32" height="32">
    <properties>
     <property name="HP" type="int" value="20"/>
     <property name="destructible" type="bool" value="true"/>
