@@ -6,8 +6,10 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 public class MapObjectsParser {
     private final TiledMap map;
@@ -37,9 +39,17 @@ public class MapObjectsParser {
 
                 // Créer un objet générique
                 GameObject gameObject = new GameObject(name, type, rect.x, rect.y, rect.width, rect.height);
-                gameObjects.add(gameObject);
 
-                System.out.println("✅ Chargé : " + name + " (" + type + ") à X=" + rect.x + ", Y=" + rect.y);
+                // Récupérer toutes les propriétés de l'objet
+                Iterator<String> keys = obj.getProperties().getKeys();
+                while (keys.hasNext()) { // Utilisation de `while` au lieu d'un `foreach`
+                    String key = keys.next();
+                    Object value = obj.getProperties().get(key);
+                    gameObject.addProperty(key, value);
+                }
+
+                gameObjects.add(gameObject);
+                System.out.println("✅ Chargé : " + gameObject);
             }
         }
 

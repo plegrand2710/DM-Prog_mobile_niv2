@@ -4,11 +4,14 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapManager {
     private TiledMap tiledMap;
     private MapObjectsParser objectsParser;
+    private final Map<String, List<GameObject>> loadedObjects = new HashMap<>();
 
     public MapManager(String mapPath) {
         try {
@@ -21,29 +24,43 @@ public class MapManager {
             return;
         }
 
-        // Initialiser l’analyse des objets (seulement sur les calques d’objets)
+        // Initialiser l’analyse des objets
         objectsParser = new MapObjectsParser(tiledMap);
+
+        // Charger tous les objets définis
+        loadAllObjects();
+    }
+
+    /**
+     * Charge tous les objets interactifs définis dans la carte.
+     */
+    private void loadAllObjects() {
+        String[] objectLayers = {
+            "Obstacles", "Checkpoints", "Enemies", "Bastion",
+            "FlyingBox", "WaterZones", "WindZones", "Platforms",
+            "Chains", "Explosives", "Lava", "Ladders", "Bridges"
+        };
+
+        for (String layerName : objectLayers) {
+            List<GameObject> objects = getObjectsSafely(layerName);
+            loadedObjects.put(layerName, objects);
+        }
     }
 
     public TiledMap getTiledMap() {
         return tiledMap;
     }
 
-    public List<GameObject> getObstacles() {
-        return getObjectsSafely("Obstacles");
-    }
-
-    public List<GameObject> getCheckpoints() {
-        return getObjectsSafely("Checkpoints");
-    }
-
-    public List<GameObject> getEnemies() {
-        return getObjectsSafely("Enemies");
+    /**
+     * Récupère une liste d'objets chargés pour un calque donné.
+     */
+    public List<GameObject> getObjects(String layerName) {
+        return loadedObjects.getOrDefault(layerName, Collections.emptyList());
     }
 
     /**
      * Récupère les objets d'un calque en toute sécurité.
-     * Vérifie que le calque existe et qu’il contient bien des objets.
+     * Vérifie que le calque existe et contient bien des objets.
      */
     private List<GameObject> getObjectsSafely(String layerName) {
         MapLayer layer = tiledMap.getLayers().get(layerName);

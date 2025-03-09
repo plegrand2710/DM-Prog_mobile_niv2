@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
-    private MapManager mapManager; // Ajout du gestionnaire de carte
+    private MapManager mapManager; // Gestionnaire de carte TMX
     private SpriteBatch batch;
 
     @Override
@@ -19,35 +19,52 @@ public class GameScreen implements Screen {
         System.out.println("✅ Initialisation de GameScreen...");
 
         TextureManager.load();
+        batch = new SpriteBatch();
 
         try {
             // Charger la carte `.tmx` via `MapManager`
             mapManager = new MapManager("assets/map/bastion_breaker_map.tmx");
             System.out.println("✅ MapManager chargé avec succès !");
-
-            // Affichage des objets de la carte
-            List<GameObject> obstacles = mapManager.getObstacles();
-            List<GameObject> checkpoints = mapManager.getCheckpoints();
-            List<GameObject> enemies = mapManager.getEnemies();
-
-            System.out.println("📌 Obstacles chargés : " + obstacles.size());
-            System.out.println("📌 Checkpoints chargés : " + checkpoints.size());
-            System.out.println("📌 Ennemis chargés : " + enemies.size());
-
         } catch (Exception e) {
-            System.out.println("❌ ERREUR : Impossible de charger la carte !");
+            System.out.println("❌ ERREUR : Impossible de charger MapManager !");
             e.printStackTrace();
         }
 
         try {
-            mapRenderer = new MapRenderer("map/bastion_breaker_map.tmx");
+            // Charger et afficher la carte
+            mapRenderer = new MapRenderer(mapManager.getTiledMap());
             System.out.println("✅ Map rendue avec succès !");
         } catch (Exception e) {
             System.out.println("❌ ERREUR : Impossible de charger MapRenderer !");
             e.printStackTrace();
         }
 
-        batch = new SpriteBatch();
+        // Affichage des objets chargés depuis la carte TMX
+        afficherObjets("Obstacles");
+        afficherObjets("Checkpoints");
+        afficherObjets("Enemies");
+        afficherObjets("Bastion");
+        afficherObjets("FlyingBox");
+        afficherObjets("WaterZones");
+        afficherObjets("WindZones");
+        afficherObjets("Platforms");
+        afficherObjets("Chains");
+        afficherObjets("Explosives");
+        afficherObjets("Lava");
+        afficherObjets("Ladders");
+        afficherObjets("Bridges");
+    }
+
+    /**
+     * Affiche les objets chargés d'un calque donné dans la console.
+     */
+    private void afficherObjets(String layerName) {
+        List<GameObject> objets = mapManager.getObjects(layerName);
+        if (objets.isEmpty()) {
+            System.out.println("⚠️  Aucun objet dans '" + layerName + "'.");
+        } else {
+            System.out.println("📌 " + objets.size() + " objets chargés depuis '" + layerName + "'.");
+        }
     }
 
     @Override
