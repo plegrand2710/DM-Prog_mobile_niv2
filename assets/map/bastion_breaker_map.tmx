@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="38" nextobjectid="330">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="39" nextobjectid="342">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -55,9 +55,9 @@
    eJzt1DkOgDAMBMDw/3fxL0ooOFJYeCPNSK5je62MAQAAAAAAAAAAAAAAAAAAAMzat7MSXPu5K95V7O4rg+ocZt7rKJ6l7Skhy5VvrKrHP2ft/h+S80yVuKvuHFe+s4oeV5kVAIA+B3adiCE=
   </data>
  </layer>
- <layer id="2" name="Floor" width="270" height="20">
+ <layer id="2" name="FloorTiles" width="270" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1VEKgkAUBVCX2ppKKPqNWodL6w0lDIFU4kxjngMXwx9fzPPadQAAAAAAAAAAAACwDtfILXJ+5vjbcYCGjX0RGeL3MN6P3hh0B5Cb6ouc7gCST/oipztgu77ti5zugOXsC2fJZ83pi9y77jhFLhUyR425pnLIrkvMWOP/jjvT6rci7Vrpd6/We70FU91xemSoPA6FxZnuWusOu7ZOr93hHP9b6o5WvpFpDru2XmmX+rj2nXMEgNLu1lycjw==
+   eJzt2NEKgjAUBuA9as8UQtJ9PccerY2KRiCVbTbz++CgeOORnf0DQwAAAAAAAAAAAACAdTilOqc63urw23aAjt3zIlVM9/H+POVGlB1AaSovSrIDyN7Ji5LsgO36NC9KsgPq2Teumu+akxelV9kxhsc/1ZY1xxJ9fdt7ze+v0WuemV7PijxrrffeUvt6C6ayY7xWXLgdGktruustO8zaOj1nh3X8bzk7ejkjcx9mbb3yLA3pOgTrCACtXQB42pm6
   </data>
  </layer>
  <layer id="14" name="Lava" width="270" height="20">
@@ -75,6 +75,63 @@
    eJzt2E0LgkAQgOH219elDp26VFBRVERfJ4sK64+1Iosii6upOer7wLCQkbPb7LDa6wEAAAAAAAAA6vJSYQAB6iEf1gsAADipWAi10LktVTQCSFf1M0Dw+33he3Gn89uraGybYwvnhPaT3jfMOeOi4yo8V6ArBsL3ojln3HTchecKdMXIshe3gvanOWe8dXwE5YXmk1TnTWN7TjkLWk9zzuC8gbJJqvOmGQrvG+acEYxrS17jCnNd/fDbkt9zZsntVFL+/1qHWYH7VFXnyblPLPd56M+egmvFJr7Wyb4RzDm5nnXuBZ5PAAAoxlNRZPkuumvD/5/LVK/XXIVjMprOV1G4+oLfgvkCKC7eN9L6gue4juJs71yBOqTV4kFl7xuu612o+S+NDEUQ
   </data>
  </layer>
+ <objectgroup id="38" name="Floor" class="Floor">
+  <object id="330" name="floor" type="Floor" x="0" y="480" width="768" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="331" name="floor" type="Floor" x="864" y="480" width="512" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="332" name="floor" type="Floor" x="2016" y="576" width="64" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="333" name="floor" type="Floor" x="2176" y="480" width="800" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="334" name="floor" type="Floor" x="3392" y="480" width="1088" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="335" name="floor" type="Floor" x="4704" y="480" width="320" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="336" name="floor" type="Floor" x="5312" y="480" width="576" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="337" name="floor" type="Floor" x="7136" y="480" width="1504" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="338" name="floor" type="Floor" x="7040" y="544" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="339" name="floor" type="Floor" x="5952" y="544" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="340" name="floor" type="Floor" x="7264" y="224" width="96" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="22" name="WaterZones">
   <object id="166" name="water_1" type="Water" x="5984" y="544" width="1056" height="96">
    <properties>
@@ -85,7 +142,7 @@
   </object>
  </objectgroup>
  <objectgroup id="24" name="Ladders">
-  <object id="182" name="ladder_1" type="Ladder" x="7293.64" y="223" width="36.7143" height="256">
+  <object id="182" name="ladder_1" type="Ladder" x="7296" y="224" width="36.7143" height="256">
    <properties>
     <property name="height" type="int" value="8"/>
    </properties>

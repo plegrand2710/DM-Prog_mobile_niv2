@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.upf.bastionbreaker.model.entities.Floor;
+import java.util.ArrayList;
 
 public class MapManager {
     private TiledMap tiledMap;
@@ -15,7 +17,7 @@ public class MapManager {
 
     public MapManager(String mapPath) {
         try {
-            // Charger la carte `.tmx`
+            // Charger la carte .tmx
             tiledMap = new TmxMapLoader().load(mapPath);
             System.out.println("✅ Carte chargée avec succès : " + mapPath);
         } catch (Exception e) {
@@ -24,10 +26,10 @@ public class MapManager {
             return;
         }
 
-        // Initialiser l’analyse des objets
+        // Initialiser l'analyse des objets
         objectsParser = new MapObjectsParser(tiledMap);
 
-        // Charger tous les objets définis
+        // Charger tous les objets définis dans la carte
         loadAllObjects();
     }
 
@@ -44,15 +46,16 @@ public class MapManager {
             "Enemies",
             "Checkpoints",
             "Obstacles",
-            "Hill" ,
+            "Hill",
             "FlyingBox",
             "Ice",
             "WindZones",
-            "Drawbridges" ,
-            "Boss" ,
+            "Drawbridges",
+            "Boss",
             "Explosives",
             "Ladders",
-            "WaterZones"
+            "WaterZones",
+            "Floor"
         };
 
         for (String layerName : objectLayers) {
@@ -73,7 +76,7 @@ public class MapManager {
     }
 
     /**
-     * Ajout d'une méthode pour récupérer uniquement les checkpoints.
+     * Récupère uniquement les checkpoints.
      */
     public List<GameObject> getCheckpoints() {
         return getObjects("Checkpoints");
@@ -81,28 +84,41 @@ public class MapManager {
 
     /**
      * Récupère les objets d'un calque en toute sécurité.
-     * Vérifie que le calque existe et contient bien des objets.
+     * Vérifie que le calque existe et contient des objets.
      */
     private List<GameObject> getObjectsSafely(String layerName) {
         MapLayer layer = tiledMap.getLayers().get(layerName);
         if (layer == null) {
-            System.out.println("⚠️  ATTENTION : Le calque '" + layerName + "' est introuvable !");
+            System.out.println("⚠️ ATTENTION : Le calque '" + layerName + "' est introuvable !");
             return Collections.emptyList();
         }
 
-        // Vérifier que le calque contient des objets
         if (layer.getObjects() == null || layer.getObjects().getCount() == 0) {
-            System.out.println("⚠️  ATTENTION : Le calque '" + layerName + "' est vide ou n'est pas un groupe d'objets !");
+            System.out.println("⚠️ ATTENTION : Le calque '" + layerName + "' est vide ou n'est pas un groupe d'objets !");
             return Collections.emptyList();
         }
 
         List<GameObject> objects = objectsParser.parseObjects(layerName);
         if (objects.isEmpty()) {
-            System.out.println("⚠️  ATTENTION : Le calque '" + layerName + "' est vide !");
+            System.out.println("⚠️ ATTENTION : Le calque '" + layerName + "' est vide !");
         } else {
             System.out.println("✅ " + objects.size() + " objets chargés depuis '" + layerName + "'.");
         }
         return objects;
+    }
+
+    public List<Floor> getFloors() {
+        List<GameObject> floorObjects = getObjects("Floor");
+        List<Floor> floors = new ArrayList<>();
+        for (GameObject obj : floorObjects) {
+            floors.add(new Floor(obj));
+        }
+        if (floors.isEmpty()) {
+            System.out.println("⚠️ ATTENTION : Aucun objet Floor n'a été trouvé dans le calque 'Floor' !");
+        } else {
+            System.out.println("✅ " + floors.size() + " Floor(s) chargés depuis 'Floor'.");
+        }
+        return floors;
     }
 
     public void dispose() {

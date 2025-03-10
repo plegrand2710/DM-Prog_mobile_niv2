@@ -17,6 +17,7 @@ import com.upf.bastionbreaker.model.entities.TNT;
 import com.upf.bastionbreaker.model.entities.FallingBlock;
 import com.upf.bastionbreaker.model.entities.Drawbridge;
 import com.upf.bastionbreaker.model.entities.UnstablePlatform;
+import com.upf.bastionbreaker.model.entities.Floor;
 import com.upf.bastionbreaker.model.entities.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class GameScreen implements Screen {
     private List<FallingBlock> fallingBlocks;
     private List<Drawbridge> drawbridges;
     private List<UnstablePlatform> unstablePlatforms;
+    private List<Floor> floors;
 
     // Dictionnaire pour retrouver un ChainLink via son nom (en minuscules)
     private Map<String, ChainLink> chainLinkMap;
@@ -130,6 +132,9 @@ public class GameScreen implements Screen {
             }
             System.out.println("📌 UnstablePlatforms chargés : " + unstablePlatforms.size());
 
+            // Charger les Floor
+            floors = mapManager.getFloors();
+
             // Lier les FallingBlocks à leur maillon support
             for (FallingBlock fb : fallingBlocks) {
                 String topName = fb.getLinkedTopName();
@@ -197,10 +202,8 @@ public class GameScreen implements Screen {
 
         batch.setProjectionMatrix(mapRenderer.getCamera().combined);
 
-        // Mise à jour de la logique des ChainLinks
+        // Mise à jour des objets dynamiques
         updateChainLinks(delta);
-
-        // Mise à jour de la TNT
         for (TNT tnt : tnts) {
             tnt.update(delta);
             if (player.getBounds().overlaps(tnt.getBounds())) {
@@ -209,21 +212,18 @@ public class GameScreen implements Screen {
                 }
             }
         }
-
-        // Mise à jour des FallingBlocks
         for (FallingBlock fb : fallingBlocks) {
             fb.update(delta);
         }
-
-        // Mise à jour des Drawbridges
         for (Drawbridge db : drawbridges) {
             db.update(delta);
         }
-
-        // Mise à jour des UnstablePlatforms
         for (UnstablePlatform up : unstablePlatforms) {
             up.update(delta, player.getBounds());
         }
+
+        // Résolution des collisions avec le sol
+        resolveFloorCollisions();
 
         // Rendu de tous les objets
         batch.begin();
@@ -257,14 +257,33 @@ public class GameScreen implements Screen {
         for (UnstablePlatform up : unstablePlatforms) {
             up.render(batch);
         }
-        // Rendu du joueur (à compléter selon votre implémentation)
+        // Rendu du joueur (selon votre implémentation)
         batch.end();
     }
 
+    /**
+     * Vérifie et résout les collisions entre le joueur (et éventuellement d'autres objets)
+     * et les Floor pour éviter qu'ils ne traversent le sol.
+     */
+    private void resolveFloorCollisions() {
+        // Exemple de correction pour le joueur
+        for (Floor floor : floors) {
+            float floorTop = floor.getBounds().y + floor.getBounds().height;
+            if (player.getBounds().overlaps(floor.getBounds())) {
+                if (player.getY() < floorTop) {
+                    player.setPosition(player.getX(), floorTop);
+                }
+            }
+        }
+        // Vous pouvez étendre la logique aux autres objets mobiles si nécessaire.
+    }
+
     private void updateChainLinks(float delta) {
+        // Mettre à jour chaque maillon de chaîne
         for (ChainLink link : chainLinks) {
             link.update(delta);
         }
+        // Vérifier si le maillon supérieur est détruit ou en chute, et faire tomber le maillon courant
         for (ChainLink link : chainLinks) {
             if (!link.isDestroyed() && !link.isFalling()) {
                 String topName = link.getLinkedTop();
@@ -278,6 +297,7 @@ public class GameScreen implements Screen {
         }
     }
 
+
     @Override
     public void resize(int width, int height) {
         if (mapRenderer != null) {
@@ -289,8 +309,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {}
+
     @Override
     public void resume() {}
+
     @Override
     public void hide() {}
 
