@@ -158,7 +158,7 @@ public class GameScreen implements Screen {
                 }
             }
 
-            // Lier les UnstablePlatforms à leur chain link support si besoin
+            // Lier les UnstablePlatforms à leur chain link support
             for (UnstablePlatform up : unstablePlatforms) {
                 String supportName = up.getLinkedTopName();
                 if (supportName != null && !supportName.isEmpty()) {
@@ -170,14 +170,11 @@ public class GameScreen implements Screen {
             }
 
             // Initialiser le joueur à partir du checkpoint0
-            // On cherche dans la liste des checkpoints celui dont le nom est "checkpoint0"
             float startX = 5, startY = 5; // Valeurs par défaut
             for (Checkpoint cp : checkpoints) {
-                // Supposons que Checkpoint dispose d'une méthode getName() pour obtenir son identifiant
-                if ("checkpoint0".equalsIgnoreCase(cp.toString()) || cp.toString().contains("checkpoint0")) {
-                    // Pour cet exemple, nous utilisons les coordonnées du checkpoint0
-                    startX = cp.getBoundingBox().x;
-                    startY = cp.getBoundingBox().y;
+                if (cp.getName() != null && cp.getName().equalsIgnoreCase("checkpoint0")) {
+                    startX = cp.getX();
+                    startY = cp.getY();
                     break;
                 }
             }
@@ -218,8 +215,7 @@ public class GameScreen implements Screen {
         for (TNT tnt : tnts) {
             tnt.update(delta);
             if (player.getBoundingBox().overlaps(tnt.getBounds())) {
-                // On vérifie que le joueur n'est pas en mode Tank (exemple de vérification)
-                // (Vous pouvez ajuster cette condition selon votre implémentation)
+                // Exemple de vérification : comparer le mode du joueur via getTexture()
                 if (!player.getTexture().equals("tank") && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
@@ -238,7 +234,7 @@ public class GameScreen implements Screen {
         // Résolution des collisions avec le sol
         resolveFloorCollisions();
 
-        // Rendre la carte
+        // Rendu de la carte
         if (mapRenderer != null) {
             mapRenderer.update(delta);
             mapRenderer.render();
@@ -285,7 +281,6 @@ public class GameScreen implements Screen {
         batch.end();
     }
 
-
     /**
      * Gestion des entrées clavier pour le joueur.
      * D : avancer, A : reculer, SPACE : sauter (mode Robot), T : transformer.
@@ -306,6 +301,8 @@ public class GameScreen implements Screen {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             player.transform();
+            // Petit ajustement pour éviter que le joueur traverse le sol après transformation
+            player.setPosition(player.getX(), player.getY() + 0.1f);
         }
     }
 
@@ -313,10 +310,19 @@ public class GameScreen implements Screen {
      * Applique la gravité au joueur et corrige sa position pour qu'il reste sur le sol.
      */
     private void applyPlayerGravity() {
-        // Simple simulation de gravité : le joueur descend progressivement si rien ne le soutient.
-        // Vous pouvez ajuster cette valeur selon vos besoins.
         float gravityForce = 0.05f;
-        player.setPosition(player.getBoundingBox().x, player.getBoundingBox().y - gravityForce);
+        boolean onGround = false;
+        for (Floor floor : floors) {
+            if (player.getBoundingBox().overlaps(floor.getBounds())) {
+                onGround = true;
+                // Positionner le joueur sur le haut du Floor
+                player.setPosition(player.getBoundingBox().x, floor.getBounds().y + floor.getBounds().height);
+                break;
+            }
+        }
+        if (!onGround) {
+            player.setPosition(player.getBoundingBox().x, player.getY() - gravityForce);
+        }
     }
 
     /**

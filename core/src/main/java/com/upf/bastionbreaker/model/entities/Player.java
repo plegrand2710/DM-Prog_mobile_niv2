@@ -3,6 +3,7 @@ package com.upf.bastionbreaker.model.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.upf.bastionbreaker.view.screens.MapRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Player {
     private float x, y;
@@ -15,8 +16,8 @@ public class Player {
     private boolean turning = false;
 
     public Player(float startX, float startY) {
-        // Conversion de la position initiale en unités de tuiles
-        this.x = startX; // Les coordonnées sont déjà en unités de tuiles
+        // Les coordonnées sont déjà en unités de tuiles
+        this.x = startX;
         this.y = startY;
         this.hp = 100;
         this.shield = 0;
@@ -39,7 +40,7 @@ public class Player {
     public void jump() {
         if (currentMode.canJump()) {
             System.out.println("🤖 Robot a sauté !");
-            // Logique de saut à ajouter ici
+            // Ajouter ici la logique de saut
         }
     }
 
@@ -49,7 +50,7 @@ public class Player {
         }
     }
 
-    // Ajout d'un getter pour le rectangle de collision
+    // Renvoie le rectangle de collision du joueur
     public Rectangle getBoundingBox() {
         return new Rectangle(x, y, currentMode.getWidth(), currentMode.getHeight());
     }
@@ -89,18 +90,22 @@ public class Player {
         }
     }
 
-    // Ajout d'un getter pour la texture du mode courant
-    public Object getTexture() {
+    // Correction : retourne un TextureRegion
+    public TextureRegion getTexture() {
         return currentMode.getTexture();
     }
 
-    // Ajout d'un setter pour position
+    // Permet de mettre à jour la position du joueur
     public void setPosition(float newX, float newY) {
         this.x = newX;
         this.y = newY;
     }
 
-    // Getters et Setters pour le mouvement
+    // Getters pour la position
+    public float getX() { return x; }
+    public float getY() { return y; }
+
+    // Gestion des entrées/mouvements
     public void setMovingForward(boolean movingForward) {
         this.movingForward = movingForward;
     }
