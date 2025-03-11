@@ -5,26 +5,25 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
-import com.upf.bastionbreaker.view.screens.MapRenderer; // Import nécessaire pour accéder à TILE_SIZE
+import com.upf.bastionbreaker.view.screens.MapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Checkpoint {
     private float x, y, width, height;
     private TextureRegion texture;
 
     public Checkpoint(GameObject gameObject) {
-        // Conversion de pixels en unités de tuiles en divisant par MapRenderer.TILE_SIZE (32f)
+        // Conversion de pixels en unités de tuiles (division par TILE_SIZE)
         this.x = gameObject.getX() / MapRenderer.TILE_SIZE;
         this.y = gameObject.getY() / MapRenderer.TILE_SIZE;
         this.width = gameObject.getWidth() / MapRenderer.TILE_SIZE;
         this.height = gameObject.getHeight() / MapRenderer.TILE_SIZE;
 
-        // Vérifier si l'objet a une propriété 'sprite'
+        // Vérifier la propriété 'sprite'
         String spriteName = gameObject.getProperty("sprite", String.class);
-
         if (spriteName != null) {
             TextureAtlas atlas = TextureManager.getGameAtlas();
-            this.texture = atlas.findRegion(spriteName); // 🔹 Récupère la bonne image
-
+            this.texture = atlas.findRegion(spriteName);
             if (this.texture == null) {
                 System.out.println("❌ ERREUR : Texture '" + spriteName + "' introuvable !");
             }
@@ -35,16 +34,16 @@ public class Checkpoint {
 
     public void render(SpriteBatch batch) {
         if (texture != null) {
-            batch.draw(texture, x, y, width, height); // 🟢 Adapte l'image à l'objet
+            batch.draw(texture, x, y, width, height);
         }
     }
 
-    // Getters pour récupérer les coordonnées si besoin
-    public float getX() {
-        return x;
+    // Ajout d'un getter pour le rectangle de collision
+    public Rectangle getBoundingBox() {
+        return new Rectangle(x, y, width, height);
     }
 
-    public float getY() {
-        return y;
-    }
+    // Optionnel : getters pour x et y
+    public float getX() { return x; }
+    public float getY() { return y; }
 }

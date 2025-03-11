@@ -1,6 +1,7 @@
 package com.upf.bastionbreaker.view.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -168,10 +169,19 @@ public class GameScreen implements Screen {
                 }
             }
 
-            // Créer le joueur
-            player = new Player();
-            player.setPosition(5, 5);
-            player.setSize(1, 1);
+            // Initialiser le joueur à partir du checkpoint0
+            // On cherche dans la liste des checkpoints celui dont le nom est "checkpoint0"
+            float startX = 5, startY = 5; // Valeurs par défaut
+            for (Checkpoint cp : checkpoints) {
+                // Supposons que Checkpoint dispose d'une méthode getName() pour obtenir son identifiant
+                if ("checkpoint0".equalsIgnoreCase(cp.toString()) || cp.toString().contains("checkpoint0")) {
+                    // Pour cet exemple, nous utilisons les coordonnées du checkpoint0
+                    startX = cp.getBoundingBox().x;
+                    startY = cp.getBoundingBox().y;
+                    break;
+                }
+            }
+            player = new Player(startX, startY); // Démarrage à la position du checkpoint0, en mode Tank par défaut
 
         } catch (Exception e) {
             System.out.println("❌ ERREUR : Impossible de charger la carte !");
@@ -191,23 +201,26 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Effacer l'écran
+        // Effacer l'écran AVANT tout rendu
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (mapRenderer != null) {
-            mapRenderer.update(delta);
-            mapRenderer.render();
-        }
+        handleInput(); // Gestion des entrées utilisateur
 
-        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
+        // Appliquer la gravité sur le joueur
+        applyPlayerGravity();
 
-        // Mise à jour des objets dynamiques
+        // Mise à jour du joueur
+        player.update(delta);
+
+        // Mise à jour des autres objets
         updateChainLinks(delta);
         for (TNT tnt : tnts) {
             tnt.update(delta);
-            if (player.getBounds().overlaps(tnt.getBounds())) {
-                if (!player.isTank() && tnt.isPushable()) {
+            if (player.getBoundingBox().overlaps(tnt.getBounds())) {
+                // On vérifie que le joueur n'est pas en mode Tank (exemple de vérification)
+                // (Vous pouvez ajuster cette condition selon votre implémentation)
+                if (!player.getTexture().equals("tank") && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
             }
@@ -219,13 +232,19 @@ public class GameScreen implements Screen {
             db.update(delta);
         }
         for (UnstablePlatform up : unstablePlatforms) {
-            up.update(delta, player.getBounds());
+            up.update(delta, player.getBoundingBox());
         }
 
         // Résolution des collisions avec le sol
         resolveFloorCollisions();
 
-        // Rendu de tous les objets
+        // Rendre la carte
+        if (mapRenderer != null) {
+            mapRenderer.update(delta);
+            mapRenderer.render();
+        }
+
+        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
         batch.begin();
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
@@ -257,33 +276,70 @@ public class GameScreen implements Screen {
         for (UnstablePlatform up : unstablePlatforms) {
             up.render(batch);
         }
-        // Rendu du joueur (selon votre implémentation)
+        // Rendu du joueur
+        player.render(batch);
+        // Optionnel : dessiner le Floor pour le debug
+        // for (Floor floor : floors) {
+        //     // batch.draw(floorTexture, floor.getBounds().x, floor.getBounds().y, floor.getBounds().width, floor.getBounds().height);
+        // }
         batch.end();
     }
 
+
     /**
-     * Vérifie et résout les collisions entre le joueur (et éventuellement d'autres objets)
-     * et les Floor pour éviter qu'ils ne traversent le sol.
+     * Gestion des entrées clavier pour le joueur.
+     * D : avancer, A : reculer, SPACE : sauter (mode Robot), T : transformer.
+     */
+    private void handleInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            player.setMovingForward(true);
+        } else {
+            player.setMovingForward(false);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            player.setMovingBackward(true);
+        } else {
+            player.setMovingBackward(false);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            player.jump();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            player.transform();
+        }
+    }
+
+    /**
+     * Applique la gravité au joueur et corrige sa position pour qu'il reste sur le sol.
+     */
+    private void applyPlayerGravity() {
+        // Simple simulation de gravité : le joueur descend progressivement si rien ne le soutient.
+        // Vous pouvez ajuster cette valeur selon vos besoins.
+        float gravityForce = 0.05f;
+        player.setPosition(player.getBoundingBox().x, player.getBoundingBox().y - gravityForce);
+    }
+
+    /**
+     * Vérifie et résout les collisions entre le joueur et le Floor pour éviter qu'il ne traverse le sol.
      */
     private void resolveFloorCollisions() {
-        // Exemple de correction pour le joueur
         for (Floor floor : floors) {
             float floorTop = floor.getBounds().y + floor.getBounds().height;
-            if (player.getBounds().overlaps(floor.getBounds())) {
-                if (player.getY() < floorTop) {
-                    player.setPosition(player.getX(), floorTop);
+            if (player.getBoundingBox().overlaps(floor.getBounds())) {
+                if (player.getBoundingBox().y < floorTop) {
+                    player.setPosition(player.getBoundingBox().x, floorTop);
                 }
             }
         }
-        // Vous pouvez étendre la logique aux autres objets mobiles si nécessaire.
     }
 
+    /**
+     * Met à jour les ChainLinks.
+     */
     private void updateChainLinks(float delta) {
-        // Mettre à jour chaque maillon de chaîne
         for (ChainLink link : chainLinks) {
             link.update(delta);
         }
-        // Vérifier si le maillon supérieur est détruit ou en chute, et faire tomber le maillon courant
         for (ChainLink link : chainLinks) {
             if (!link.isDestroyed() && !link.isFalling()) {
                 String topName = link.getLinkedTop();
@@ -296,7 +352,6 @@ public class GameScreen implements Screen {
             }
         }
     }
-
 
     @Override
     public void resize(int width, int height) {
