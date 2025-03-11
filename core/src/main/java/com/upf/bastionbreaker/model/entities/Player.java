@@ -1,81 +1,60 @@
 package com.upf.bastionbreaker.model.entities;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.upf.bastionbreaker.view.screens.MapRenderer;
 
 public class Player {
-    private float x, y, width, height;
-    private int hp;
-    private int shield;
+    private float x, y;
+    private PlayerMode currentMode;
+    private int hp, shield;
 
-    // Mode de jeu : true si Tank, false si Robot
-    private boolean isTank = true; // Par défaut, le joueur commence en mode Tank
-
-    public Player() {
-        // Initialisation des propriétés du joueur
-        this.x = 1f;
-        this.y = 1f;
-        this.width = 1f;
-        this.height = 1f;
+    public Player(float startX, float startY) {
+        this.x = startX / MapRenderer.TILE_SIZE;
+        this.y = startY / MapRenderer.TILE_SIZE;
         this.hp = 100;
         this.shield = 0;
+        this.currentMode = new Tank(); // Débute en Tank
     }
 
-    /**
-     * Retourne le poids du joueur en fonction de son mode.
-     * Mode Tank : 120 kg, Mode Robot : 80 kg.
-     */
+    public void transform() {
+        if (currentMode instanceof Tank) {
+            currentMode = new Robot();
+        } else {
+            currentMode = new Tank();
+        }
+        System.out.println("🔄 Transformation en " + (currentMode instanceof Tank ? "TANK" : "ROBOT"));
+    }
+
+    public void move(float deltaX) {
+        x += deltaX * currentMode.getSpeed();
+    }
+
+    public void jump() {
+        if (currentMode.canJump()) {
+            System.out.println("🤖 Robot a sauté !");
+            // Ajouter ici la logique pour le saut
+        }
+    }
+
+    public void render(SpriteBatch batch) {
+        if (currentMode.getTexture() != null) {
+            batch.draw(currentMode.getTexture(), x, y, currentMode.getWidth(), currentMode.getHeight());
+        }
+    }
+
+    public Rectangle getBoundingBox() {
+        return new Rectangle(x, y, currentMode.getWidth(), currentMode.getHeight());
+    }
+
     public int getWeight() {
-        return isTank ? 120 : 80;
+        return currentMode.getWeight();
     }
-
-    public boolean isTank() {
-        return isTank;
-    }
-
-    public void setTankMode(boolean isTank) {
-        this.isTank = isTank;
-    }
-
-    /**
-     * Méthode appelée lors du passage sur un Ice Bridge.
-     * (La logique de destruction est gérée dans GameScreen)
-     */
-    public void update() {
-        // Mettre ici la logique de mise à jour du joueur (déplacement, etc.)
-    }
-
-    /**
-     * Renvoie le rectangle de collision du joueur.
-     */
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
-    }
-
-    // Getters et setters pour la position et la taille
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public float getWidth() { return width; }
-    public float getHeight() { return height; }
 
     public int getHp() { return hp; }
     public int getShield() { return shield; }
 
-    public void setPosition(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setSize(float width, float height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    /**
-     * Applique l'effet d'une FlyingBox sur le joueur.
-     * Si la box est de type "heal", ajoute 20 HP (sans dépasser 100).
-     * Si la box est de type "shield", ajoute 20 Shield (sans dépasser 100).
-     */
-    public void collectFlyingBox(com.upf.bastionbreaker.model.entities.FlyingBox box) {
+    public void collectFlyingBox(FlyingBox box) {
         if (box.getEffectType().equalsIgnoreCase("heal")) {
             hp = Math.min(100, hp + 20);
             System.out.println("Player healed: HP = " + hp);
