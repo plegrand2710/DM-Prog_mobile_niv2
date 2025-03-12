@@ -67,13 +67,16 @@ public class Player {
         return shield;
     }
 
+    // Méthode pour collecter un FlyingBox
     public void collectFlyingBox(FlyingBox box) {
         if (box.getEffectType().equalsIgnoreCase("heal")) {
             hp = Math.min(100, hp + 20);
             System.out.println("Player healed: HP = " + hp);
+            // Vous pouvez ajouter un appel à SoundManager.playSound("...") ici si souhaité
         } else if (box.getEffectType().equalsIgnoreCase("shield")) {
             shield = Math.min(100, shield + 20);
             System.out.println("Player shield increased: Shield = " + shield);
+            // Vous pouvez également jouer un son pour ce power-up
         }
     }
 
@@ -87,12 +90,11 @@ public class Player {
             x -= movementSpeed;  // Déplacer vers la gauche
         }
 
-        // Jouer et ajuster le son en fonction du mouvement
+        // Gestion du son en fonction du mode et du mouvement
         if (currentMode instanceof Tank) {
             if (!SoundManager.isPlaying("tank_engine")) {
-                SoundManager.playLoopingSound("tank_engine", 0.4f);  // Joue en boucle
+                SoundManager.playLoopingSound("tank_engine", 0.4f);
             }
-
             if (movingForward || movingBackward) {
                 SoundManager.adjustVolume("tank_engine", 0.7f);
             } else {
@@ -108,12 +110,10 @@ public class Player {
             }
         }
 
-        // Mise à jour du mode spécifique (ex: Tank ou Robot)
         if (currentMode instanceof Robot) {
             ((Robot) currentMode).update(delta, movingForward, movingBackward, turning);
         }
     }
-
 
     // Retourne le TextureRegion du mode courant
     public TextureRegion getTexture() {
@@ -143,5 +143,4 @@ public class Player {
     public PlayerMode getCurrentMode() {
         return currentMode;
     }
-
 }
