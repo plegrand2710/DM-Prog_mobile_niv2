@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.upf.bastionbreaker.model.audio.SoundManager;
 import com.upf.bastionbreaker.model.entities.Bastion;
 import com.upf.bastionbreaker.model.entities.Checkpoint;
@@ -25,6 +26,8 @@ import com.upf.bastionbreaker.model.map.MapManager;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.controller.input.GyroscopeController;
 import com.upf.bastionbreaker.view.ui.ControlsOverlay;
+import com.upf.bastionbreaker.controller.gameplay.TransformationManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +84,20 @@ public class GameScreen implements Screen {
             controlsOverlay = new ControlsOverlay(false);
         }
         gyroscopeController = new GyroscopeController(); // Pour une gestion future
+
+        // Après avoir créé controlsOverlay...
+        if (inputMode.equalsIgnoreCase("touchpad")) {
+            // Ajouter un listener au bouton "Change Mode" pour déclencher la transformation
+            controlsOverlay.getModeButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                    TransformationManager.getInstance().transform(player);
+                    // Ajustement pour éviter les problèmes de collision après transformation
+                    player.setPosition(player.getX(), player.getY() + 0.1f);
+                }
+            });
+        }
+
 
         try {
             mapManager = new MapManager("assets/map/bastion_breaker_map.tmx");
@@ -342,14 +359,14 @@ public class GameScreen implements Screen {
     }
 
     private void handleInput() {
-        // Gestion clavier
         player.setMovingForward(Gdx.input.isKeyPressed(Input.Keys.D));
         player.setMovingBackward(Gdx.input.isKeyPressed(Input.Keys.A));
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player.jump();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            player.transform();
+            // Utiliser TransformationManager pour basculer le mode
+            TransformationManager.getInstance().transform(player);
             player.setPosition(player.getX(), player.getY() + 0.1f);
         }
     }

@@ -2,6 +2,7 @@ package com.upf.bastionbreaker.view.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
 public class ControlsOverlay {
     private Stage stage;
@@ -60,7 +61,7 @@ public class ControlsOverlay {
         // Création d'un style de bouton par défaut
         BitmapFont font = new BitmapFont();
         skin.add("default", font);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        TextButtonStyle textButtonStyle = new TextButtonStyle();
         textButtonStyle.font = skin.getFont("default");
 
         // Création des boutons
@@ -109,9 +110,9 @@ public class ControlsOverlay {
         return modeButton.isPressed();
     }
 
-    // Pour accéder au Stage si nécessaire
-    public Stage getStage() {
-        return stage;
+    // Nouvel accesseur pour le bouton "Change Mode"
+    public TextButton getModeButton() {
+        return modeButton;
     }
 
     public void dispose() {

@@ -34,6 +34,17 @@ public class Player {
         System.out.println("🔄 Transformation en " + (currentMode instanceof Tank ? "TANK" : "ROBOT"));
     }
 
+    // Ajoutez dans la classe Player
+    public void switchMode() {
+        if (currentMode instanceof Tank) {
+            currentMode = new Robot();
+            SoundManager.stopSound("tank_engine"); // Arrête le son du tank lors de la transformation
+        } else {
+            currentMode = new Tank();
+        }
+        System.out.println("🔄 Transformation en " + (currentMode instanceof Tank ? "TANK" : "ROBOT"));
+    }
+
     public void move(float deltaX) {
         x += deltaX * currentMode.getSpeed();
     }
