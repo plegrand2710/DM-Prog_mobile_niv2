@@ -2,8 +2,9 @@ package com.upf.bastionbreaker.model.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.upf.bastionbreaker.view.screens.MapRenderer;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.upf.bastionbreaker.view.screens.MapRenderer;
+import com.upf.bastionbreaker.model.audio.SoundManager;
 
 public class Player {
     private float x, y;
@@ -40,7 +41,7 @@ public class Player {
     public void jump() {
         if (currentMode.canJump()) {
             System.out.println("🤖 Robot a sauté !");
-            // Ajouter ici la logique de saut
+            // Logique de saut à ajouter ici
         }
     }
 
@@ -50,7 +51,6 @@ public class Player {
         }
     }
 
-    // Renvoie le rectangle de collision du joueur
     public Rectangle getBoundingBox() {
         return new Rectangle(x, y, currentMode.getWidth(), currentMode.getHeight());
     }
@@ -78,34 +78,56 @@ public class Player {
     }
 
     public void update(float delta) {
+        float movementSpeed = currentMode.getSpeed() * delta;
+
+        if (movingForward) {
+            x += movementSpeed;  // Déplacer vers la droite
+        }
+        if (movingBackward) {
+            x -= movementSpeed;  // Déplacer vers la gauche
+        }
+
+        // Jouer et ajuster le son en fonction du mouvement
+        if (currentMode instanceof Tank) {
+            if (!SoundManager.isPlaying("tank_engine")) {
+                SoundManager.playLoopingSound("tank_engine", 0.4f);  // Joue en boucle
+            }
+
+            if (movingForward || movingBackward) {
+                SoundManager.adjustVolume("tank_engine", 0.7f);
+            } else {
+                SoundManager.adjustVolume("tank_engine", 0.4f);
+            }
+        }
+
+        if (currentMode instanceof Robot) {
+            if (movingForward || movingBackward) {
+                SoundManager.playLoopingSound("robot_walk", 0.6f);
+            } else {
+                SoundManager.stopSound("robot_walk");
+            }
+        }
+
+        // Mise à jour du mode spécifique (ex: Tank ou Robot)
         if (currentMode instanceof Robot) {
             ((Robot) currentMode).update(delta, movingForward, movingBackward, turning);
         }
-        if (currentMode instanceof Tank) {
-            if (movingForward) {
-                ((Tank) currentMode).playEngineSound();
-            } else {
-                ((Tank) currentMode).stopEngineSound();
-            }
-        }
     }
 
-    // Correction : retourne un TextureRegion
+
+    // Retourne le TextureRegion du mode courant
     public TextureRegion getTexture() {
         return currentMode.getTexture();
     }
 
-    // Permet de mettre à jour la position du joueur
     public void setPosition(float newX, float newY) {
         this.x = newX;
         this.y = newY;
     }
 
-    // Getters pour la position
     public float getX() { return x; }
     public float getY() { return y; }
 
-    // Gestion des entrées/mouvements
     public void setMovingForward(boolean movingForward) {
         this.movingForward = movingForward;
     }
@@ -117,4 +139,9 @@ public class Player {
     public void setTurning(boolean turning) {
         this.turning = turning;
     }
+
+    public PlayerMode getCurrentMode() {
+        return currentMode;
+    }
+
 }

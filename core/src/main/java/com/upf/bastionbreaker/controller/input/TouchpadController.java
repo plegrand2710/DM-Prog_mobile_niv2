@@ -50,6 +50,11 @@ public class TouchpadController {
         stage.draw();
     }
 
+    public boolean isTouched() {
+        return touchpad.isTouched();
+    }
+
+
     public float getKnobPercentX() {
         return touchpad.getKnobPercentX();
     }

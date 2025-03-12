@@ -3,9 +3,11 @@ package com.upf.bastionbreaker.view.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.upf.bastionbreaker.model.entities.Tank;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.map.MapManager;
@@ -23,6 +25,7 @@ import com.upf.bastionbreaker.model.entities.Floor;
 import com.upf.bastionbreaker.model.entities.Player;
 import com.upf.bastionbreaker.controller.input.TouchpadController;
 import com.upf.bastionbreaker.controller.input.GyroscopeController;
+import com.upf.bastionbreaker.model.audio.SoundManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +58,7 @@ public class GameScreen implements Screen {
     private TouchpadController touchpadController;
     private GyroscopeController gyroscopeController;
 
-    // Limites de la carte en unités de tuiles (à adapter selon votre map)
+    // Limites de la carte en unités de tuiles (ex. définies dans MapRenderer)
     private float mapWidth = MapRenderer.MAP_WIDTH_TILES;
     private float mapHeight = MapRenderer.MAP_HEIGHT_TILES;
 
@@ -78,25 +81,19 @@ public class GameScreen implements Screen {
                 checkpoints.add(new Checkpoint(obj));
             }
 
-            // Charger les obstacles
+            // Charger les autres objets...
             obstacles = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Obstacles")) {
                 obstacles.add(new Obstacle(obj));
             }
-
-            // Charger les FlyingBox
             flyingBoxes = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("FlyingBox")) {
                 flyingBoxes.add(new FlyingBox(obj));
             }
-
-            // Charger les IceBridges
             iceBridges = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Ice")) {
                 iceBridges.add(new IceBridge(obj));
             }
-
-            // Charger les ChainLinks
             List<GameObject> chainObjects = mapManager.getObjects("Chains");
             chainLinks = new ArrayList<>();
             chainLinkMap = new HashMap<>();
@@ -108,49 +105,37 @@ public class GameScreen implements Screen {
                 }
             }
             System.out.println("🔗 ChainLinks chargés : " + chainLinks.size());
-
-            // Charger les Bastions
             bastions = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Bastion")) {
                 bastions.add(new Bastion(obj));
             }
             System.out.println("📌 Bastions chargés : " + bastions.size());
-
-            // Charger les TNT (Explosives)
             tnts = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Explosives")) {
                 tnts.add(new TNT(obj));
             }
             System.out.println("📌 TNT chargées : " + tnts.size());
-
-            // Charger les FallingBlocks
             fallingBlocks = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("FallingBlock")) {
                 FallingBlock fb = new FallingBlock(obj);
                 fallingBlocks.add(fb);
             }
             System.out.println("📌 FallingBlocks chargés : " + fallingBlocks.size());
-
-            // Charger les Drawbridges
             drawbridges = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Drawbridges")) {
                 Drawbridge db = new Drawbridge(obj);
                 drawbridges.add(db);
             }
             System.out.println("📌 Drawbridges chargés : " + drawbridges.size());
-
-            // Charger les UnstablePlatforms
             unstablePlatforms = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("UnstablePlatforms")) {
                 UnstablePlatform up = new UnstablePlatform(obj);
                 unstablePlatforms.add(up);
             }
             System.out.println("📌 UnstablePlatforms chargés : " + unstablePlatforms.size());
-
-            // Charger les Floor
             floors = mapManager.getFloors();
 
-            // Lier FallingBlocks à leur maillon support
+            // Lier FallingBlocks, Drawbridges, UnstablePlatforms à leurs supports
             for (FallingBlock fb : fallingBlocks) {
                 String topName = fb.getLinkedTopName();
                 if (topName != null && !topName.isEmpty()) {
@@ -160,8 +145,6 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-
-            // Lier Drawbridges à leur chain link support
             for (Drawbridge db : drawbridges) {
                 String supportName = db.getLinkedTopName();
                 if (supportName != null && !supportName.isEmpty()) {
@@ -171,8 +154,6 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-
-            // Lier UnstablePlatforms à leur chain link support
             for (UnstablePlatform up : unstablePlatforms) {
                 String supportName = up.getLinkedTopName();
                 if (supportName != null && !supportName.isEmpty()) {
@@ -192,7 +173,7 @@ public class GameScreen implements Screen {
                     break;
                 }
             }
-            player = new Player(startX, startY); // Démarrage au checkpoint0, en mode Tank
+            player = new Player(startX, startY); // Le joueur démarre au checkpoint0, en mode Tank
             System.out.println("🟢 Joueur positionné au checkpoint0 : (" + startX + ", " + startY + ")");
 
         } catch (Exception e) {
@@ -217,7 +198,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        handleInput(); // Gestion des entrées clavier et via le TouchpadController
+        handleInput(); // Gestion des entrées clavier et touchpad
 
         // Appliquer la gravité et résoudre les collisions du joueur avec le Floor
         applyPlayerGravity();
@@ -231,7 +212,6 @@ public class GameScreen implements Screen {
         for (TNT tnt : tnts) {
             tnt.update(delta);
             if (player.getBoundingBox().overlaps(tnt.getBounds())) {
-                // Exemple : si le joueur n'est pas en mode Tank et que la TNT est pushable
                 if (!player.getTexture().equals("tank") && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
@@ -253,7 +233,7 @@ public class GameScreen implements Screen {
             mapRenderer.getCamera().translate(moveX * 0.02f, 0);
         }
 
-        // Limiter la caméra aux bords de la carte
+        // Limiter la caméra aux bords de la carte...
         OrthographicCamera cam = mapRenderer.getCamera();
         float halfViewportWidth = cam.viewportWidth / 2;
         float halfViewportHeight = cam.viewportHeight / 2;
@@ -276,9 +256,17 @@ public class GameScreen implements Screen {
         float playerX = screenCenterX + (MapRenderer.VIEWPORT_WIDTH / 4);
         player.setPosition(playerX, player.getBoundingBox().y);
 
-        // Mise à jour et rendu du Touchpad via TouchpadController
+        // Mise à jour et rendu du Touchpad
         touchpadController.update(delta);
         touchpadController.draw();
+
+        // Ajustement dynamique du son du tank
+        if (isTankMode()) { // Par exemple, une méthode qui vérifie si le mode courant est Tank
+            // Utiliser l'intensité du touchpad pour ajuster le volume
+            float touchIntensity = Math.abs(touchpadController.getKnobPercentX());
+            float volume = 0.4f + 0.3f * touchIntensity; // Volume entre 0.4 et 0.7
+            SoundManager.adjustVolume("tank_engine", volume);
+        }
 
         // Rendu de la carte
         mapRenderer.update(delta);
@@ -318,10 +306,16 @@ public class GameScreen implements Screen {
         }
         player.render(batch);
         // Optionnel : dessiner le Floor pour le debug
-        // for (Floor floor : floors) {
-        //     // batch.draw(floorDebugTexture, floor.getBounds().x, floor.getBounds().y, floor.getBounds().width, floor.getBounds().height);
-        // }
         batch.end();
+
+        // Optionnel : Vérification des hélicoptères pour jouer "helicopter.ogg"
+        checkHelicopterSound();
+    }
+
+    private boolean isTankMode() {
+        // Supposons que si le TextureRegion du joueur correspond au tank, le mode est Tank.
+        // Vous pouvez adapter cette logique en fonction de PlayerMode.
+        return player.getTexture() == ((Tank)player.getCurrentMode()).getTexture();
     }
 
     /**
@@ -339,29 +333,21 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Gestion des entrées clavier et du Touchpad.
-     * D : avancer, A : reculer, SPACE : sauter (mode Robot), T : transformer.
+     * Gestion des entrées clavier.
      */
     private void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.setMovingForward(true);
-        } else {
-            player.setMovingForward(false);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.setMovingBackward(true);
-        } else {
-            player.setMovingBackward(false);
-        }
+        player.setMovingForward(Gdx.input.isKeyPressed(Input.Keys.D));
+        player.setMovingBackward(Gdx.input.isKeyPressed(Input.Keys.A));
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player.jump();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             player.transform();
-            // Ajustement pour éviter des problèmes de collision après transformation
             player.setPosition(player.getX(), player.getY() + 0.1f);
         }
     }
+
 
     /**
      * Applique la gravité au joueur et corrige sa position pour qu'il reste sur le sol.
@@ -372,6 +358,7 @@ public class GameScreen implements Screen {
         for (Floor floor : floors) {
             if (player.getBoundingBox().overlaps(floor.getBounds())) {
                 onGround = true;
+                // Positionner le joueur sur le haut du Floor
                 player.setPosition(player.getBoundingBox().x, floor.getBounds().y + floor.getBounds().height);
                 break;
             }
@@ -412,6 +399,30 @@ public class GameScreen implements Screen {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Vérifie si un hélicoptère est visible dans le champ de la caméra et joue ou arrête le son.
+     */
+    private void checkHelicopterSound() {
+        boolean helicopterInView = false;
+        // Parcourir les ennemis pour détecter un hélicoptère (exemple simplifié)
+        for (GameObject enemy : mapManager.getObjects("Enemies")) {
+            String sprite = enemy.getProperty("sprite", String.class);
+            if (sprite != null && sprite.equalsIgnoreCase("helicopter.gif")) {
+                float ex = enemy.getX() / MapRenderer.TILE_SIZE;
+                float ey = enemy.getY() / MapRenderer.TILE_SIZE;
+                if (mapRenderer.getCamera().frustum.pointInFrustum(ex, ey, 0)) {
+                    helicopterInView = true;
+                    break;
+                }
+            }
+        }
+        if (helicopterInView) {
+            SoundManager.playLoopingSound("helicopter", 0.6f);
+        } else {
+            SoundManager.stopSound("helicopter");
         }
     }
 
