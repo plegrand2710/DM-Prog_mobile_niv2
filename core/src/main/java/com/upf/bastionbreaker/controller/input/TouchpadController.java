@@ -1,7 +1,6 @@
-package com.upf.bastionbreaker.controller;
+package com.upf.bastionbreaker.controller.input;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,15 +15,15 @@ public class TouchpadController {
     private Touchpad touchpad;
     private Skin skin;
 
-    public TouchpadController(AssetManager assetManager) {
+    public TouchpadController() {
         // Création d'un Stage dédié au Touchpad avec un ScreenViewport
         stage = new Stage(new ScreenViewport());
 
-        // Chargement des textures pour le Touchpad depuis le dossier assets/images
-        Texture touchBackground = assetManager.get("images/touchBackground.png", Texture.class);
-        Texture touchKnob = assetManager.get("images/touchKnob.png", Texture.class);
+        // Chargement des textures directement sans passer par un AssetManager
+        Texture touchBackground = new Texture(Gdx.files.internal("assets/images/touchBackground.png"));
+        Texture touchKnob = new Texture(Gdx.files.internal("assets/images/touchKnob.png"));
 
-        // Création d'un Skin et ajout des Drawables
+        // Création du Skin et ajout des Drawables
         skin = new Skin();
         skin.add("touchBackground", new TextureRegionDrawable(new TextureRegion(touchBackground)));
         skin.add("touchKnob", new TextureRegionDrawable(new TextureRegion(touchKnob)));
@@ -36,9 +35,8 @@ public class TouchpadController {
 
         // Création du Touchpad avec une zone morte (exemple : 10 pixels)
         touchpad = new Touchpad(10, style);
-
-        // Positionnement du Touchpad (par exemple en bas à gauche de l'écran)
-        touchpad.setBounds(20, 20, 150, 150); // ajuster la taille et la position selon vos besoins
+        // Positionnement du Touchpad (en bas à gauche)
+        touchpad.setBounds(20, 20, 150, 150);
 
         // Ajout du Touchpad au stage
         stage.addActor(touchpad);
