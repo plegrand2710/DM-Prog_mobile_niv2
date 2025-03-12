@@ -8,7 +8,7 @@ public class Main extends Game {
     @Override
     public void create() {
         try {
-            setScreen(new GameScreen());
+            setScreen(new GameScreen("touchpad"));
             Gdx.app.log("Main", "✅ GameScreen défini comme écran principal");
         } catch (Exception e) {
             Gdx.app.error("Main", "❌ ERREUR : Impossible d'initialiser GameScreen", e);

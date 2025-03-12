@@ -16,7 +16,7 @@ public class TouchpadController {
     private Drawable touchBackground;
     private Drawable touchKnob;
 
-    public TouchpadController() {
+    public TouchpadController(float x, float y, float width, float height) {
         // Création du Skin avec les textures du Touchpad
         touchpadSkin = new Skin();
         touchpadSkin.add("touchBackground", new Texture("assets/images/touchBackground.png"));
@@ -31,15 +31,13 @@ public class TouchpadController {
 
         // Création du Touchpad avec une deadzone de 10
         touchpad = new Touchpad(10, touchpadStyle);
-        // Position et taille réduite pour être visible en bas à gauche
-        touchpad.setBounds(20, 20, 150, 150);
+        touchpad.setBounds(x, y, width, height);
 
         // Création du Stage et ajout du Touchpad
         stage = new Stage();
         stage.addActor(touchpad);
-        // Mettre le Touchpad au premier plan
+        // Mettre le touchpad au premier plan (positionne cet acteur en haut)
         touchpad.setZIndex(stage.getRoot().getChildren().size - 1);
-        Gdx.input.setInputProcessor(stage);
     }
 
     public void update(float delta) {
@@ -53,7 +51,6 @@ public class TouchpadController {
     public boolean isTouched() {
         return touchpad.isTouched();
     }
-
 
     public float getKnobPercentX() {
         return touchpad.getKnobPercentX();
