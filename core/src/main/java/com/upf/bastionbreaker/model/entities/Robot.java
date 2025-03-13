@@ -18,7 +18,7 @@ public class Robot extends PlayerMode {
     public Robot() {
         super("robot_1_forward", 3.0f, 80, 1.0f, 2.0f, true);
         this.stateTime = 0;
-        walkSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/robot_walk.ogg"));
+        walkSound = Gdx.audio.newSound(Gdx.files.internal("sounds/robot_walk.ogg"));
     }
 
     public void update(float delta, boolean movingForward, boolean movingBackward, boolean turning) {

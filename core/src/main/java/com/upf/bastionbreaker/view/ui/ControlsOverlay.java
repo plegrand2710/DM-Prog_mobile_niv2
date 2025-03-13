@@ -3,6 +3,7 @@ package com.upf.bastionbreaker.view.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -11,11 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.upf.bastionbreaker.model.graphics.TextureManager;
 
 public class ControlsOverlay {
     private Stage stage;
     private Skin skin;
+
+    private TextureAtlas atlas;
 
     // Touchpads pour déplacement et orientation
     private Touchpad movementTouchpad;
@@ -28,19 +33,31 @@ public class ControlsOverlay {
 
     private boolean showMovement; // Si true, on affiche le touchpad de déplacement
 
+
     public ControlsOverlay(boolean showMovement) {
         this.showMovement = showMovement;
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin();
 
-        // Chargement des textures pour le touchpad
-        skin.add("touchBackground", new Texture("assets/images/touchBackground.png"));
-        skin.add("touchKnob", new Texture("assets/images/touchKnob.png"));
+        atlas = TextureManager.getGameAtlas();
+
+        if (atlas == null) {
+            Gdx.app.error("DEBUG_CONTROLS", " ERREUR : game.atlas non chargé !");
+            return;
+        }
+
+        TextureRegionDrawable touchBackground = new TextureRegionDrawable(atlas.findRegion("touchBackground"));
+        TextureRegionDrawable touchKnob = new TextureRegionDrawable(atlas.findRegion("touchKnob"));
+
+        if (touchBackground.getRegion() == null || touchKnob.getRegion() == null) {
+            Gdx.app.error("DEBUG_CONTROLS", " ERREUR : Textures touchpad introuvables dans game.atlas !");
+        } else {
+            Gdx.app.log("DEBUG_CONTROLS", " Textures touchpad chargées avec succès !");
+        }
+
         TouchpadStyle touchpadStyle = new TouchpadStyle();
-        Drawable background = skin.getDrawable("touchBackground");
-        Drawable knob = skin.getDrawable("touchKnob");
-        touchpadStyle.background = background;
-        touchpadStyle.knob = knob;
+        touchpadStyle.background = touchBackground;
+        touchpadStyle.knob = touchKnob;
 
         // Création du touchpad d'orientation (toujours affiché) en bas à droite
         aimTouchpad = new Touchpad(10, touchpadStyle);

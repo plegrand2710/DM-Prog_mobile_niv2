@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.upf.bastionbreaker.Main;
+import com.upf.bastionbreaker.MainPauline;
 
 /** Launches the Android application. */
 public class AndroidLauncher extends AndroidApplication {
-    private Main mainGame; // Stocker l'instance du jeu
+    private MainPauline mainGame; // Stocker l'instance du jeu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class AndroidLauncher extends AndroidApplication {
         configuration.useImmersiveMode = true;
 
         // Initialisation du jeu
-        mainGame = new Main();
+        mainGame = new MainPauline();
         initialize(mainGame, configuration);
 
         Log.d("AndroidLauncher", "✅ Application Android lancée avec succès !");

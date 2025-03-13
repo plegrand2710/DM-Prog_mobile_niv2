@@ -119,7 +119,8 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("DEBUG_MENU", "⚡ Changement d'écran vers PauseMenu");
-                pauseMenu.togglePause();
+                game.setScreen(new GameScreen("giroscopic"));
+                //pauseMenu.togglePause();
             }
         });
 
@@ -127,7 +128,9 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("DEBUG_MENU", "⚡ Changement d'écran vers PauseMenu");
-                pauseMenu.togglePause();
+                game.setScreen(new GameScreen("touchpad"));
+
+                //pauseMenu.togglePause();
             }
         });
     }
