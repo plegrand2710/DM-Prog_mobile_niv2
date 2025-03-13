@@ -3,9 +3,11 @@ package com.upf.bastionbreaker.model.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.*;
 import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.view.screens.MapRenderer;
+import com.upf.bastionbreaker.model.physics.WorldManager;
 
 public class Bastion {
     private float x, y, width, height;
@@ -13,6 +15,9 @@ public class Bastion {
     private int hp;
     private boolean breakable;
     private boolean destroyed;
+
+    // Ajout d'un Body Box2D pour la physique
+    private Body body;
 
     public Bastion(GameObject gameObject) {
         // Conversion des coordonnées de pixels en unités de tuiles
@@ -57,6 +62,27 @@ public class Bastion {
         }
 
         destroyed = false;
+
+        // Création du body Box2D pour le Bastion (StaticBody)
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Positionner le body au centre du Bastion
+        bodyDef.position.set(x + width / 2, y + height / 2);
+        body = WorldManager.getWorld().createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / 2, height / 2);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0f;
+
+        body.createFixture(fixtureDef);
+        shape.dispose();
+
+        // Identifier ce body pour le ContactListener
+        body.setUserData("Bastion");
     }
 
     /**
@@ -86,12 +112,18 @@ public class Bastion {
 
     /**
      * Détruit le bastion.
-     * Ici, vous pouvez ajouter une animation d'explosion si nécessaire.
+     * Supprime son body du monde Box2D et marque l'objet comme détruit.
+     * Optionnel : ajouter une animation d'explosion avant la destruction.
      */
     private void destroy() {
         destroyed = true;
         System.out.println("💥 Bastion détruit !");
-        // Optionnel : déclencher ici une animation d'explosion ou un effet sonore.
+        // Supprimer le body du World pour qu'il ne soit plus pris en compte dans la physique
+        if (body != null) {
+            WorldManager.getWorld().destroyBody(body);
+            body = null;
+        }
+        // Optionnel : déclencher une animation d'explosion ou un effet sonore.
     }
 
     /**
