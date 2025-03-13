@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -30,9 +31,9 @@ public class ControlsOverlay {
     private TextButton jumpButton;
     private TextButton modeButton;
     private TextButton shootButton;
+    private ImageButton pauseButton;
 
     private boolean showMovement; // Si true, on affiche le touchpad de déplacement
-
 
     public ControlsOverlay(boolean showMovement) {
         this.showMovement = showMovement;
@@ -98,6 +99,13 @@ public class ControlsOverlay {
         stage.addActor(modeButton);
         stage.addActor(shootButton);
 
+        TextureRegionDrawable pauseTexture = new TextureRegionDrawable(atlas.findRegion("Icon-Pause"));
+        pauseButton = new ImageButton(pauseTexture);
+        pauseButton.setPosition(Gdx.graphics.getWidth() - pauseButton.getWidth() - 20,
+            Gdx.graphics.getHeight() - pauseButton.getHeight() - 20);
+
+        stage.addActor(pauseButton);
+
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -142,6 +150,10 @@ public class ControlsOverlay {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public ImageButton getPauseButton() {
+        return pauseButton;
     }
 
     public void dispose() {

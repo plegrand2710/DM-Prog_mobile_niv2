@@ -27,6 +27,8 @@ import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.controller.input.GyroscopeController;
 import com.upf.bastionbreaker.view.ui.ControlsOverlay;
 import com.upf.bastionbreaker.controller.gameplay.TransformationManager;
+import com.upf.bastionbreaker.view.ui.PauseMenu;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,7 @@ public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
     private MapManager mapManager;
     private SpriteBatch batch;
-
+    private PauseMenu pauseMenu;
     // Listes d'objets
     private List<Checkpoint> checkpoints;
     private List<Obstacle> obstacles;
@@ -67,6 +69,7 @@ public class GameScreen implements Screen {
     private float mapHeight = MapRenderer.MAP_HEIGHT_TILES;
 
     public GameScreen(String inputMode) {
+        this.pauseMenu = new PauseMenu();
         this.inputMode = inputMode;
     }
 
@@ -95,6 +98,13 @@ public class GameScreen implements Screen {
             });
         }
 
+        controlsOverlay.getPauseButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                Gdx.app.log("DEBUG_GAME", "⏸️ Bouton Pause Pressé !");
+                pauseMenu.togglePause(controlsOverlay.getStage());
+            }
+        });
         try {
             Gdx.app.log("DEBUG_GAME", "📜 Chargement de la carte...");
             mapManager = new MapManager("map/bastion_breaker_map.tmx");
@@ -265,6 +275,10 @@ public class GameScreen implements Screen {
         if (drawbridges == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : drawbridges est NULL !");
         if (unstablePlatforms == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : unstablePlatforms est NULL !");
 
+        if (pauseMenu.getIsVisible()) {
+            pauseMenu.render(delta);
+            return;
+        }
         handleInput();
         handleTouchpadInput();
         handleGyroscopeInput(delta);
@@ -426,6 +440,7 @@ public class GameScreen implements Screen {
         if (controlsOverlay.getJumpButton().isPressed()) {
             player.jump();
         }
+
     }
 
     private void handleGyroscopeInput(float delta) {
