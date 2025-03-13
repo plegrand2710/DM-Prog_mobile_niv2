@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="39" nextobjectid="343">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="39" nextobjectid="371">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -116,17 +116,82 @@
     <property name="collision" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="338" name="floor" type="Floor" x="7040" y="544" width="32" height="32">
-   <properties>
-    <property name="collision" type="bool" value="true"/>
-   </properties>
-  </object>
-  <object id="339" name="floor" type="Floor" x="5952" y="544" width="32" height="32">
-   <properties>
-    <property name="collision" type="bool" value="true"/>
-   </properties>
-  </object>
   <object id="340" name="floor" type="Floor" x="7264" y="224" width="96" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="349" name="floor" type="Floor" x="4480" y="576" width="224" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="351" name="floor" type="Floor" x="5024" y="512" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="357" name="floor" type="Floor" x="1696" y="320" width="64" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="359" name="floor" type="Floor" x="736" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="360" name="floor" type="Floor" x="864" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="361" name="floor" type="Floor" x="2944" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="362" name="floor" type="Floor" x="3392" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="363" name="floor" type="Floor" x="4448" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="364" name="floor" type="Floor" x="4704" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="365" name="floor" type="Floor" x="4992" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="366" name="floor" type="Floor" x="5280" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="367" name="floor" type="Floor" x="5952" y="544" width="32" height="96">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="368" name="floor" type="Floor" x="7040" y="544" width="32" height="96">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="369" name="floor" type="Floor" x="8608" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="370" name="floor" type="Floor" x="0" y="512" width="32" height="128">
    <properties>
     <property name="collision" type="bool" value="true"/>
    </properties>
@@ -460,13 +525,13 @@
    </properties>
    <polygon points="0,0 -0.664936,62.0003 63.3351,61.6798"/>
   </object>
-  <object id="170" name="hill_5" type="Slide" x="7137.01" y="480.182" rotation="90">
+  <object id="358" name="hill_5" type="Slide" x="7072" y="544.161">
    <properties>
     <property name="climb" type="float" value="0.5"/>
-    <property name="difficulty" type="bool" value="true"/>
+    <property name="diffuculty" type="bool" value="true"/>
     <property name="slide" type="float" value="1.5"/>
    </properties>
-   <polygon points="0,0 -0.694373,65.5003 66.139,65.1617"/>
+   <polygon points="0,0 64.7517,2.23281 64.7517,-64.3051"/>
   </object>
  </objectgroup>
  <objectgroup id="4" name="Obstacles" class="Obstacle">
