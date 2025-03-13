@@ -14,43 +14,45 @@ public class GyroscopeController implements InputProcessor {
     private float sensitivity = 0.02f;
 
     public GyroscopeController() {
-        // Initialisation si nécessaire (par exemple, calibrage)
+        // Initialisation si nécessaire (par exemple, calibrage de l'accéléromètre)
     }
 
     /**
      * Retourne le déplacement horizontal basé sur l'accéléromètre.
-     * @return Valeur de déplacement sur l'axe X.
+     * @return Valeur de déplacement sur l'axe X, ajustée par la sensibilité.
      */
     public float getMovementX() {
         // Récupère la valeur de l'accéléromètre sur l'axe X
         float accelX = Gdx.input.getAccelerometerX();
-        // Applique la sensibilité et retourne la valeur ajustée
+        // Selon votre dispositif, vous pourriez avoir besoin d'inverser la valeur (ex : -accelX)
         return accelX * sensitivity;
     }
 
     /**
-     * Méthode de mise à jour si des traitements périodiques sont nécessaires.
+     * Méthode de mise à jour. Aucun traitement périodique n'est requis ici,
+     * mais cette méthode est là pour l'éventuelle application de filtres ou calibrations.
      * @param delta Temps écoulé depuis la dernière mise à jour.
      */
     public void update(float delta) {
-        // Aucun traitement requis ici dans cette implémentation.
+        // Aucun traitement n'est nécessaire pour l'instant.
     }
 
     /**
-     * Permet d'obtenir l'InputProcessor (ici, l'instance courante).
-     * @return L'instance de GyroscopeController en tant qu'InputProcessor.
+     * Retourne l'instance actuelle en tant qu'InputProcessor.
+     * @return L'instance de GyroscopeController.
      */
     public InputProcessor getInputProcessor() {
         return this;
     }
 
     /**
-     * Libère les ressources allouées par le contrôleur (aucune dans ce cas).
+     * Libère les ressources, si nécessaire.
      */
     public void dispose() {
-        // Aucune ressource à libérer.
+        // Aucune ressource spécifique à libérer pour l'instant.
     }
 
+    // Méthodes de l'interface InputProcessor (aucune action par défaut)
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -91,9 +93,6 @@ public class GyroscopeController implements InputProcessor {
         return false;
     }
 
-    /**
-     * Implémentation de la méthode touchCancelled pour satisfaire l'interface InputProcessor.
-     */
     @Override
     public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
         return false;
