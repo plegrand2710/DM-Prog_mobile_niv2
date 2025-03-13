@@ -193,6 +193,11 @@ public class Player {
         return body.getPosition().y - currentMode.getHeight() / 2;
     }
 
+    public Body getBody() {
+        return body;
+    }
+
+
     public void setPosition(float x, float y) {
         // On positionne le body de façon à ce que (x,y) soit le coin inférieur gauche du sprite
         body.setTransform(x + currentMode.getWidth() / 2, y + currentMode.getHeight() / 2, body.getAngle());

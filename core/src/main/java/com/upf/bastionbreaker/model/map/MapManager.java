@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import com.badlogic.gdx.physics.box2d.*;
+import com.upf.bastionbreaker.model.entities.Floor;
 import com.upf.bastionbreaker.view.screens.MapRenderer;
 
 public class MapManager {
@@ -55,6 +56,7 @@ public class MapManager {
             "Enemies",
             "Checkpoints",
             "Obstacles",
+            "Hill",
             "Hill",
             "FlyingBox",
             "Ice",
@@ -108,37 +110,7 @@ public class MapManager {
     }
 
     public void createFloorBodies(World world) {
-        List<GameObject> floors = getObjects("Floor");
-
-        for (GameObject obj : floors) {
-            float x = obj.getX() / MapRenderer.TILE_SIZE;
-            float y = obj.getY() / MapRenderer.TILE_SIZE;
-            float width = obj.getWidth() / MapRenderer.TILE_SIZE;
-            float height = obj.getHeight() / MapRenderer.TILE_SIZE;
-
-            // Définir le corps statique
-            BodyDef bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set(x + width / 2, y + height / 2); // Centrage
-
-            Body body = world.createBody(bodyDef);
-
-            // Définir la forme et la fixture
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(width / 2, height / 2);
-
-            FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.shape = shape;
-            fixtureDef.friction = 0.5f;
-            fixtureDef.restitution = 0f;
-
-            body.createFixture(fixtureDef);
-            body.setUserData("Floor");
-
-            shape.dispose();
-        }
-
-        System.out.println("✅ Sol ajouté avec Box2D !");
+        Floor.createFloors(world);
     }
 
     public void dispose() {
