@@ -167,6 +167,11 @@ public class Player {
         this.movingBackward = movingBackward;
     }
 
+    public void setOnGround(boolean onGround) {
+        this.isOnGround = onGround;
+    }
+
+
     public PlayerMode getCurrentMode() {
         return currentMode;
     }
