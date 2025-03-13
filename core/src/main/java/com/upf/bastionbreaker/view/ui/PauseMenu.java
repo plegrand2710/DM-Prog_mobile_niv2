@@ -139,7 +139,9 @@ public class PauseMenu {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 Gdx.app.log("DEBUG_PAUSE", "🟢 Bouton 'Reprendre' cliqué");
-                togglePause();
+                togglePause(null);
+                Gdx.input.setInputProcessor(null);
+
             }
         });
 
@@ -211,19 +213,34 @@ public class PauseMenu {
         stage.draw();
     }
 
-    public void togglePause() {
+    public void togglePause(Stage gameStage) {
         isVisible = !isVisible;
-        Gdx.input.setInputProcessor(isVisible ? stage : null);
-        blurredTexture = null;
+
+        if (isVisible) {
+            Gdx.input.setInputProcessor(stage); // Met le focus sur le menu pause
+            blurredTexture = null;
+        } else {
+            Gdx.input.setInputProcessor(gameStage);
+            Gdx.app.log("DEBUG_PAUSE", "🔁 rendu a gamestage ");
+
+        }
+
         Gdx.app.log("DEBUG_PAUSE", "🔁 Toggle pause : " + isVisible);
     }
+
 
     public void dispose() {
         Gdx.app.log("DEBUG_PAUSE", "🗑️ Destruction du menu pause");
         stage.dispose();
         gameAtlas.dispose();
         font.dispose();
+        Gdx.input.setInputProcessor(null);
+
         if (blurredTexture != null) blurredTexture.dispose();
         batch.dispose();
+    }
+
+    public boolean getIsVisible(){
+        return isVisible;
     }
 }

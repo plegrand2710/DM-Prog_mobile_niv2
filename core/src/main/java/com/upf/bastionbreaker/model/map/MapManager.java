@@ -1,5 +1,6 @@
 package com.upf.bastionbreaker.model.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -19,9 +20,11 @@ public class MapManager {
         try {
             // Charger la carte .tmx
             tiledMap = new TmxMapLoader().load(mapPath);
-            System.out.println("✅ Carte chargée avec succès : " + mapPath);
+            Gdx.app.log("DEBUG_GAME", "✅ Carte chargée avec succès :" + mapPath );
+
+            System.out.println();
         } catch (Exception e) {
-            System.out.println("❌ ERREUR : Impossible de charger la carte " + mapPath);
+            Gdx.app.log("DEBUG_GAME","❌ ERREUR : Impossible de charger la carte " + mapPath);
             e.printStackTrace();
             return;
         }
@@ -65,6 +68,7 @@ public class MapManager {
     }
 
     public TiledMap getTiledMap() {
+        Gdx.app.log("DEBUG_GAME", "passage tile map " + tiledMap);
         return tiledMap;
     }
 
@@ -116,7 +120,7 @@ public class MapManager {
         if (floors.isEmpty()) {
             System.out.println("⚠️ ATTENTION : Aucun objet Floor n'a été trouvé dans le calque 'Floor' !");
         } else {
-            System.out.println("✅ " + floors.size() + " Floor(s) chargés depuis 'Floor'.");
+            //System.out.println("✅ " + floors.size() + " Floor(s) chargés depuis 'Floor'.");
         }
         return floors;
     }

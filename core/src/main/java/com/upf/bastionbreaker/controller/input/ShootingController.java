@@ -18,8 +18,8 @@ public class ShootingController {
     public ShootingController(float x, float y, float width, float height) {
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin();
-        skin.add("touchBackground", new Texture("assets/images/touchBackground.png"));
-        skin.add("touchKnob", new Texture("assets/images/touchKnob.png"));
+        skin.add("touchBackground", new Texture("images/touchBackground.png"));
+        skin.add("touchKnob", new Texture("images/touchKnob.png"));
         touchpadStyle = new TouchpadStyle();
         Drawable background = skin.getDrawable("touchBackground");
         Drawable knob = skin.getDrawable("touchKnob");

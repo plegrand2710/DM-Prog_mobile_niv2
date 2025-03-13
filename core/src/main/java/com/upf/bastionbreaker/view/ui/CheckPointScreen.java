@@ -110,7 +110,7 @@ public class CheckPointScreen {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("DEBUG_CHECKPOINT", "🔙 Retour au menu pause");
                 toggleVisibility(false);
-                pauseMenu.togglePause();
+                pauseMenu.togglePause(null);
             }
         });
 
@@ -123,7 +123,7 @@ public class CheckPointScreen {
     private void teleportToCheckpoint(int checkpointIndex) {
         Gdx.app.log("DEBUG_CHECKPOINT", "🚀 Joueur téléporté au checkpoint " + (checkpointIndex + 1));
         toggleVisibility(false);
-        pauseMenu.togglePause();
+        pauseMenu.togglePause(null);
     }
 
     public void render(float delta) {
