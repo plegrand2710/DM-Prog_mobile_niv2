@@ -150,10 +150,10 @@ public class Player {
         // Mise à jour de l'animation en fonction de la vitesse horizontale
         if (currentMode instanceof Robot) {
             if (velocity.x > 0.1f) {
-                currentAnimation = AnimationHandler.getAnimation("robot_walk_right").getKeyFrame(stateTime, true);
+                currentAnimation = AnimationHandler.getAnimation("robot_walk_forward").getKeyFrame(stateTime, true);
                 facingRight = true;
             } else if (velocity.x < -0.1f) {
-                currentAnimation = AnimationHandler.getAnimation("robot_walk_left").getKeyFrame(stateTime, true);
+                currentAnimation = AnimationHandler.getAnimation("robot_walk_backward").getKeyFrame(stateTime, true);
                 facingRight = false;
             } else {
                 currentAnimation = AnimationHandler.getAnimation("robot_idle").getKeyFrame(stateTime, true);
