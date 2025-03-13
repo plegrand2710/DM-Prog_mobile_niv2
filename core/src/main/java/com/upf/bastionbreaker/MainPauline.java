@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.upf.bastionbreaker.view.screens.SplashScreen;
 
-public class Main extends Game {
+public class MainPauline extends Game {
     private SpriteBatch batch;
 
     @Override
