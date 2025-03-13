@@ -444,6 +444,8 @@ public class GameScreen implements Screen {
     }
 
     private void handleGyroscopeInput(float delta) {
+        if (inputMode.equalsIgnoreCase("touchpad")) return;  // ❌ Bloque le gyroscope en mode Touchpad
+
         if (!hasGyroscope()) return;  // ❌ Ne rien faire si pas d'accéléromètre
 
         float tilt = Gdx.input.getAccelerometerY(); // Détecte l'inclinaison gauche/droite
