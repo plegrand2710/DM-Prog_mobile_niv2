@@ -870,13 +870,6 @@
     <property name="sprite" value="chain"/>
    </properties>
   </object>
-  <object id="342" name="chainlink2" type="ChainLink" x="306" y="318" width="32" height="32">
-   <properties>
-    <property name="linked_bottom" value=""/>
-    <property name="linked_top" value=""/>
-    <property name="sprite" value="chain"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup id="7" name="Bastion">
   <object id="46" name="Bastion1" type="Destructible" x="1088.67" y="159.333" width="96" height="320">

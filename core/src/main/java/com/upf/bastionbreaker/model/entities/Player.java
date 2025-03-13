@@ -65,94 +65,72 @@ public class Player {
         System.out.println("🔄 Transformation en " + (currentMode instanceof Tank ? "TANK" : "ROBOT"));
     }
 
-    /**
-     * Déplace le joueur en modifiant la vélocité linéaire de son body.
-     */
     public void move(float moveX) {
         Vector2 currentVel = body.getLinearVelocity();
-        // Calcul de la vitesse cible selon le mode et l'input (moveX est entre -1 et 1)
+        // Calcul de la vitesse cible en fonction du mode et de l'input (moveX entre -1 et 1)
         float targetSpeed = moveX * currentMode.getSpeed();
-        // Lissage pour éviter des changements brusques, avec une réactivité accrue (facteur 0.2f)
+        // Lissage pour une transition plus fluide (facteur 0.2f)
         float smoothedSpeed = MathUtils.lerp(currentVel.x, targetSpeed, 0.2f);
         body.setLinearVelocity(new Vector2(smoothedSpeed, currentVel.y));
 
-        // Définir l'état de mouvement pour l'animation et les sons
-        boolean isMoving = Math.abs(moveX) > 0.1f;
+        // Met à jour les indicateurs de direction
         setMovingForward(moveX > 0);
         setMovingBackward(moveX < 0);
-
-        // Gestion des sons en fonction du mode
-        if (currentMode instanceof Tank) {
-            if (!SoundManager.isPlaying("tank_engine")) {
-                SoundManager.playLoopingSound("tank_engine", 0.4f);
-            }
-            float volume = isMoving ? 0.7f : 0.4f;
-            SoundManager.adjustVolume("tank_engine", volume);
-        } else if (currentMode instanceof Robot) {
-            if (isMoving) {
-                if (!SoundManager.isPlaying("robot_walk")) {
-                    SoundManager.playLoopingSound("robot_walk", 0.7f);
-                }
-            } else {
-                SoundManager.stopSound("robot_walk");
-            }
-        } else {
-            SoundManager.stopSound("robot_walk");
-            SoundManager.stopSound("tank_engine");
-        }
     }
 
-    /**
-     * Effectue un saut en appliquant une impulsion verticale.
-     */
     public void jump() {
-        if (currentMode instanceof Robot && isOnGround) { // Seul le robot peut sauter, ici on pourrait élargir aux deux modes si désiré
-            body.applyLinearImpulse(new Vector2(0, JUMP_FORCE), body.getWorldCenter(), true);
+        if (currentMode instanceof Robot && isOnGround) {
+            // Augmentation de la force de saut pour un effet plus puissant
+            float enhancedJumpForce = 15f; // Nouvelle valeur d'impulsion
+            body.applyLinearImpulse(new Vector2(0, enhancedJumpForce), body.getWorldCenter(), true);
             isOnGround = false;
             SoundManager.playSound("robot_jump");
-            System.out.println("🟢 [DEBUG] Jump effectué !");
+            System.out.println("🟢 [DEBUG] Jump effectué avec force améliorée (" + enhancedJumpForce + ") !");
         } else {
             System.out.println("❌ [DEBUG] Impossible de sauter !");
         }
     }
 
-    /**
-     * Met à jour l'animation en fonction de la vitesse horizontale.
-     */
+
     public void update(float delta) {
         stateTime += delta;
         Vector2 velocity = body.getLinearVelocity();
 
-        // Pour le Tank, ajuster le son en fonction de la vitesse horizontale
-        if (currentMode instanceof Tank) {
-            if (!SoundManager.isPlaying("tank_engine")) {
-                SoundManager.playLoopingSound("tank_engine", 0.4f);
-            }
-            float volume = Math.abs(velocity.x) > 0.1f ? 0.7f : 0.4f;
-            SoundManager.adjustVolume("tank_engine", volume);
-        } else {
-            SoundManager.stopSound("tank_engine");
-        }
+        // Détermine si le joueur se déplace réellement
+        boolean isMoving = Math.abs(velocity.x) > 0.1f;
 
-        // Pour le Robot, jouer le son de marche si le joueur bouge
-        if (currentMode instanceof Robot) {
-            if (Math.abs(velocity.x) > 0.1f) {
+        // Gestion des sons en fonction du mode
+        if (currentMode instanceof Tank) {
+            // Le son du tank doit toujours être actif en mode Tank
+            if (!SoundManager.isPlaying("tank_engine")) {
+                SoundManager.playLoopingSound("tank_engine", 0.5f); // Volume de base
+            }
+            // Volume plus élevé en cas de déplacement
+            float volume = isMoving ? 0.8f : 0.5f;
+            SoundManager.adjustVolume("tank_engine", volume);
+        } else if (currentMode instanceof Robot) {
+            // Pour le robot, on augmente la puissance du son quand il bouge
+            if (isMoving) {
                 if (!SoundManager.isPlaying("robot_walk")) {
-                    SoundManager.playLoopingSound("robot_walk", 0.7f);
+                    // Augmente le volume pour simuler une "vitesse" supérieure
+                    SoundManager.playLoopingSound("robot_walk", 0.9f);
                 }
             } else {
                 SoundManager.stopSound("robot_walk");
             }
         } else {
+            SoundManager.stopSound("tank_engine");
             SoundManager.stopSound("robot_walk");
         }
 
         // Mise à jour de l'animation en fonction de la vitesse horizontale
         if (currentMode instanceof Robot) {
             if (velocity.x > 0.1f) {
+                // Utilisation du nouveau nom d'animation pour avancer
                 currentAnimation = AnimationHandler.getAnimation("robot_walk_forward").getKeyFrame(stateTime, true);
                 facingRight = true;
             } else if (velocity.x < -0.1f) {
+                // Utilisation du nouveau nom d'animation pour reculer
                 currentAnimation = AnimationHandler.getAnimation("robot_walk_backward").getKeyFrame(stateTime, true);
                 facingRight = false;
             } else {
@@ -164,10 +142,6 @@ public class Player {
     }
 
 
-
-    /**
-     * La méthode collectFlyingBox reste identique car la logique est indépendante de la physique.
-     */
     public void collectFlyingBox(FlyingBox box) {
         if (box == null) return;
 
@@ -183,9 +157,6 @@ public class Player {
         // La désactivation de la FlyingBox est gérée dans sa méthode onCollected()
     }
 
-    /**
-     * Rendu du joueur en se basant sur la position du body.
-     */
     public void render(SpriteBatch batch) {
         if (currentAnimation != null) {
             float posX = body.getPosition().x - currentMode.getWidth() / 2;
@@ -206,9 +177,6 @@ public class Player {
         this.movingBackward = movingBackward;
     }
 
-    /**
-     * Méthode appelée par le ContactListener pour réactiver le saut lorsque le joueur touche le sol.
-     */
     public void setOnGround(boolean onGround) {
         this.isOnGround = onGround;
     }
@@ -217,31 +185,19 @@ public class Player {
         return currentMode;
     }
 
-    /**
-     * Retourne la position X calculée à partir du body.
-     */
     public float getX() {
         return body.getPosition().x - currentMode.getWidth() / 2;
     }
 
-    /**
-     * Retourne la position Y calculée à partir du body.
-     */
     public float getY() {
         return body.getPosition().y - currentMode.getHeight() / 2;
     }
 
-    /**
-     * Modifie la position du body.
-     */
     public void setPosition(float x, float y) {
         // On positionne le body de façon à ce que (x,y) soit le coin inférieur gauche du sprite
         body.setTransform(x + currentMode.getWidth() / 2, y + currentMode.getHeight() / 2, body.getAngle());
     }
 
-    /**
-     * Retourne un rectangle correspondant à la hitbox du joueur pour des vérifications éventuelles.
-     */
     public com.badlogic.gdx.math.Rectangle getBoundingBox() {
         return new com.badlogic.gdx.math.Rectangle(getX(), getY(), currentMode.getWidth(), currentMode.getHeight());
     }

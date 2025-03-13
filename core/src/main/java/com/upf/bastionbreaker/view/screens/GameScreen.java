@@ -342,22 +342,21 @@ public class GameScreen implements Screen {
             player.setMovingBackward(false);
         }
 
-        // Si le mode touchpad est actif, on priorise son input
+        // Si le mode touchpad est actif, prioriser son input
         if (inputMode.equalsIgnoreCase("touchpad")) {
             float touchValue = controlsOverlay.getMovementKnobX();
-            if (Math.abs(touchValue) > 0.1f) {
-                // Augmente la sensibilité : multiplier par 2 (ajustable)
-                moveX = touchValue * 2f;
+            if (Math.abs(touchValue) > 0.05f) {  // seuil plus bas pour plus de réactivité
+                moveX = touchValue * 2f;         // augmentation de la puissance
             }
             if (controlsOverlay.getJumpButton().isPressed()) {
                 player.jump();
             }
         }
 
-        // Appliquer le mouvement avec la valeur brute
+        // Appliquer le mouvement avec la valeur normalisée
         player.move(moveX);
 
-        // Saut via la touche espace (si non utilisé via le touchpad)
+        // Saut avec la touche espace (si non utilisé via le touchpad)
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player.jump();
         }
@@ -367,6 +366,7 @@ public class GameScreen implements Screen {
             TransformationManager.getInstance().transform(player);
         }
     }
+
 
     private void updateCameraPosition() {
         OrthographicCamera cam = mapRenderer.getCamera();
