@@ -15,40 +15,26 @@ public class SoundManager {
     }
 
     private static void loadSounds() {
-//        soundMap.put("tank_engine", Gdx.audio.newSound(Gdx.files.internal("sounds/tank_engine.ogg")));
-//        soundMap.put("tank_shot", Gdx.audio.newSound(Gdx.files.internal("sounds/tank_shot.ogg")));
-//        soundMap.put("robot_walk", Gdx.audio.newSound(Gdx.files.internal("sounds/robot_walk.ogg")));
-//        soundMap.put("robot_shot", Gdx.audio.newSound(Gdx.files.internal("sounds/robot_shot.ogg")));
-//        soundMap.put("canon_aiming", Gdx.audio.newSound(Gdx.files.internal("sounds/canon_aiming.ogg")));
-//        soundMap.put("helicopter", Gdx.audio.newSound(Gdx.files.internal("sounds/helicopter.ogg")));
+        soundMap.put("tank_engine", Gdx.audio.newSound(Gdx.files.internal("sounds/tank_engine.ogg")));
+        soundMap.put("tank_shot", Gdx.audio.newSound(Gdx.files.internal("sounds/tank_shot.ogg")));
+        soundMap.put("robot_walk", Gdx.audio.newSound(Gdx.files.internal("sounds/robot_walk.ogg")));
+        soundMap.put("robot_shot", Gdx.audio.newSound(Gdx.files.internal("sounds/robot_shot.ogg")));
+        soundMap.put("canon_aiming", Gdx.audio.newSound(Gdx.files.internal("sounds/canon_aiming.ogg")));
+        soundMap.put("helicopter", Gdx.audio.newSound(Gdx.files.internal("sounds/helicopter.ogg")));
     }
 
     public static void playLoopingSound(String soundName, float volume) {
-        if (soundMap.containsKey(soundName)) {
-            Sound sound = soundMap.get(soundName);
-            if (sound != null) {
-                long id = sound.loop(volume);
-                playingSounds.put(soundName, id);
-            } else {
-                Gdx.app.log("DEBUG_GAME", "⚠️ Son " + soundName + " non chargé, annulation du play.");
-            }
+        if (soundMap.containsKey(soundName) && !playingSounds.containsKey(soundName)) {
+            long id = soundMap.get(soundName).loop(volume);
+            playingSounds.put(soundName, id);
         }
     }
 
     public static void playSound(String soundName) {
         if (soundMap.containsKey(soundName)) {
-            Sound sound = soundMap.get(soundName);
-            if (sound != null) {
-                long id = sound.play(defaultVolume);
-                if (id == -1) {
-                    Gdx.app.log("DEBUG_SOUND", "⚠️ Le son " + soundName + " n'est pas encore prêt à être joué.");
-                }
-            } else {
-                Gdx.app.log("DEBUG_SOUND", "⚠️ Son " + soundName + " non chargé, annulation du play.");
-            }
+            soundMap.get(soundName).play(defaultVolume);
         }
     }
-
 
     public static void stopSound(String soundName) {
         if (soundMap.containsKey(soundName) && playingSounds.containsKey(soundName)) {

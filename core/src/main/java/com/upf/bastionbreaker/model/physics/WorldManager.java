@@ -1,7 +1,7 @@
 package com.upf.bastionbreaker.model.physics;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
 public class WorldManager {
     private static World world;
@@ -22,7 +22,6 @@ public class WorldManager {
     }
 
     public static void update(float delta) {
-        // Effectue une étape de simulation Box2D
         world.step(delta, 6, 2);
     }
 

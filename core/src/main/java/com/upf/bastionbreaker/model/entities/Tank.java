@@ -14,12 +14,7 @@ public class Tank extends PlayerMode {
         super("tank", 2.0f, 120, 2.0f, 1.5f, false);
 
         // Chargement du son du moteur du Tank
-        try {
-            engineSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank_engine.ogg"));
-        } catch (Exception e) {
-            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : Impossible de charger le son tank_engine.ogg", e);
-            engineSound = null; // Évite le crash en mettant à null
-        }
+        engineSound = Gdx.audio.newSound(Gdx.files.internal("sounds/tank_engine.ogg"));
     }
 
     public void playEngineSound() {

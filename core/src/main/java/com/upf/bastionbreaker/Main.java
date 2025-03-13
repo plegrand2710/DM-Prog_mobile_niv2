@@ -2,35 +2,11 @@ package com.upf.bastionbreaker;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.upf.bastionbreaker.view.screens.GameScreen;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.view.animation.AnimationHandler;
-import com.upf.bastionbreaker.view.screens.GameScreen;
-import com.upf.bastionbreaker.view.screens.SplashScreen;
 
-public class MainPauline extends Game {
-    private SpriteBatch batch;
-
-//    @Override
-//    public void create() {
-//        batch = new SpriteBatch();
-//        Gdx.app.log("DEBUGsplashScreen", "main");
-//
-//        setScreen(new SplashScreen(this));
-//        Gdx.app.log("DEBUGsplashScreen", "screen lancé");
-//
-//    }
-//
-//    @Override
-//    public void render() {
-//        super.render();
-//    }
-//
-//    @Override
-//    public void dispose() {
-//        batch.dispose();
-//    }
-
+public class Main extends Game {
     @Override
     public void create() {
         try {
@@ -44,13 +20,11 @@ public class MainPauline extends Game {
                 return;
             }
 
-            //GameScreen gameScreen = new GameScreen("touchpad");
             // 🔹 Étape 3 : Charger les animations APRES les textures
             AnimationHandler.loadAnimations();
-            //setScreen(gameScreen);
 
-            setScreen(new SplashScreen(this));
-
+            // 🔹 Étape 4 : Définir l'écran principal après avoir tout chargé
+            setScreen(new GameScreen("touchpad"));
             Gdx.app.log("Main", "✅ GameScreen défini comme écran principal");
 
         } catch (Exception e) {
@@ -61,7 +35,7 @@ public class MainPauline extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        TextureManager.dispose();
+        TextureManager.dispose(); // 🔹 Libérer proprement les textures
         Gdx.app.log("Main", "🚀 Nettoyage du jeu terminé");
     }
 }
