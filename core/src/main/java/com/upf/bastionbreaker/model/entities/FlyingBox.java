@@ -29,23 +29,9 @@ public class FlyingBox {
         this.height = gameObject.getHeight() / MapRenderer.TILE_SIZE;
 
         // Récupération de HP et propriété destructible
-        Object hpProp = gameObject.getProperties().get("HP");
-        this.hp = (hpProp instanceof Number) ? ((Number)hpProp).intValue() : 20;
-
-        Object destructibleProp = gameObject.getProperties().get("destructible");
-        if(destructibleProp instanceof Boolean)
-            this.destructible = (Boolean) destructibleProp;
-        else if(destructibleProp instanceof String)
-            this.destructible = Boolean.parseBoolean((String)destructibleProp);
-
-        // Temps de respawn
-        Object respawnProp = gameObject.getProperties().get("respawn_time");
-        if(respawnProp instanceof Number)
-            this.respawnTime = ((Number)respawnProp).floatValue();
-        else if(respawnProp instanceof String)
-            this.respawnTime = Float.parseFloat((String)respawnProp);
-        else
-            this.respawnTime = DEFAULT_RESPAWN_DELAY;
+        this.hp = getIntProperty(gameObject, "HP", 20);
+        this.destructible = getBooleanProperty(gameObject, "destructible", false);
+        this.respawnTime = getFloatProperty(gameObject, "respawn_time", DEFAULT_RESPAWN_DELAY);
 
         // Déterminer le type d'effet à partir du nom de l'objet
         String name = gameObject.getName() != null ? gameObject.getName() : "";
@@ -60,7 +46,7 @@ public class FlyingBox {
 
         // Récupérer la texture depuis l'atlas
         String spriteName = gameObject.getProperty("sprite", String.class);
-        if (spriteName != null) {
+        if (spriteName != null && !spriteName.isEmpty()) {
             TextureAtlas atlas = TextureManager.getGameAtlas();
             this.texture = atlas.findRegion(spriteName);
             if (this.texture == null) {
@@ -82,8 +68,7 @@ public class FlyingBox {
         if (!active) {
             respawnTimer += delta;
             if (respawnTimer >= respawnTime) {
-                active = true;
-                respawnTimer = 0f;
+                setActive(true);
             }
         }
     }
@@ -103,9 +88,16 @@ public class FlyingBox {
     public void onCollected(Player player) {
         if (active) {
             player.collectFlyingBox(this);
-            active = false;
-            respawnTimer = 0f;
+            setActive(false);
         }
+    }
+
+    /**
+     * Active ou désactive la FlyingBox.
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+        this.respawnTimer = 0f;
     }
 
     public boolean isActive() {
@@ -121,5 +113,30 @@ public class FlyingBox {
 
     public String getEffectType() {
         return effectType;
+    }
+
+    /**
+     * Méthodes utilitaires pour récupérer des propriétés de `GameObject`
+     * et éviter les erreurs de conversion.
+     */
+    private int getIntProperty(GameObject gameObject, String property, int defaultValue) {
+        Object prop = gameObject.getProperties().get(property);
+        if (prop instanceof Number) return ((Number) prop).intValue();
+        if (prop instanceof String) try { return Integer.parseInt((String) prop); } catch (NumberFormatException e) {}
+        return defaultValue;
+    }
+
+    private float getFloatProperty(GameObject gameObject, String property, float defaultValue) {
+        Object prop = gameObject.getProperties().get(property);
+        if (prop instanceof Number) return ((Number) prop).floatValue();
+        if (prop instanceof String) try { return Float.parseFloat((String) prop); } catch (NumberFormatException e) {}
+        return defaultValue;
+    }
+
+    private boolean getBooleanProperty(GameObject gameObject, String property, boolean defaultValue) {
+        Object prop = gameObject.getProperties().get(property);
+        if (prop instanceof Boolean) return (Boolean) prop;
+        if (prop instanceof String) return Boolean.parseBoolean((String) prop);
+        return defaultValue;
     }
 }

@@ -3,13 +3,25 @@ package com.upf.bastionbreaker.model.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.upf.bastionbreaker.view.screens.MapRenderer;
 import com.upf.bastionbreaker.model.audio.SoundManager;
+import com.upf.bastionbreaker.view.animation.AnimationHandler;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Player {
     private float x, y;
     private PlayerMode currentMode;
     private int hp, shield;
+    private boolean isOnGround = true; // Pour le saut
+    private Vector2 velocity = new Vector2(0, 0);
+    private static final float JUMP_FORCE = 5f;
+    private static final float GRAVITY = -9.8f;
+
+    // Gestion des animations
+    private TextureRegion currentAnimation;
+    private boolean facingRight = true;
+    private float stateTime = 0;
 
     // Gestion des mouvements
     private boolean movingForward = false;
@@ -17,28 +29,18 @@ public class Player {
     private boolean turning = false;
 
     public Player(float startX, float startY) {
-        // Les coordonnées sont déjà en unités de tuiles
         this.x = startX;
         this.y = startY;
         this.hp = 100;
         this.shield = 0;
         this.currentMode = new Tank(); // Démarrage en mode Tank par défaut
+        this.currentAnimation = AnimationHandler.getAnimation("tank_idle").getKeyFrame(0, true);
     }
 
-    public void transform() {
-        if (currentMode instanceof Tank) {
-            currentMode = new Robot();
-        } else {
-            currentMode = new Tank();
-        }
-        System.out.println("🔄 Transformation en " + (currentMode instanceof Tank ? "TANK" : "ROBOT"));
-    }
-
-    // Ajoutez dans la classe Player
     public void switchMode() {
         if (currentMode instanceof Tank) {
             currentMode = new Robot();
-            SoundManager.stopSound("tank_engine"); // Arrête le son du tank lors de la transformation
+            SoundManager.stopSound("tank_engine");
         } else {
             currentMode = new Tank();
         }
@@ -50,58 +52,44 @@ public class Player {
     }
 
     public void jump() {
-        if (currentMode.canJump()) {
-            System.out.println("🤖 Robot a sauté !");
-            // Logique de saut à ajouter ici
+        if (currentMode instanceof Robot && isOnGround) { // ✅ Vérifie s'il peut sauter
+            velocity.y = JUMP_FORCE;
+            isOnGround = false;
+            SoundManager.playSound("robot_jump");
+
+            System.out.println("🟢 [DEBUG] Jump effectué !");
+        } else {
+            System.out.println("❌ [DEBUG] Impossible de sauter !");
         }
     }
 
-    public void render(SpriteBatch batch) {
-        if (currentMode.getTexture() != null) {
-            batch.draw(currentMode.getTexture(), x, y, currentMode.getWidth(), currentMode.getHeight());
-        }
-    }
-
-    public Rectangle getBoundingBox() {
-        return new Rectangle(x, y, currentMode.getWidth(), currentMode.getHeight());
-    }
-
-    public int getWeight() {
-        return currentMode.getWeight();
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public int getShield() {
-        return shield;
-    }
-
-    // Méthode pour collecter un FlyingBox
-    public void collectFlyingBox(FlyingBox box) {
-        if (box.getEffectType().equalsIgnoreCase("heal")) {
-            hp = Math.min(100, hp + 20);
-            System.out.println("Player healed: HP = " + hp);
-            // Vous pouvez ajouter un appel à SoundManager.playSound("...") ici si souhaité
-        } else if (box.getEffectType().equalsIgnoreCase("shield")) {
-            shield = Math.min(100, shield + 20);
-            System.out.println("Player shield increased: Shield = " + shield);
-            // Vous pouvez également jouer un son pour ce power-up
-        }
-    }
 
     public void update(float delta) {
-        float movementSpeed = currentMode.getSpeed() * delta;
+        stateTime += delta; // Mise à jour du temps d'animation
 
+        // Appliquer la gravité
+        if (!isOnGround) {
+            velocity.y += GRAVITY * delta;
+            y += velocity.y * delta;
+        }
+
+        // Vérifier si le joueur touche le sol (limite basse)
+        if (y <= 0) {
+            y = 0;
+            isOnGround = true;
+            velocity.y = 0;
+        }
+
+        // Gestion du mouvement horizontal
+        float movementSpeed = currentMode.getSpeed() * delta;
         if (movingForward) {
-            x += movementSpeed;  // Déplacer vers la droite
+            x += movementSpeed;
         }
         if (movingBackward) {
-            x -= movementSpeed;  // Déplacer vers la gauche
+            x -= movementSpeed;
         }
 
-        // Gestion du son en fonction du mode et du mouvement
+        // Gestion du son du Tank
         if (currentMode instanceof Tank) {
             if (!SoundManager.isPlaying("tank_engine")) {
                 SoundManager.playLoopingSound("tank_engine", 0.4f);
@@ -113,31 +101,63 @@ public class Player {
             }
         }
 
+        // Gestion du son du Robot
         if (currentMode instanceof Robot) {
-            if (movingForward || movingBackward) {
-                SoundManager.playLoopingSound("robot_walk", 0.6f);
+            if (isMoving()) {
+                if (!SoundManager.isPlaying("robot_walk")) {
+                    SoundManager.playLoopingSound("robot_walk", 0.7f);
+                }
             } else {
                 SoundManager.stopSound("robot_walk");
             }
+        } else {
+            SoundManager.stopSound("robot_walk");
         }
 
+        updateAnimation(delta);
+    }
+
+    public void updateAnimation(float delta) {
         if (currentMode instanceof Robot) {
-            ((Robot) currentMode).update(delta, movingForward, movingBackward, turning);
+            if (velocity.x > 0) {
+                currentAnimation = AnimationHandler.getAnimation("robot_walk_right").getKeyFrame(stateTime, true);
+                facingRight = true;
+            } else if (velocity.x < 0) {
+                currentAnimation = AnimationHandler.getAnimation("robot_walk_left").getKeyFrame(stateTime, true);
+                facingRight = false;
+            } else {
+                currentAnimation = AnimationHandler.getAnimation("robot_idle").getKeyFrame(stateTime, true);
+            }
+        } else {
+            currentAnimation = AnimationHandler.getAnimation("tank_idle").getKeyFrame(stateTime, true);
         }
     }
 
-    // Retourne le TextureRegion du mode courant
-    public TextureRegion getTexture() {
-        return currentMode.getTexture();
+    public void collectFlyingBox(FlyingBox box) {
+        if (box == null) return;
+
+        if (box.getEffectType().equalsIgnoreCase("heal")) {
+            hp = Math.min(100, hp + 20); // Limite la vie à 100
+            System.out.println("🩹 Vie restaurée : " + hp);
+            SoundManager.playSound("heal_sound");
+        } else if (box.getEffectType().equalsIgnoreCase("shield")) {
+            shield = Math.min(100, shield + 20); // Limite le bouclier à 100
+            System.out.println("🛡️ Bouclier augmenté : " + shield);
+            SoundManager.playSound("shield_sound");
+        }
+
+        // La désactivation de la FlyingBox est déjà gérée dans sa méthode onCollected()
     }
 
-    public void setPosition(float newX, float newY) {
-        this.x = newX;
-        this.y = newY;
+    public void render(SpriteBatch batch) {
+        if (currentAnimation != null) {
+            batch.draw(currentAnimation, x, y, currentMode.getWidth(), currentMode.getHeight());
+        }
     }
 
-    public float getX() { return x; }
-    public float getY() { return y; }
+    public boolean isMoving() {
+        return movingForward || movingBackward;
+    }
 
     public void setMovingForward(boolean movingForward) {
         this.movingForward = movingForward;
@@ -147,11 +167,26 @@ public class Player {
         this.movingBackward = movingBackward;
     }
 
-    public void setTurning(boolean turning) {
-        this.turning = turning;
-    }
-
     public PlayerMode getCurrentMode() {
         return currentMode;
+    }
+
+    // --- Ajouts pour la gestion de la position et des collisions ---
+
+    public void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public Rectangle getBoundingBox() {
+        return new Rectangle(x, y, currentMode.getWidth(), currentMode.getHeight());
     }
 }

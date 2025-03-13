@@ -6,8 +6,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.badlogic.gdx.math.MathUtils;
 import com.upf.bastionbreaker.model.audio.SoundManager;
+import com.upf.bastionbreaker.model.entities.Tank;
 import com.upf.bastionbreaker.model.entities.Bastion;
 import com.upf.bastionbreaker.model.entities.Checkpoint;
 import com.upf.bastionbreaker.model.entities.ChainLink;
@@ -19,7 +20,6 @@ import com.upf.bastionbreaker.model.entities.IceBridge;
 import com.upf.bastionbreaker.model.entities.Obstacle;
 import com.upf.bastionbreaker.model.entities.Player;
 import com.upf.bastionbreaker.model.entities.TNT;
-import com.upf.bastionbreaker.model.entities.Tank;
 import com.upf.bastionbreaker.model.entities.UnstablePlatform;
 import com.upf.bastionbreaker.model.map.GameObject;
 import com.upf.bastionbreaker.model.map.MapManager;
@@ -27,7 +27,6 @@ import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.controller.input.GyroscopeController;
 import com.upf.bastionbreaker.view.ui.ControlsOverlay;
 import com.upf.bastionbreaker.controller.gameplay.TransformationManager;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +66,6 @@ public class GameScreen implements Screen {
     private float mapWidth = MapRenderer.MAP_WIDTH_TILES;
     private float mapHeight = MapRenderer.MAP_HEIGHT_TILES;
 
-    // Constructeur recevant le mode d'entrée
     public GameScreen(String inputMode) {
         this.inputMode = inputMode;
     }
@@ -77,27 +75,22 @@ public class GameScreen implements Screen {
         System.out.println("✅ Initialisation de GameScreen...");
         TextureManager.load();
 
-        // Initialisation des contrôleurs d'entrée selon le mode choisi
         if (inputMode.equalsIgnoreCase("touchpad")) {
             controlsOverlay = new ControlsOverlay(true);
         } else {
             controlsOverlay = new ControlsOverlay(false);
         }
-        gyroscopeController = new GyroscopeController(); // Pour une gestion future
+        gyroscopeController = new GyroscopeController();
 
-        // Après avoir créé controlsOverlay...
         if (inputMode.equalsIgnoreCase("touchpad")) {
-            // Ajouter un listener au bouton "Change Mode" pour déclencher la transformation
             controlsOverlay.getModeButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
                     TransformationManager.getInstance().transform(player);
-                    // Ajustement pour éviter les problèmes de collision après transformation
-                    player.setPosition(player.getX(), player.getY() + 0.1f);
+                    player.setPosition(player.getX(), player.getY());
                 }
             });
         }
-
 
         try {
             mapManager = new MapManager("assets/map/bastion_breaker_map.tmx");
@@ -222,25 +215,24 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Effacer l'écran
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        handleInput(); // Gestion des entrées clavier et contrôles
-
-        // Appliquer la gravité et résoudre les collisions du joueur avec le Floor
-        applyPlayerGravity();
-        resolveFloorCollisions();
+        handleInput();
 
         // Mise à jour du joueur
         player.update(delta);
+        // Gestion des collisions avec le sol
+        handleFloorCollisions();
+        // Mise à jour de la caméra pour suivre le joueur
+        updateCameraPosition();
 
         // Mise à jour des objets dynamiques
         updateChainLinks(delta);
         for (TNT tnt : tnts) {
             tnt.update(delta);
             if (player.getBoundingBox().overlaps(tnt.getBounds())) {
-                if (!isTankMode() && tnt.isPushable()) {
+                if (!(player.getCurrentMode() instanceof Tank) && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
             }
@@ -255,7 +247,6 @@ public class GameScreen implements Screen {
             up.update(delta, player.getBoundingBox());
         }
 
-        // Déplacement de la caméra via le touchpad (uniquement en mode "touchpad")
         if (inputMode.equalsIgnoreCase("touchpad")) {
             float moveX = controlsOverlay.getMovementKnobX();
             if (Math.abs(moveX) > 0.1f) {
@@ -263,42 +254,18 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Limiter la caméra aux bords de la carte
-        OrthographicCamera cam = mapRenderer.getCamera();
-        float halfViewportWidth = cam.viewportWidth / 2;
-        float halfViewportHeight = cam.viewportHeight / 2;
-        if (cam.position.x - halfViewportWidth < 0) {
-            cam.position.x = halfViewportWidth;
-        }
-        if (cam.position.y - halfViewportHeight < 0) {
-            cam.position.y = halfViewportHeight;
-        }
-        if (cam.position.x + halfViewportWidth > mapWidth()) {
-            cam.position.x = mapWidth() - halfViewportWidth;
-        }
-        if (cam.position.y + halfViewportHeight > mapHeight()) {
-            cam.position.y = mapHeight() - halfViewportHeight;
-        }
-        cam.update();
-
-        // Maintenir le joueur centré (avec léger décalage vers la gauche)
-        float screenCenterX = cam.position.x - (MapRenderer.VIEWPORT_WIDTH / 2);
-        float playerX = screenCenterX + (MapRenderer.VIEWPORT_WIDTH / 4);
-        player.setPosition(playerX, player.getBoundingBox().y);
-
         // Ajustement dynamique du son du tank
-        if (isTankMode()) {
+        if (player.getCurrentMode() instanceof Tank) {
             float touchIntensity = inputMode.equalsIgnoreCase("touchpad")
                 ? Math.abs(controlsOverlay.getMovementKnobX()) : 0;
             float volume = 0.4f + 0.3f * touchIntensity;
             SoundManager.adjustVolume("tank_engine", volume);
         }
 
-        // Rendu de la carte et de la scène de jeu
         mapRenderer.update(delta);
         mapRenderer.render();
 
-        batch.setProjectionMatrix(cam.combined);
+        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
         batch.begin();
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
@@ -333,68 +300,94 @@ public class GameScreen implements Screen {
         player.render(batch);
         batch.end();
 
-        // Dessiner l'overlay en dernier pour qu'il soit au premier plan
-        if (inputMode.equalsIgnoreCase("touchpad")) {
-            if (controlsOverlay != null) {
-                controlsOverlay.update(delta);
-                controlsOverlay.draw();
-            }
+        if (inputMode.equalsIgnoreCase("touchpad") && controlsOverlay != null) {
+            controlsOverlay.update(delta);
+            controlsOverlay.draw();
         }
 
-        // Vérification des hélicoptères pour jouer "helicopter.ogg"
         checkHelicopterSound();
     }
 
-
-    private boolean isTankMode() {
-        return player.getCurrentMode() instanceof Tank;
-    }
-
-    private float mapWidth() {
-        return MapRenderer.MAP_WIDTH_TILES;
-    }
-
-    private float mapHeight() {
-        return MapRenderer.MAP_HEIGHT_TILES;
-    }
-
     private void handleInput() {
-        player.setMovingForward(Gdx.input.isKeyPressed(Input.Keys.D));
-        player.setMovingBackward(Gdx.input.isKeyPressed(Input.Keys.A));
+        // 🟢 Gestion clavier
+        boolean movingRight = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean movingLeft = Gdx.input.isKeyPressed(Input.Keys.A);
+
+        if (movingRight) {
+            player.move(1 * Gdx.graphics.getDeltaTime()); // Déplacement fluide
+            player.setMovingForward(true);
+            player.setMovingBackward(false);
+        } else if (movingLeft) {
+            player.move(-1 * Gdx.graphics.getDeltaTime());
+            player.setMovingBackward(true);
+            player.setMovingForward(false);
+        } else {
+            player.setMovingForward(false);
+            player.setMovingBackward(false);
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player.jump();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            // Utiliser TransformationManager pour basculer le mode
-            TransformationManager.getInstance().transform(player);
-            player.setPosition(player.getX(), player.getY() + 0.1f);
-        }
-    }
 
-    private void applyPlayerGravity() {
-        float gravityForce = 0.05f;
-        boolean onGround = false;
-        for (Floor floor : floors) {
-            if (player.getBoundingBox().overlaps(floor.getBounds())) {
-                onGround = true;
-                player.setPosition(player.getBoundingBox().x, floor.getBounds().y + floor.getBounds().height);
-                break;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            TransformationManager.getInstance().transform(player);
+        }
+
+        // 🟢 Gestion Touchpad (ne pas écraser clavier)
+        if (inputMode.equalsIgnoreCase("touchpad")) {
+            float moveX = controlsOverlay.getMovementKnobX();
+
+            if (Math.abs(moveX) > 0.1f) {
+                float adjustedSpeed = moveX * 0.5f * Gdx.graphics.getDeltaTime();
+                player.move(adjustedSpeed);
+
+                // 🔹 Active le son et le mouvement
+                player.setMovingForward(moveX > 0);
+                player.setMovingBackward(moveX < 0);
+            } else {
+                player.setMovingForward(false);
+                player.setMovingBackward(false);
+            }
+
+            if (controlsOverlay.getJumpButton().isPressed()) {
+                player.jump();
             }
         }
-        if (!onGround) {
-            player.setPosition(player.getBoundingBox().x, player.getY() - gravityForce);
-        }
     }
 
-    private void resolveFloorCollisions() {
+
+
+
+    private void handleFloorCollisions() {
+        boolean onGround = false;
+
         for (Floor floor : floors) {
-            float floorTop = floor.getBounds().y + floor.getBounds().height;
             if (player.getBoundingBox().overlaps(floor.getBounds())) {
-                if (player.getBoundingBox().y < floorTop) {
-                    player.setPosition(player.getBoundingBox().x, floorTop);
+                float floorTop = floor.getBounds().y + floor.getBounds().height;
+                if (player.getY() < floorTop) {
+                    player.setPosition(player.getX(), floorTop);
+                    onGround = true;
                 }
             }
         }
+
+        player.setOnGround(onGround); // ✅ Met à jour `isOnGround` !
+    }
+
+
+    /**
+     * Met à jour la position de la caméra pour suivre le joueur sans sortir de la carte.
+     */
+    private void updateCameraPosition() {
+        OrthographicCamera cam = mapRenderer.getCamera();
+        float halfViewportWidth = cam.viewportWidth / 2;
+        float halfViewportHeight = cam.viewportHeight / 2;
+        float targetX = player.getX() + player.getCurrentMode().getWidth() / 2;
+        float targetY = player.getY() + player.getCurrentMode().getHeight() / 2;
+        cam.position.x = MathUtils.clamp(targetX, halfViewportWidth, mapWidth - halfViewportWidth);
+        cam.position.y = MathUtils.clamp(targetY, halfViewportHeight, mapHeight - halfViewportHeight);
+        cam.update();
     }
 
     private void updateChainLinks(float delta) {
