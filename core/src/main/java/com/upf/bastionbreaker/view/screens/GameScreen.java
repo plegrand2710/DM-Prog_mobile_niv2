@@ -6,10 +6,14 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.upf.bastionbreaker.controller.input.TouchpadController;
 import com.upf.bastionbreaker.model.audio.SoundManager;
 import com.upf.bastionbreaker.model.entities.Tank;
@@ -40,6 +44,11 @@ public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
     private MapManager mapManager;
     private SpriteBatch batch;
+
+    private OrthographicCamera camera;
+    private Viewport viewport;
+    private ParallaxBackground parallaxBackground;
+    private TextureAtlas backgroundAtlas;
 
     // Listes d'objets
     private List<Checkpoint> checkpoints;
@@ -84,6 +93,29 @@ public class GameScreen implements Screen {
     public void show() {
         System.out.println("✅ Initialisation de GameScreen...");
         TextureManager.load();
+
+        backgroundAtlas = new TextureAtlas(Gdx.files.internal("atlas/background/background.atlas"));
+
+        TextureRegion[] parallaxLayers = new TextureRegion[]{
+            backgroundAtlas.findRegion("background", 1), // Fond le plus éloigné (ex: ciel)
+            backgroundAtlas.findRegion("background", 2), // Second plan (ex: montagnes)
+            backgroundAtlas.findRegion("background", 3), // Milieu (ex: arbres lointains)
+            backgroundAtlas.findRegion("background", 4), // Premier plan (ex: arbres proches)
+            backgroundAtlas.findRegion("background", 5)  // Très proche (ex: herbe, sol)
+        };
+
+        if (parallaxLayers[0] == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `background 1` introuvable !");
+//        if (parallaxLayers[1] == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `background 2` introuvable !");
+//        if (parallaxLayers[2] == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `background 3` introuvable !");
+//        if (parallaxLayers[3] == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `background 4` introuvable !");
+//        if (parallaxLayers[4] == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `background 5` introuvable !");
+
+
+        float[] speeds = { 0.1f, 0.3f, 0.5f, 0.7f, 1.0f }; // Différentes vitesses (le plus proche bouge plus)
+
+        parallaxBackground = new ParallaxBackground(parallaxLayers, speeds);
+
+
 
         MapManager.initialize("map/bastion_breaker_map.tmx");
         mapManager = MapManager.getInstance();
@@ -269,7 +301,12 @@ public class GameScreen implements Screen {
         mapManager.createFloorBodies(WorldManager.getWorld());
         debugRenderer = new Box2DDebugRenderer();
 
+        camera = mapRenderer.getCamera(); // 🎯 On utilise la caméra de la map !
+        viewport = new FitViewport(1555, 720, camera);
+        viewport.apply();
+
         batch = new SpriteBatch();
+
     }
 
     @Override
@@ -300,6 +337,17 @@ public class GameScreen implements Screen {
         // Mise à jour de la caméra pour suivre le joueur
         updateCameraPosition();
 
+        //viewport.apply();
+
+        camera.position.set(player.getX(), player.getY(), 0);
+        camera.update();
+
+        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
+        batch.begin();
+        //parallaxBackground.render(batch, camera);
+
+        mapRenderer.render();
+
         // Mise à jour des objets dynamiques
         updateChainLinks(delta);
         for (TNT tnt : tnts) {
@@ -320,11 +368,6 @@ public class GameScreen implements Screen {
             up.update(delta, player.getBoundingBox());
         }
 
-        mapRenderer.update(delta);
-        mapRenderer.render();
-
-        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
-        batch.begin();
         for (Obstacle obstacle : obstacles) {
             obstacle.render(batch);
         }
@@ -355,7 +398,9 @@ public class GameScreen implements Screen {
         for (UnstablePlatform up : unstablePlatforms) {
             up.render(batch);
         }
+
         player.render(batch);
+
         batch.end();
 
         if (inputMode.equalsIgnoreCase("touchpad")) {
@@ -396,6 +441,8 @@ public class GameScreen implements Screen {
 
         // Affichage du debug de Box2D (optionnel)
         debugRenderer.render(WorldManager.getWorld(), mapRenderer.getCamera().combined);
+
+
     }
 
 
@@ -442,62 +489,6 @@ public class GameScreen implements Screen {
 
     }
 
-
-//    private void handleInput(float delta) {
-//        float moveX = 0;
-//
-//        try {
-//            // Gestion clavier : valeurs brutes
-//            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-//                moveX = 1;
-//                player.setMovingForward(true);
-//                player.setMovingBackward(false);
-//            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-//                moveX = -1;
-//                player.setMovingBackward(true);
-//                player.setMovingForward(false);
-//            } else {
-//                player.setMovingForward(false);
-//                player.setMovingBackward(false);
-//            }
-//
-//            // Gestion du mode touchpad
-//            if (inputMode.equalsIgnoreCase("touchpad") && touchPadController != null) {
-//                float touchValue = touchPadController.getKnobPercentX();  // Récupère l'input du stick
-//                if (Math.abs(touchValue) > 0.05f) {  // Seuil de détection
-//                    moveX = touchValue * 2f;
-//                }
-//                if (touchPadController.isJumpPressed()) {
-//                    player.jump();
-//                }
-//            }
-//
-//            // Gestion du mode gyroscope
-//            if (inputMode.equalsIgnoreCase("gyroscopic") && gyroscopeController != null) {
-//                float gyroInput = gyroscopeController.getMovementX();  // Récupère l'inclinaison
-//                if (Math.abs(gyroInput) > 0.05f) {  // Seuil de détection
-//                    moveX = gyroInput * 2f;
-//                }
-//            }
-//
-//            // Appliquer le mouvement calculé
-//            player.move(moveX);
-//
-//            // Gestion du saut via la touche espace (si non utilisé via le touchpad)
-//            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-//                player.jump();
-//            }
-//
-//            // Transformation du mode avec la touche "T"
-//            if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-//                TransformationManager.getInstance().transform(player);
-//            }
-//
-//        } catch (Exception e) {
-//            Gdx.app.error("DEBUG_GAME", "❌ ERREUR dans `handleInput()`: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
 
     private void updateCameraPosition() {
         OrthographicCamera cam = mapRenderer.getCamera();
@@ -569,6 +560,10 @@ public class GameScreen implements Screen {
         mapRenderer.getCamera().viewportWidth = MapRenderer.VIEWPORT_WIDTH;
         mapRenderer.getCamera().viewportHeight = MapRenderer.VIEWPORT_HEIGHT;
         mapRenderer.getCamera().update();
+
+        viewport.update(width, height, true);
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
     }
 
 
