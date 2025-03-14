@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
 //        if (parallaxLayers[4] == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `background 5` introuvable !");
 
 
-        float[] speeds = { 0.1f, 0.3f, 0.5f, 0.7f, 1.0f }; // Différentes vitesses (le plus proche bouge plus)
+        float[] speeds = { 0.6f, 0.7f, 0.8f, 0.9f, 1.0f }; // Différentes vitesses (le plus proche bouge plus)
 
         parallaxBackground = new ParallaxBackground(parallaxLayers, speeds);
 
