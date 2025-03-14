@@ -2,12 +2,15 @@ package com.upf.bastionbreaker.view.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.upf.bastionbreaker.controller.input.TouchpadController;
 import com.upf.bastionbreaker.model.audio.SoundManager;
 import com.upf.bastionbreaker.model.entities.Tank;
 import com.upf.bastionbreaker.model.entities.Bastion;
@@ -58,6 +61,8 @@ public class GameScreen implements Screen {
     // Contrôleurs d'entrée
     private ControlsOverlay controlsOverlay;
     private GyroscopeController gyroscopeController;
+    private TouchpadController leftTouchpadController;
+    private TouchpadController rightTouchpadController;
 
     // Mode d'entrée ("touchpad" ou "gyroscopic")
     private String inputMode;
@@ -68,9 +73,11 @@ public class GameScreen implements Screen {
 
     // Box2D Debug renderer
     private Box2DDebugRenderer debugRenderer;
+    private TextureAtlas gameAtlas;
 
-    public GameScreen(String inputMode) {
+    public GameScreen(String inputMode, TextureAtlas gameAtlas) {
         this.inputMode = inputMode;
+        this.gameAtlas = gameAtlas;
     }
 
     @Override
@@ -107,20 +114,37 @@ public class GameScreen implements Screen {
 
         if (inputMode.equalsIgnoreCase("touchpad")) {
             controlsOverlay = new ControlsOverlay(true);
-        } else {
-            controlsOverlay = new ControlsOverlay(false);
-        }
-        gyroscopeController = new GyroscopeController();
+            // Par exemple, le touchpad de gauche pour le mouvement
+            leftTouchpadController = new TouchpadController(gameAtlas, 50, 50, 200, 200);
+            // Et le touchpad de droite pour une action (exemple : viser ou autre)
+            rightTouchpadController = new TouchpadController(gameAtlas, Gdx.graphics.getWidth() - 250, 50, 200, 200);
 
-        if (inputMode.equalsIgnoreCase("touchpad")) {
-            controlsOverlay.getModeButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
-                    TransformationManager.getInstance().transform(player);
-                    // Dans une version physique, on n'ajuste plus manuellement la position
-                }
-            });
+            // Combiner les stages avec un InputMultiplexer
+            InputMultiplexer multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(leftTouchpadController.getStage());
+            multiplexer.addProcessor(rightTouchpadController.getStage());
+            multiplexer.addProcessor(controlsOverlay.getStage());
+            Gdx.input.setInputProcessor(multiplexer);
         }
+
+        if (!inputMode.equalsIgnoreCase("touchpad")) {
+            controlsOverlay = new ControlsOverlay(false);
+            gyroscopeController = new GyroscopeController();
+            // Ici, vous pouvez aussi ajouter le gyroscopeController dans un InputMultiplexer
+            // si vous souhaitez combiner d'autres InputProcessors.
+            Gdx.input.setInputProcessor(controlsOverlay.getStage());
+        }
+
+
+
+        controlsOverlay.getModeButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                TransformationManager.getInstance().transform(player);
+                // Dans une version physique, on n'ajuste plus manuellement la position
+            }
+        });
+
 
         try {
 
@@ -254,28 +278,32 @@ public class GameScreen implements Screen {
             Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `player` est NULL ! Impossible d'exécuter `render()`.");
             return;
         }
+
         // Mettre à jour la physique Box2D
-
-
-
         WorldManager.update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        handleInput();
+        // Sélection du mode d'input
+        if (inputMode.equalsIgnoreCase("gyroscopic") && gyroscopeController != null) {
+            // Appel du gyroscope pour déplacer le joueur
+            gyroscopeController.handleInput(player, delta);
+        } else {
+            // Gestion du clavier et du touchpad
+            handleInput();
+        }
 
-        // Mise à jour du joueur (les positions sont mises à jour via la simulation physique)
+        // Mise à jour du joueur (positions via la simulation physique)
         player.update(delta);
 
-        // Mise à jour de la caméra pour suivre le joueur (basée sur la position du body)
+        // Mise à jour de la caméra pour suivre le joueur
         updateCameraPosition();
 
         // Mise à jour des objets dynamiques
         updateChainLinks(delta);
         for (TNT tnt : tnts) {
             tnt.update(delta);
-            // On peut laisser la logique de collision Box2D gérer les interactions
             if (player.getBoundingBox().overlaps(tnt.getBounds())) {
                 if (!(player.getCurrentMode() instanceof Tank) && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
@@ -290,23 +318,6 @@ public class GameScreen implements Screen {
         }
         for (UnstablePlatform up : unstablePlatforms) {
             up.update(delta, player.getBoundingBox());
-        }
-
-        // Gestion des entrées via le touchpad
-        if (inputMode.equalsIgnoreCase("touchpad")) {
-            float moveX = controlsOverlay.getMovementKnobX();
-            if (Math.abs(moveX) > 0.1f) {
-                float adjustedSpeed = moveX * 0.5f * Gdx.graphics.getDeltaTime();
-                player.move(adjustedSpeed);
-                player.setMovingForward(moveX > 0);
-                player.setMovingBackward(moveX < 0);
-            } else {
-                player.setMovingForward(false);
-                player.setMovingBackward(false);
-            }
-            if (controlsOverlay.getJumpButton().isPressed()) {
-                player.jump();
-            }
         }
 
         mapRenderer.update(delta);
@@ -347,15 +358,46 @@ public class GameScreen implements Screen {
         player.render(batch);
         batch.end();
 
-        // Affichage de l'overlay des contrôles
-        if (inputMode.equalsIgnoreCase("touchpad") && controlsOverlay != null) {
-            controlsOverlay.update(delta);
-            controlsOverlay.draw();
+        if (inputMode.equalsIgnoreCase("touchpad")) {
+            leftTouchpadController.update(delta);
+            leftTouchpadController.draw();
+            rightTouchpadController.update(delta);
+            rightTouchpadController.draw();
+
+            if (controlsOverlay != null) {
+                controlsOverlay.update(delta);
+                controlsOverlay.draw();
+            }
         }
+
+        if (inputMode.equalsIgnoreCase("gyroscopic") && gyroscopeController != null) {
+            float gyroX = gyroscopeController.getMovementX();
+            if (Math.abs(gyroX) > 0.05f) {
+                player.move(gyroX);
+                player.setMovingForward(gyroX > 0);
+                player.setMovingBackward(gyroX < 0);
+
+                if (controlsOverlay != null) {
+                    controlsOverlay.update(delta);
+                    controlsOverlay.draw();
+                }
+                if (controlsOverlay.getJumpButton().isPressed()) {
+                    player.jump();
+                }
+            } else {
+                player.setMovingForward(false);
+                player.setMovingBackward(false);
+            }
+        } else {
+            // Gestion du clavier et du touchpad
+            handleInput();
+        }
+
 
         // Affichage du debug de Box2D (optionnel)
         debugRenderer.render(WorldManager.getWorld(), mapRenderer.getCamera().combined);
     }
+
 
     private void handleInput() {
         float moveX = 0;
@@ -374,11 +416,10 @@ public class GameScreen implements Screen {
             player.setMovingBackward(false);
         }
 
-        // Si le mode touchpad est actif, prioriser son input
-        if (inputMode.equalsIgnoreCase("touchpad")) {
-            float touchValue = controlsOverlay.getMovementKnobX();
-            if (Math.abs(touchValue) > 0.05f) {  // seuil plus bas pour plus de réactivité
-                moveX = touchValue * 2f;         // augmentation de la puissance
+        if (inputMode.equalsIgnoreCase("touchpad") && leftTouchpadController != null) {
+            float touchValue = leftTouchpadController.getKnobPercentX();  // Récupère l'input du stick
+            if (Math.abs(touchValue) > 0.05f) {  // Seuil de détection
+                moveX = touchValue * 2f;
             }
             if (controlsOverlay.getJumpButton().isPressed()) {
                 player.jump();
@@ -397,8 +438,66 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             TransformationManager.getInstance().transform(player);
         }
+        //Gdx.app.log("DEBUG_GAME", "🎮 Touchpad X: " + leftTouchpadController.getKnobPercentX());
+
     }
 
+
+//    private void handleInput(float delta) {
+//        float moveX = 0;
+//
+//        try {
+//            // Gestion clavier : valeurs brutes
+//            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+//                moveX = 1;
+//                player.setMovingForward(true);
+//                player.setMovingBackward(false);
+//            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+//                moveX = -1;
+//                player.setMovingBackward(true);
+//                player.setMovingForward(false);
+//            } else {
+//                player.setMovingForward(false);
+//                player.setMovingBackward(false);
+//            }
+//
+//            // Gestion du mode touchpad
+//            if (inputMode.equalsIgnoreCase("touchpad") && touchPadController != null) {
+//                float touchValue = touchPadController.getKnobPercentX();  // Récupère l'input du stick
+//                if (Math.abs(touchValue) > 0.05f) {  // Seuil de détection
+//                    moveX = touchValue * 2f;
+//                }
+//                if (touchPadController.isJumpPressed()) {
+//                    player.jump();
+//                }
+//            }
+//
+//            // Gestion du mode gyroscope
+//            if (inputMode.equalsIgnoreCase("gyroscopic") && gyroscopeController != null) {
+//                float gyroInput = gyroscopeController.getMovementX();  // Récupère l'inclinaison
+//                if (Math.abs(gyroInput) > 0.05f) {  // Seuil de détection
+//                    moveX = gyroInput * 2f;
+//                }
+//            }
+//
+//            // Appliquer le mouvement calculé
+//            player.move(moveX);
+//
+//            // Gestion du saut via la touche espace (si non utilisé via le touchpad)
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+//                player.jump();
+//            }
+//
+//            // Transformation du mode avec la touche "T"
+//            if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+//                TransformationManager.getInstance().transform(player);
+//            }
+//
+//        } catch (Exception e) {
+//            Gdx.app.error("DEBUG_GAME", "❌ ERREUR dans `handleInput()`: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
 
     private void updateCameraPosition() {
         OrthographicCamera cam = mapRenderer.getCamera();

@@ -2,44 +2,96 @@ package com.upf.bastionbreaker.controller.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.MathUtils;
+import com.upf.bastionbreaker.model.entities.Player;
 
 /**
  * GyroscopeController gère les entrées basées sur l'accéléromètre du dispositif.
- * La méthode getMovementX() retourne une valeur indiquant le déplacement horizontal
- * en fonction de l'inclinaison de l'appareil.
+ * Il applique un déplacement horizontal au joueur en fonction de l'inclinaison de l'appareil.
+ *
+ * Remarque : Ce contrôleur ne doit pas être utilisé en mode "touchpad".
  */
 public class GyroscopeController implements InputProcessor {
 
-    // Sensibilité de l'entrée du gyroscope (ajustable selon les besoins)
-    private float sensitivity = 0.02f;
-
-    public GyroscopeController() {
-        // Initialisation si nécessaire (par exemple, calibrage de l'accéléromètre)
-    }
+    // Seuil minimal pour détecter un mouvement
+    private static final float THRESHOLD = 1.0f;
+    // Vitesse maximale en unités par seconde
+    private static final float MAX_SPEED = 4.0f;
+    // Facteur d'échelle pour calculer la vitesse à partir du tilt
+    private static final float SCALING_FACTOR = 0.5f;
 
     /**
-     * Retourne le déplacement horizontal basé sur l'accéléromètre.
-     * @return Valeur de déplacement sur l'axe X, ajustée par la sensibilité.
+     * Constructeur qui vérifie la disponibilité de l'accéléromètre.
      */
-    public float getMovementX() {
-        // Récupère la valeur de l'accéléromètre sur l'axe X
-        float accelX = Gdx.input.getAccelerometerX();
-        // Selon votre dispositif, vous pourriez avoir besoin d'inverser la valeur (ex : -accelX)
-        return accelX * sensitivity;
+    public GyroscopeController() {
+        if (!hasAccelerometer()) {
+            Gdx.app.log("DEBUG_GAME", "⚠️ Accelerometer non disponible !");
+        } else {
+            Gdx.app.log("DEBUG_GAME", "✅ Accelerometer détecté !");
+        }
     }
 
     /**
-     * Méthode de mise à jour. Aucun traitement périodique n'est requis ici,
-     * mais cette méthode est là pour l'éventuelle application de filtres ou calibrations.
-     * @param delta Temps écoulé depuis la dernière mise à jour.
+     * Vérifie la disponibilité de l'accéléromètre.
+     * Pour simplifier, on renvoie true, mais vous pouvez ajuster selon vos besoins.
+     *
+     * @return true si l'accéléromètre est disponible
+     */
+    private boolean hasAccelerometer() {
+        // Vous pouvez adapter cette méthode selon la plateforme (mobile vs desktop)
+        return true;
+    }
+
+    /**
+     * Applique le mouvement horizontal au joueur en fonction de l'inclinaison de l'accéléromètre.
+     * Ce contrôleur doit être désactivé en mode "touchpad".
+     *
+     * @param player le joueur à déplacer
+     * @param delta  temps écoulé depuis la dernière mise à jour
+     */
+    public void handleInput(Player player, float delta) {
+        if (player == null) return;
+        if (!hasAccelerometer()) return;
+
+        float tilt = Gdx.input.getAccelerometerY();
+
+        if (Math.abs(tilt) > 0.05f) {  // 🔥 Seuil plus bas pour détecter des mouvements légers
+            float movementSpeed = MathUtils.clamp(tilt * 5f, -8.0f, 8.0f);  // 🔥 Facteur de sensibilité augmenté
+            player.move(movementSpeed * delta);
+
+            player.setMovingForward(movementSpeed > 0);
+            player.setMovingBackward(movementSpeed < 0);
+
+            Gdx.app.log("DEBUG_GAME", "🚀 Mouvement appliqué: " + movementSpeed);
+        } else {
+            player.setMovingForward(false);
+            player.setMovingBackward(false);
+        }
+    }
+
+
+    public float getMovementX() {
+        float accelX = Gdx.input.getAccelerometerY();  // Utilise l'axe Y de l'accéléromètre
+        float movement = MathUtils.clamp(accelX * 0.5f, -4.0f, 4.0f); // Applique un facteur de sensibilité et limite la vitesse
+
+        Gdx.app.log("DEBUG_GAME", "🎮 Accéléromètre Y: " + accelX + " → Calculé: " + movement);
+        return movement;
+    }
+
+
+    /**
+     * Méthode de mise à jour (aucun traitement périodique requis ici).
+     *
+     * @param delta temps écoulé depuis la dernière mise à jour
      */
     public void update(float delta) {
-        // Aucun traitement n'est nécessaire pour l'instant.
+        // Aucun traitement périodique nécessaire pour l'instant.
     }
 
     /**
-     * Retourne l'instance actuelle en tant qu'InputProcessor.
-     * @return L'instance de GyroscopeController.
+     * Retourne cette instance en tant qu'InputProcessor, utile pour l'enregistrement dans un InputMultiplexer.
+     *
+     * @return l'instance de GyroscopeController
      */
     public InputProcessor getInputProcessor() {
         return this;
@@ -49,52 +101,35 @@ public class GyroscopeController implements InputProcessor {
      * Libère les ressources, si nécessaire.
      */
     public void dispose() {
-        // Aucune ressource spécifique à libérer pour l'instant.
+        // Aucun nettoyage requis actuellement.
     }
 
-    // Méthodes de l'interface InputProcessor (aucune action par défaut)
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
+    // Implémentation des méthodes de l'interface InputProcessor (non utilisées ici)
 
     @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
+    public boolean keyDown(int keycode) { return false; }
 
     @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
+    public boolean keyUp(int keycode) { return false; }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+    public boolean keyTyped(char character) { return false; }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) { return false; }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) { return false; }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
+    public boolean touchDragged(int screenX, int screenY, int pointer) { return false; }
 
     @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
+    public boolean mouseMoved(int screenX, int screenY) { return false; }
 
     @Override
-    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+    public boolean scrolled(float amountX, float amountY) { return false; }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) { return false; }
 }
