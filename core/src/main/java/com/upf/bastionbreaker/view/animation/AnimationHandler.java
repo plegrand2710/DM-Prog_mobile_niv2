@@ -21,11 +21,11 @@ public class AnimationHandler {
 
         addAnimation(atlas, "robot_walk_forward", new String[]{
             "robot_1_forward", "robot_2_forward", "robot_1_forward", "robot_3_forward", "robot_1_forward"
-        }, 0.1f);
+        }, 0.2f);
 
         addAnimation(atlas, "robot_walk_backward", new String[]{
             "robot_1_backward", "robot_2_backward", "robot_1_backward", "robot_3_backward", "robot_1_backward"
-        }, 0.1f);
+        }, 0.2f);
 
         addAnimation(atlas, "robot_turn_back", new String[]{
             "robot_1_forward", "robot_facing", "robot_1_backward"

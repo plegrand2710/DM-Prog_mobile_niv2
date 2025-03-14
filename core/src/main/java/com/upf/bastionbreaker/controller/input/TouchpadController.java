@@ -19,8 +19,8 @@ public class TouchpadController {
     public TouchpadController(float x, float y, float width, float height) {
         // Création du Skin avec les textures du Touchpad
         touchpadSkin = new Skin();
-        touchpadSkin.add("touchBackground", new Texture("images/touchBackground.png"));
-        touchpadSkin.add("touchKnob", new Texture("images/touchKnob.png"));
+        touchpadSkin.add("touchBackground", new Texture("assets/images/touchBackground.png"));
+        touchpadSkin.add("touchKnob", new Texture("assets/images/touchKnob.png"));
 
         // Création du style du Touchpad
         touchpadStyle = new TouchpadStyle();

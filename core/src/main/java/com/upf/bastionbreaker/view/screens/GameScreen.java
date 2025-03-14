@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.upf.bastionbreaker.model.audio.SoundManager;
 import com.upf.bastionbreaker.model.entities.Tank;
 import com.upf.bastionbreaker.model.entities.Bastion;
@@ -14,7 +15,6 @@ import com.upf.bastionbreaker.model.entities.Checkpoint;
 import com.upf.bastionbreaker.model.entities.ChainLink;
 import com.upf.bastionbreaker.model.entities.Drawbridge;
 import com.upf.bastionbreaker.model.entities.FallingBlock;
-import com.upf.bastionbreaker.model.entities.Floor;
 import com.upf.bastionbreaker.model.entities.FlyingBox;
 import com.upf.bastionbreaker.model.entities.IceBridge;
 import com.upf.bastionbreaker.model.entities.Obstacle;
@@ -27,8 +27,7 @@ import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.controller.input.GyroscopeController;
 import com.upf.bastionbreaker.view.ui.ControlsOverlay;
 import com.upf.bastionbreaker.controller.gameplay.TransformationManager;
-import com.upf.bastionbreaker.view.ui.PauseMenu;
-
+import com.upf.bastionbreaker.model.physics.WorldManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +37,7 @@ public class GameScreen implements Screen {
     private MapRenderer mapRenderer;
     private MapManager mapManager;
     private SpriteBatch batch;
-    private PauseMenu pauseMenu;
+
     // Listes d'objets
     private List<Checkpoint> checkpoints;
     private List<Obstacle> obstacles;
@@ -50,7 +49,6 @@ public class GameScreen implements Screen {
     private List<FallingBlock> fallingBlocks;
     private List<Drawbridge> drawbridges;
     private List<UnstablePlatform> unstablePlatforms;
-    private List<Floor> floors;
 
     // Dictionnaire pour les ChainLinks
     private Map<String, ChainLink> chainLinkMap;
@@ -58,7 +56,7 @@ public class GameScreen implements Screen {
     private Player player;
 
     // Contrôleurs d'entrée
-    private ControlsOverlay controlsOverlay;  // Gère l'affichage des touchpads et boutons
+    private ControlsOverlay controlsOverlay;
     private GyroscopeController gyroscopeController;
 
     // Mode d'entrée ("touchpad" ou "gyroscopic")
@@ -68,21 +66,48 @@ public class GameScreen implements Screen {
     private float mapWidth = MapRenderer.MAP_WIDTH_TILES;
     private float mapHeight = MapRenderer.MAP_HEIGHT_TILES;
 
+    // Box2D Debug renderer
+    private Box2DDebugRenderer debugRenderer;
+
     public GameScreen(String inputMode) {
-        this.pauseMenu = new PauseMenu();
         this.inputMode = inputMode;
     }
 
     @Override
     public void show() {
-        Gdx.app.log("DEBUG_GAME", "✅ Initialisation de GameScreen...");
+        System.out.println("✅ Initialisation de GameScreen...");
         TextureManager.load();
 
+        MapManager.initialize("map/bastion_breaker_map.tmx");
+        mapManager = MapManager.getInstance();
+
+        if (mapManager == null) {
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR CRITIQUE : `mapManager` est NULL après l'initialisation !");
+            return;
+        }
+
+        try {
+            if (mapManager.getTiledMap() == null) {
+                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `mapManager.getTiledMap()` est NULL !");
+                return;
+            }
+
+            mapRenderer = new MapRenderer(mapManager.getTiledMap());
+
+            if (mapRenderer.getCamera() == null) {
+                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `mapRenderer.getCamera()` est NULL !");
+                return;
+            }
+
+            Gdx.app.log("DEBUG_GAME", "✅ MapRenderer chargé !");
+        } catch (Exception e) {
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : Impossible de charger MapRenderer !", e);
+            return;
+        }
+
         if (inputMode.equalsIgnoreCase("touchpad")) {
-            Gdx.app.log("DEBUG_GAME", "🎮 Mode de contrôle : Touchpad activé");
             controlsOverlay = new ControlsOverlay(true);
         } else {
-            Gdx.app.log("DEBUG_GAME", "🎮 Mode de contrôle : Gyroscope activé");
             controlsOverlay = new ControlsOverlay(false);
         }
         gyroscopeController = new GyroscopeController();
@@ -91,65 +116,55 @@ public class GameScreen implements Screen {
             controlsOverlay.getModeButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
-                    Gdx.app.log("DEBUG_GAME", "🔄 Transformation du joueur");
                     TransformationManager.getInstance().transform(player);
-                    player.setPosition(player.getX(), player.getY());
+                    // Dans une version physique, on n'ajuste plus manuellement la position
                 }
             });
         }
 
-        controlsOverlay.getPauseButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
-                Gdx.app.log("DEBUG_GAME", "⏸️ Bouton Pause Pressé !");
-                pauseMenu.togglePause(controlsOverlay.getStage());
-            }
-        });
         try {
-            Gdx.app.log("DEBUG_GAME", "📜 Chargement de la carte...");
-            mapManager = new MapManager("map/bastion_breaker_map.tmx");
-            Gdx.app.log("DEBUG_GAME", "✅ MapManager chargé avec succès !");
 
-            try {
-                Gdx.app.log("DEBUG_GAME", "🗺️ Chargement du MapRenderer...");
-                mapRenderer = new MapRenderer(mapManager.getTiledMap());
-                Gdx.app.log("DEBUG_GAME", "✅ Map rendue avec succès !");
-            } catch (Exception e) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : Impossible de charger MapRenderer !", e);
-            }
-
-            // Chargement des objets du jeu
-
-            floors = mapManager.getFloors();
-            if (floors == null) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : La liste `floors` est NULL après l'initialisation !");
-            } else {
-                //Gdx.app.log("DEBUG_GAME", "✅ Floors chargés : " + floors.size());
-            }
-
-            Gdx.app.log("DEBUG_GAME", "📥 Chargement des checkpoints...");
+            // Charger les checkpoints
             checkpoints = new ArrayList<>();
             for (GameObject obj : mapManager.getCheckpoints()) {
                 checkpoints.add(new Checkpoint(obj));
             }
-            Gdx.app.log("DEBUG_GAME", "✅ Checkpoints chargés : " + checkpoints.size());
 
-            Gdx.app.log("DEBUG_GAME", "📥 Chargement des obstacles...");
+            // Positionner le joueur à partir du checkpoint "checkpoint0"
+            float startX = 5, startY = 5;
+            for (Checkpoint cp : checkpoints) {
+                if (cp.getName() != null && cp.getName().equalsIgnoreCase("checkpoint0")) {
+                    startX = cp.getX();
+                    startY = cp.getY();
+                    break;
+                }
+            }
+            // Création du joueur (qui va créer son body Box2D)
+            try {
+                player = new Player(startX, startY);
+                if (player == null) {
+                    throw new NullPointerException("❌ ERREUR CRITIQUE : `player` est NULL après instanciation !");
+                }
+                System.out.println("🟢 Joueur positionné au checkpoint0 : (" + startX + ", " + startY + ")");
+            } catch (Exception e) {
+                System.err.println("❌ ERREUR : Impossible de créer le joueur !");
+                e.printStackTrace();
+                return;
+            }
+
+            // Charger les autres objets (les obstacles créent leurs bodies Box2D)
             obstacles = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Obstacles")) {
                 obstacles.add(new Obstacle(obj));
             }
-            Gdx.app.log("DEBUG_GAME", "✅ Obstacles chargés : " + obstacles.size());
-
-            Gdx.app.log("DEBUG_GAME", "📥 Chargement des FlyingBoxes...");
             flyingBoxes = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("FlyingBox")) {
                 flyingBoxes.add(new FlyingBox(obj));
             }
-            Gdx.app.log("DEBUG_GAME", "✅ FlyingBoxes chargées : " + flyingBoxes.size());
-
-            // Gestion des ChainLinks
-            Gdx.app.log("DEBUG_GAME", "📥 Chargement des ChainLinks...");
+            iceBridges = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("Ice")) {
+                iceBridges.add(new IceBridge(obj));
+            }
             List<GameObject> chainObjects = mapManager.getObjects("Chains");
             chainLinks = new ArrayList<>();
             chainLinkMap = new HashMap<>();
@@ -160,152 +175,113 @@ public class GameScreen implements Screen {
                     chainLinkMap.put(obj.getName().toLowerCase(), link);
                 }
             }
-            Gdx.app.log("DEBUG_GAME", "✅ ChainLinks chargés : " + chainLinks.size());
-
-            // Gestion des Bastions
-            Gdx.app.log("DEBUG_GAME", "📥 Chargement des Bastions...");
+            System.out.println("🔗 ChainLinks chargés : " + chainLinks.size());
             bastions = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Bastion")) {
                 bastions.add(new Bastion(obj));
             }
-            Gdx.app.log("DEBUG_GAME", "✅ Bastions chargés : " + bastions.size());
-
-            // Gestion des TNTs
-            Gdx.app.log("DEBUG_GAME", "📥 Chargement des TNT...");
+            System.out.println("📌 Bastions chargés : " + bastions.size());
             tnts = new ArrayList<>();
             for (GameObject obj : mapManager.getObjects("Explosives")) {
                 tnts.add(new TNT(obj));
             }
-            Gdx.app.log("DEBUG_GAME", "✅ TNTs chargées : " + tnts.size());
+            System.out.println("📌 TNT chargées : " + tnts.size());
+            fallingBlocks = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("FallingBlock")) {
+                FallingBlock fb = new FallingBlock(obj);
+                fallingBlocks.add(fb);
+            }
+            System.out.println("📌 FallingBlocks chargés : " + fallingBlocks.size());
+            drawbridges = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("Drawbridges")) {
+                Drawbridge db = new Drawbridge(obj);
+                drawbridges.add(db);
+            }
+            System.out.println("📌 Drawbridges chargés : " + drawbridges.size());
+            unstablePlatforms = new ArrayList<>();
+            for (GameObject obj : mapManager.getObjects("UnstablePlatforms")) {
+                UnstablePlatform up = new UnstablePlatform(obj);
+                unstablePlatforms.add(up);
+            }
+            System.out.println("📌 UnstablePlatforms chargés : " + unstablePlatforms.size());
 
-            // Initialisation du joueur
-            float startX = 5, startY = 5;
-            for (Checkpoint cp : checkpoints) {
-                if (cp.getName() != null && cp.getName().equalsIgnoreCase("checkpoint0")) {
-                    startX = cp.getX();
-                    startY = cp.getY();
-                    break;
+
+            // Lier certains objets (comme dans votre version précédente)
+            for (FallingBlock fb : fallingBlocks) {
+                String topName = fb.getLinkedTopName();
+                if (topName != null && !topName.isEmpty()) {
+                    ChainLink support = chainLinkMap.get(topName.toLowerCase());
+                    if (support != null) {
+                        fb.setLinkedChain(support);
+                    }
                 }
             }
-
-            Gdx.app.log("DEBUG_GAME", "📥 Vérification des IceBridges...");
-            List<GameObject> iceObjects = mapManager.getObjects("Ice");
-            if (iceObjects == null) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : mapManager.getObjects('Ice') a retourné NULL !");
-            } else {
-                Gdx.app.log("DEBUG_GAME", "✅ Objets Ice trouvés : " + iceObjects.size());
-            }
-            iceBridges = (iceObjects != null) ? new ArrayList<>() : new ArrayList<>();
-            if (iceObjects != null) {
-                for (GameObject obj : iceObjects) {
-                    iceBridges.add(new IceBridge(obj));
+            for (Drawbridge db : drawbridges) {
+                String supportName = db.getLinkedTopName();
+                if (supportName != null && !supportName.isEmpty()) {
+                    ChainLink support = chainLinkMap.get(supportName.toLowerCase());
+                    if (support != null) {
+                        db.setSupportingLink(support);
+                    }
                 }
             }
-            Gdx.app.log("DEBUG_GAME", "✅ IceBridges chargés : " + iceBridges.size());
-
-            Gdx.app.log("DEBUG_GAME", "📥 Vérification des FallingBlocks...");
-            List<GameObject> fallingBlockObjects = mapManager.getObjects("FallingBlock");
-            if (fallingBlockObjects == null) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : mapManager.getObjects('FallingBlock') a retourné NULL !");
-            } else {
-                Gdx.app.log("DEBUG_GAME", "✅ Objets FallingBlock trouvés : " + fallingBlockObjects.size());
-            }
-            fallingBlocks = (fallingBlockObjects != null) ? new ArrayList<>() : new ArrayList<>();
-            if (fallingBlockObjects != null) {
-                for (GameObject obj : fallingBlockObjects) {
-                    fallingBlocks.add(new FallingBlock(obj));
+            for (UnstablePlatform up : unstablePlatforms) {
+                String supportName = up.getLinkedTopName();
+                if (supportName != null && !supportName.isEmpty()) {
+                    ChainLink support = chainLinkMap.get(supportName.toLowerCase());
+                    if (support != null) {
+                        up.setLinkedChain(support);
+                    }
                 }
             }
-            Gdx.app.log("DEBUG_GAME", "✅ FallingBlocks chargés : " + fallingBlocks.size() );
-
-            Gdx.app.log("DEBUG_GAME", "📥 Vérification des Drawbridges...");
-            List<GameObject> drawbridgeObjects = mapManager.getObjects("Drawbridges");
-            if (drawbridgeObjects == null) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : mapManager.getObjects('Drawbridges') a retourné NULL !");
-            } else {
-                Gdx.app.log("DEBUG_GAME", "✅ Objets Drawbridges trouvés : " + drawbridgeObjects.size());
-            }
-            drawbridges = (drawbridgeObjects != null) ? new ArrayList<>() : new ArrayList<>();
-            if (drawbridgeObjects != null) {
-                for (GameObject obj : drawbridgeObjects) {
-                    drawbridges.add(new Drawbridge(obj));
-                }
-            }
-            Gdx.app.log("DEBUG_GAME", "✅ Drawbridges chargés : " + drawbridges.size());
-
-            Gdx.app.log("DEBUG_GAME", "📥 Vérification des UnstablePlatforms...");
-            List<GameObject> unstablePlatformObjects = mapManager.getObjects("UnstablePlatforms");
-            if (unstablePlatformObjects == null) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR : mapManager.getObjects('UnstablePlatforms') a retourné NULL !");
-            } else {
-                Gdx.app.log("DEBUG_GAME", "✅ Objets UnstablePlatforms trouvés : " + unstablePlatformObjects.size());
-            }
-            unstablePlatforms = (unstablePlatformObjects != null) ? new ArrayList<>() : new ArrayList<>();
-            if (unstablePlatformObjects != null) {
-                for (GameObject obj : unstablePlatformObjects) {
-                    unstablePlatforms.add(new UnstablePlatform(obj));
-                }
-            }
-            Gdx.app.log("DEBUG_GAME", "✅ UnstablePlatforms chargés : " + unstablePlatforms.size());
-
-            player = new Player(startX, startY);
-            Gdx.app.log("DEBUG_GAME", "🟢 Joueur positionné au checkpoint0 : (" + startX + ", " + startY + ")");
 
         } catch (Exception e) {
-            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : Impossible de charger la carte !", e);
+            System.out.println("❌ ERREUR : Impossible de charger la carte !");
+            e.printStackTrace();
         }
 
-        batch = new SpriteBatch();
-        Gdx.app.log("DEBUG_GAME", "✅ Initialisation de GameScreen terminée !");
-    }
+        // Initialiser la physique
+        WorldManager.initialize();
+        mapManager.createFloorBodies(WorldManager.getWorld());
+        debugRenderer = new Box2DDebugRenderer();
 
+        batch = new SpriteBatch();
+    }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (obstacles == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : obstacles est NULL !");
-        if (checkpoints == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : checkpoints est NULL !");
-        if (flyingBoxes == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : flyingBoxes est NULL !");
-        if (iceBridges == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : iceBridges est NULL !");
-        if (chainLinks == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : chainLinks est NULL !");
-        if (bastions == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : bastions est NULL !");
-        if (tnts == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : tnts est NULL !");
-        if (fallingBlocks == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : fallingBlocks est NULL !");
-        if (drawbridges == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : drawbridges est NULL !");
-        if (unstablePlatforms == null) Gdx.app.error("DEBUG_GAME", "❌ ERREUR : unstablePlatforms est NULL !");
-
-        if (pauseMenu.getIsVisible()) {
-            pauseMenu.render(delta);
+        if (player == null) {
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `player` est NULL ! Impossible d'exécuter `render()`.");
             return;
         }
+        // Mettre à jour la physique Box2D
+
+
+
+        WorldManager.update(delta);
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         handleInput();
-        handleTouchpadInput();
-        handleGyroscopeInput(delta);
-        // Mise à jour du joueur
-        // Gestion des collisions avec le sol
-        handleFloorCollisions();
-        // Mise à jour de la caméra pour suivre le joueur
+
+        // Mise à jour du joueur (les positions sont mises à jour via la simulation physique)
+        player.update(delta);
+
+        // Mise à jour de la caméra pour suivre le joueur (basée sur la position du body)
         updateCameraPosition();
 
         // Mise à jour des objets dynamiques
         updateChainLinks(delta);
         for (TNT tnt : tnts) {
             tnt.update(delta);
+            // On peut laisser la logique de collision Box2D gérer les interactions
             if (player.getBoundingBox().overlaps(tnt.getBounds())) {
                 if (!(player.getCurrentMode() instanceof Tank) && tnt.isPushable()) {
                     tnt.push(0.1f, 0);
                 }
             }
         }
-
-        floors = mapManager.getFloors();
-        if (floors == null) {
-            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : La liste `floors` est NULL après l'initialisation !");
-        } else {
-            //Gdx.app.log("DEBUG_GAME", "✅ Floors chargés : " + floors.size());
-        }
-
         for (FallingBlock fb : fallingBlocks) {
             fb.update(delta);
         }
@@ -316,19 +292,21 @@ public class GameScreen implements Screen {
             up.update(delta, player.getBoundingBox());
         }
 
+        // Gestion des entrées via le touchpad
         if (inputMode.equalsIgnoreCase("touchpad")) {
             float moveX = controlsOverlay.getMovementKnobX();
             if (Math.abs(moveX) > 0.1f) {
-                mapRenderer.getCamera().translate(moveX * 0.02f, 0);
+                float adjustedSpeed = moveX * 0.5f * Gdx.graphics.getDeltaTime();
+                player.move(adjustedSpeed);
+                player.setMovingForward(moveX > 0);
+                player.setMovingBackward(moveX < 0);
+            } else {
+                player.setMovingForward(false);
+                player.setMovingBackward(false);
             }
-        }
-
-        // Ajustement dynamique du son du tank
-        if (player.getCurrentMode() instanceof Tank) {
-            float touchIntensity = inputMode.equalsIgnoreCase("touchpad")
-                ? Math.abs(controlsOverlay.getMovementKnobX()) : 0;
-            float volume = 0.4f + 0.3f * touchIntensity;
-            SoundManager.adjustVolume("tank_engine", volume);
+            if (controlsOverlay.getJumpButton().isPressed()) {
+                player.jump();
+            }
         }
 
         mapRenderer.update(delta);
@@ -366,30 +344,29 @@ public class GameScreen implements Screen {
         for (UnstablePlatform up : unstablePlatforms) {
             up.render(batch);
         }
-
         player.render(batch);
-        player.update(delta);
-
         batch.end();
 
+        // Affichage de l'overlay des contrôles
         if (inputMode.equalsIgnoreCase("touchpad") && controlsOverlay != null) {
             controlsOverlay.update(delta);
             controlsOverlay.draw();
         }
 
-        checkHelicopterSound();
+        // Affichage du debug de Box2D (optionnel)
+        debugRenderer.render(WorldManager.getWorld(), mapRenderer.getCamera().combined);
     }
 
     private void handleInput() {
-        boolean movingRight = Gdx.input.isKeyPressed(Input.Keys.D);
-        boolean movingLeft = Gdx.input.isKeyPressed(Input.Keys.A);
+        float moveX = 0;
 
-        if (movingRight) {
-            player.move(1 * Gdx.graphics.getDeltaTime());
+        // Gestion clavier : valeurs brutes
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            moveX = 1;
             player.setMovingForward(true);
             player.setMovingBackward(false);
-        } else if (movingLeft) {
-            player.move(-1 * Gdx.graphics.getDeltaTime());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            moveX = -1;
             player.setMovingBackward(true);
             player.setMovingForward(false);
         } else {
@@ -397,97 +374,32 @@ public class GameScreen implements Screen {
             player.setMovingBackward(false);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            player.jump();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            TransformationManager.getInstance().transform(player);
-        }
-
-        // 🟢 Gestion Touchpad (ne pas écraser clavier)
-        if (inputMode.equalsIgnoreCase("gyroscopic")) {
-            handleGyroscopeInput(Gdx.graphics.getDeltaTime());
-        } else {
-            handleTouchpadInput();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            player.jump();
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-            TransformationManager.getInstance().transform(player);
-        }
-    }
-
-
-    private void handleTouchpadInput() {
-        float moveX = controlsOverlay.getMovementKnobX();
-
-        if (Math.abs(moveX) > 0.1f) {
-            float adjustedSpeed = moveX * 0.5f * Gdx.graphics.getDeltaTime();
-            player.move(adjustedSpeed);
-
-            // 🔹 Active l'animation du joueur
-            player.setMovingForward(moveX > 0);
-            player.setMovingBackward(moveX < 0);
-        } else {
-            player.setMovingForward(false);
-            player.setMovingBackward(false);
-        }
-
-        if (controlsOverlay.getJumpButton().isPressed()) {
-            player.jump();
-        }
-
-    }
-
-    private void handleGyroscopeInput(float delta) {
-        if (inputMode.equalsIgnoreCase("touchpad")) return;  // ❌ Bloque le gyroscope en mode Touchpad
-
-        if (!hasGyroscope()) return;  // ❌ Ne rien faire si pas d'accéléromètre
-
-        float tilt = Gdx.input.getAccelerometerY(); // Détecte l'inclinaison gauche/droite
-
-        float threshold = 1.0f;  // Sensibilité minimale pour détecter un mouvement
-        float maxSpeed = 4.0f;   // Vitesse maximale en unités par seconde
-
-        if (Math.abs(tilt) > threshold) {
-            float movementSpeed = MathUtils.clamp(tilt * 0.5f, -maxSpeed, maxSpeed);  // Calcule la vitesse
-            player.move(movementSpeed * delta);
-
-            // 🔹 Ajuste l'animation du joueur
-            player.setMovingForward(tilt > 0);
-            player.setMovingBackward(tilt < 0);
-        } else {
-            player.setMovingForward(false);
-            player.setMovingBackward(false);
-        }
-    }
-
-    private void handleFloorCollisions() {
-        boolean onGround = false;
-
-        for (Floor floor : floors) {
-            if (player.getBoundingBox().overlaps(floor.getBounds())) {
-                float floorTop = floor.getBounds().y + floor.getBounds().height;
-                if (player.getY() < floorTop) {
-                    player.setPosition(player.getX(), floorTop);
-                    onGround = true;
-                }
+        // Si le mode touchpad est actif, prioriser son input
+        if (inputMode.equalsIgnoreCase("touchpad")) {
+            float touchValue = controlsOverlay.getMovementKnobX();
+            if (Math.abs(touchValue) > 0.05f) {  // seuil plus bas pour plus de réactivité
+                moveX = touchValue * 2f;         // augmentation de la puissance
+            }
+            if (controlsOverlay.getJumpButton().isPressed()) {
+                player.jump();
             }
         }
 
-        player.setOnGround(onGround); // ✅ Met à jour `isOnGround` !
+        // Appliquer le mouvement avec la valeur normalisée
+        player.move(moveX);
+
+        // Saut avec la touche espace (si non utilisé via le touchpad)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            player.jump();
+        }
+
+        // Transformation du mode
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            TransformationManager.getInstance().transform(player);
+        }
     }
 
-    private boolean hasGyroscope() {
-        return Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer);
-    }
-    /**
-     * Met à jour la position de la caméra pour suivre le joueur sans sortir de la carte.
-     */
+
     private void updateCameraPosition() {
         OrthographicCamera cam = mapRenderer.getCamera();
         float halfViewportWidth = cam.viewportWidth / 2;
@@ -530,27 +442,26 @@ public class GameScreen implements Screen {
             }
         }
         if (helicopterInView) {
-            //SoundManager.playLoopingSound("helicopter", 0.6f);
+            SoundManager.playLoopingSound("helicopter", 0.6f);
         } else {
-            //SoundManager.stopSound("helicopter");
+            SoundManager.stopSound("helicopter");
         }
     }
 
     @Override
     public void resize(int width, int height) {
         if (mapRenderer == null) {
-            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : mapRenderer est NULL dans resize() !");
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `mapRenderer` est NULL dans resize() !");
             return;
         }
 
         if (mapRenderer.getCamera() == null) {
-            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : mapRenderer.getCamera() est NULL dans resize() !");
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `mapRenderer.getCamera()` est NULL dans resize() !");
 
-            // 💡 Solution : Forcer la réinitialisation de la caméra ici
             mapRenderer = new MapRenderer(mapManager.getTiledMap());
 
             if (mapRenderer.getCamera() == null) {
-                Gdx.app.error("DEBUG_GAME", "❌ ERREUR CRITIQUE : mapRenderer.getCamera() reste NULL après réinitialisation !");
+                Gdx.app.error("DEBUG_GAME", "❌ ERREUR CRITIQUE : `mapRenderer.getCamera()` reste NULL après réinitialisation !");
                 return;
             }
         }
@@ -560,9 +471,6 @@ public class GameScreen implements Screen {
         mapRenderer.getCamera().viewportHeight = MapRenderer.VIEWPORT_HEIGHT;
         mapRenderer.getCamera().update();
     }
-
-
-
 
 
     @Override
@@ -580,5 +488,6 @@ public class GameScreen implements Screen {
         if (mapRenderer != null) mapRenderer.dispose();
         if (batch != null) batch.dispose();
         if (controlsOverlay != null) controlsOverlay.dispose();
+        debugRenderer.dispose();
     }
 }
