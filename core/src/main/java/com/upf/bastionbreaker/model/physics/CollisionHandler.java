@@ -25,7 +25,7 @@ public class CollisionHandler implements ContactListener {
             System.out.println("Player a touché le sol.");
         }
 
-        // Gestion des Hill
+        // Gestion des Hill : considérer les Hill comme un sol sur lequel le joueur peut marcher
         if ((dataA instanceof com.upf.bastionbreaker.model.entities.Player && dataB instanceof Hill) ||
             (dataB instanceof com.upf.bastionbreaker.model.entities.Player && dataA instanceof Hill)) {
             com.upf.bastionbreaker.model.entities.Player player = (dataA instanceof com.upf.bastionbreaker.model.entities.Player)
@@ -33,11 +33,13 @@ public class CollisionHandler implements ContactListener {
                 : (com.upf.bastionbreaker.model.entities.Player) dataB;
             Hill hill = (dataA instanceof Hill) ? (Hill) dataA : (Hill) dataB;
 
-            // Marquer le joueur comme étant au sol sur la pente
+            // Traiter la pente comme un sol : le joueur est considéré comme au sol
             player.setOnGround(true);
 
-            // Ajuster légèrement la vitesse en fonction des propriétés de la pente
+            // Ajuster la vitesse du joueur en fonction de la pente
             Vector2 vel = player.getBody().getLinearVelocity();
+            // Par exemple, si le joueur monte (vitesse positive), appliquer le facteur climb ;
+            // s'il descend (vitesse négative), appliquer le facteur slide.
             if (vel.x > 0) {
                 vel.x *= hill.getClimb();
             } else if (vel.x < 0) {
@@ -57,6 +59,7 @@ public class CollisionHandler implements ContactListener {
         Object dataB = fixtureB.getBody().getUserData();
         System.out.println("Collision ended between: " + dataA + " and " + dataB);
 
+        // Lorsque le joueur quitte le sol, on désactive le flag onGround
         if ((dataA instanceof com.upf.bastionbreaker.model.entities.Player && "Floor".equals(dataB)) ||
             (dataB instanceof com.upf.bastionbreaker.model.entities.Player && "Floor".equals(dataA))) {
             com.upf.bastionbreaker.model.entities.Player player = (dataA instanceof com.upf.bastionbreaker.model.entities.Player)

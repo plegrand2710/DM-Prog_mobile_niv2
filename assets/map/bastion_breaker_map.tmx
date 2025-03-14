@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="39" nextobjectid="372">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="41" nextobjectid="404">
  <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="Ground/dungeon_.png" width="288" height="192"/>
  </tileset>
@@ -42,9 +42,6 @@
  <tileset firstgid="452" name="ground" tilewidth="32" tileheight="32" tilecount="40" columns="8">
   <image source="background/ground.png" width="283" height="160"/>
  </tileset>
- <imagelayer id="34" name="Background" repeatx="1">
-  <image source="background/background.png" width="1080" height="500"/>
- </imagelayer>
  <layer id="10" name="Ground" width="270" height="20">
   <data encoding="base64" compression="zlib">
    eJzt1lGqwjAQBdAU/wTFJbqUWYpLcWn2IYIflabTmjzsOXChH23nhkBIKQAAAAAAAAAAAAAA8JtiIgBTYiYAL7EgwL5FMsD+xAYB1osvp+WsTKce/TJadVvTvcd/1s7qJaR6z3p3+dQr2+04TGfp7BqZft/IFh3ntO7dWsii/erd5VO3zLevM+IwlNt5KPe/jM/3mrMjI7vG/5g5vea2EDvOZXim5t13vXtvlfe7xXhWlNOY8/P5WnPvyOi95i0zp9fcFuJH8gBFTa1t
@@ -121,7 +118,7 @@
     <property name="collision" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="349" name="floor" type="Floor" x="4480" y="576" width="224" height="32">
+  <object id="349" name="floor" type="Floor" x="4480" y="480" width="224" height="32">
    <properties>
     <property name="collision" type="bool" value="true"/>
    </properties>
@@ -192,6 +189,161 @@
    </properties>
   </object>
   <object id="370" name="floor" type="Floor" x="0" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="372" name="floor" type="Floor" x="1376" y="480" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="373" name="floor" type="Floor" x="1408" y="448" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="374" name="floor" type="Floor" x="1440" y="448" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="375" name="floor" type="Floor" x="1472" y="416" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="376" name="floor" type="Floor" x="1568" y="384" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="377" name="floor" type="Floor" x="1536" y="384" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="378" name="floor" type="Floor" x="1504" y="416" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="379" name="floor" type="Floor" x="1600" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="380" name="floor" type="Floor" x="1664" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="381" name="floor" type="Floor" x="1824" y="416" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="382" name="floor" type="Floor" x="1632" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="383" name="floor" type="Floor" x="1792" y="384" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="384" name="floor" type="Floor" x="1760" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="385" name="floor" type="Floor" x="1952" y="544" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="386" name="floor" type="Floor" x="1920" y="512" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="387" name="floor" type="Floor" x="1888" y="480" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="388" name="floor" type="Floor" x="1856" y="448" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="389" name="floor" type="Floor" x="1984" y="576" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="390" name="floor" type="Floor" x="2080" y="544" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="391" name="floor" type="Floor" x="2112" y="512" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="392" name="floor" type="Floor" x="2144" y="480" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="394" name="floor" type="Floor" x="2976" y="480" width="416" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="395" name="floor" type="Floor" x="0" y="608" width="768" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="396" name="floor" type="Floor" x="896" y="608" width="512" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="397" name="floor" type="Floor" x="1408" y="608" width="512" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="398" name="floor" type="Floor" x="1920" y="608" width="800" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="399" name="floor" type="Floor" x="2720" y="608" width="225" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="400" name="floor" type="Floor" x="3424" y="608" width="1088" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="401" name="floor" type="Floor" x="4512" y="608" width="1088" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="402" name="floor" type="Floor" x="5408" y="608" width="576" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="403" name="floor" type="Floor" x="7072" y="608" width="1534" height="32">
    <properties>
     <property name="collision" type="bool" value="true"/>
    </properties>
@@ -493,7 +645,7 @@
   </object>
  </objectgroup>
  <objectgroup id="9" name="Hill">
-  <object id="48" name="hill_1" type="Slide" x="1696" y="321.333">
+  <object id="48" name="hill_1" type="Slide" x="1760" y="480">
    <properties>
     <property name="climb" type="float" value="1"/>
     <property name="difficulty" type="bool" value="false"/>
@@ -501,7 +653,7 @@
    </properties>
    <polygon points="0,0 -321.333,159.333 -1.33333,159.333"/>
   </object>
-  <object id="51" name="hill_2" type="Slide" x="1762" y="320">
+  <object id="51" name="hill_2" type="Slide" x="1760" y="384">
    <properties>
     <property name="climb" type="float" value="0.5"/>
     <property name="difficulty" type="bool" value="true"/>
@@ -532,14 +684,6 @@
     <property name="slide" type="float" value="1.5"/>
    </properties>
    <polygon points="0,0 64.7517,2.23281 64.7517,-64.3051"/>
-  </object>
-  <object id="371" name="hill_1" type="Slide" x="992" y="320">
-   <properties>
-    <property name="climb" type="float" value="1"/>
-    <property name="difficulty" type="bool" value="false"/>
-    <property name="slide" type="float" value="1"/>
-   </properties>
-   <polygon points="0,0 -321.333,159.333 -1.33333,159.333"/>
   </object>
  </objectgroup>
  <objectgroup id="4" name="Obstacles" class="Obstacle">
@@ -880,18 +1024,13 @@
   </object>
  </objectgroup>
  <objectgroup id="7" name="Bastion">
-  <object id="46" name="Bastion1" type="Destructible" x="1088.67" y="159.333" width="96" height="320">
-   <properties>
-    <property name="HP" type="int" value="200"/>
-   </properties>
-  </object>
-  <object id="68" name="Bastion2" type="Destructible" x="2688.33" y="157.667" width="96" height="320">
+  <object id="68" name="Bastion2" type="Destructible" x="2688" y="64" width="96" height="320">
    <properties>
     <property name="HP" type="int" value="200"/>
     <property name="sprite" value="wall"/>
    </properties>
   </object>
-  <object id="114" name="Bastion3" type="Destructible" x="3968" y="160" width="92.6667" height="319.333">
+  <object id="114" name="Bastion3" type="Destructible" x="3968" y="64" width="92.6667" height="319.333">
    <properties>
     <property name="HP" type="int" value="200"/>
    </properties>
@@ -901,9 +1040,15 @@
     <property name="HP" type="int" value="200"/>
    </properties>
   </object>
-  <object id="180" name="Bastion5" type="Destructible" x="7776" y="160" width="96" height="320">
+  <object id="180" name="Bastion5" type="Destructible" x="7776" y="64" width="96" height="320">
    <properties>
     <property name="HP" type="int" value="2000"/>
+   </properties>
+  </object>
+  <object id="393" name="Bastion1" type="Destructible" x="1088" y="32" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+    <property name="sprite" value="wall"/>
    </properties>
   </object>
  </objectgroup>

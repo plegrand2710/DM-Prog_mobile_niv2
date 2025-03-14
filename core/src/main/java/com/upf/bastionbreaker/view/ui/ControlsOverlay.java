@@ -38,11 +38,7 @@ public class ControlsOverlay {
         touchpadStyle.background = background;
         touchpadStyle.knob = knob;
 
-        // Création du touchpad d'orientation (toujours affiché) en bas à droite
-        float screenWidth = Gdx.graphics.getWidth();
-
         if (showMovement) {
-            // Création du touchpad de mouvement (affiché uniquement si demandé) en bas à gauche
             Table table = new Table();
             table.setFillParent(true);
             table.bottom().left();
@@ -56,15 +52,27 @@ public class ControlsOverlay {
         TextButtonStyle buttonStyle = new TextButtonStyle();
         buttonStyle.font = skin.getFont("default");
 
-        // Création des boutons
         jumpButton = new TextButton("Jump", buttonStyle);
         modeButton = new TextButton("Change Mode", buttonStyle);
         shootButton = new TextButton("Shoot", buttonStyle);
 
-        // Positionnement des boutons
-        jumpButton.setPosition(screenWidth - 200, Gdx.graphics.getHeight() - 100);
-        modeButton.setPosition(screenWidth - 200, Gdx.graphics.getHeight() - 160);
-        shootButton.setPosition(screenWidth - 200, 200);
+        jumpButton.setTransform(true);
+        jumpButton.setScale(3f);
+        modeButton.setTransform(true);
+        modeButton.setScale(3f);
+        shootButton.setTransform(true);
+        shootButton.setScale(3f);
+
+        // Positionnement des boutons modifié pour améliorer l'espacement :
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+
+        // Déplacer "Jump" légèrement vers la gauche
+        jumpButton.setPosition(screenWidth - 400, screenHeight - 150);
+        // Descendre "Change Mode" pour qu'il soit en dessous du bouton Jump
+        modeButton.setPosition(screenWidth - 400, screenHeight - 300);
+        // Remonter "Shoot" pour une meilleure accessibilité
+        shootButton.setPosition(screenWidth - 400, screenHeight - 450);
 
         stage.addActor(jumpButton);
         stage.addActor(modeButton);
@@ -80,8 +88,6 @@ public class ControlsOverlay {
     public void draw() {
         stage.draw();
     }
-
-
 
     public TextButton getJumpButton() {
         return jumpButton;
