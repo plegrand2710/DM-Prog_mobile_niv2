@@ -3,7 +3,10 @@ package com.upf.bastionbreaker.view.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -11,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class ControlsOverlay {
@@ -21,6 +25,8 @@ public class ControlsOverlay {
     private TextButton jumpButton;
     private TextButton modeButton;
     private TextButton shootButton;
+    private TextureAtlas buttonAtlas;
+    private ImageButton pauseButton; // Bouton Pause
 
     private boolean showMovement; // Si true, on affiche le touchpad de déplacement
 
@@ -28,8 +34,14 @@ public class ControlsOverlay {
         this.showMovement = showMovement;
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin();
+        buttonAtlas = new TextureAtlas(Gdx.files.internal("atlas/game/game.atlas"));
 
-        // Chargement des textures pour le touchpad
+        TextureRegion pauseRegion = buttonAtlas.findRegion("Icon-Pause");
+
+        if (pauseRegion == null) {
+            Gdx.app.error("DEBUG_UI", "❌ ERREUR : L'image 'pause' n'a pas été trouvée dans l'Atlas !");
+        }
+
         skin.add("touchBackground", new Texture("images/touchBackground.png"));
         skin.add("touchKnob", new Texture("images/touchKnob.png"));
         TouchpadStyle touchpadStyle = new TouchpadStyle();
@@ -45,6 +57,14 @@ public class ControlsOverlay {
             table.row();
             stage.addActor(table);
         }
+
+        pauseButton = new ImageButton(new TextureRegionDrawable(pauseRegion));
+
+        // Positionnement en haut à gauche
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        pauseButton.setPosition(50, screenHeight - 100);
+        pauseButton.setSize(80, 80); // Ajuste la taille si nécessaire
 
         // Création d'un style de bouton par défaut
         BitmapFont font = new BitmapFont();
@@ -63,20 +83,15 @@ public class ControlsOverlay {
         shootButton.setTransform(true);
         shootButton.setScale(3f);
 
-        // Positionnement des boutons modifié pour améliorer l'espacement :
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
 
-        // Déplacer "Jump" légèrement vers la gauche
         jumpButton.setPosition(screenWidth - 400, screenHeight - 150);
-        // Descendre "Change Mode" pour qu'il soit en dessous du bouton Jump
         modeButton.setPosition(screenWidth - 400, screenHeight - 300);
-        // Remonter "Shoot" pour une meilleure accessibilité
         shootButton.setPosition(screenWidth - 400, screenHeight - 450);
 
         stage.addActor(jumpButton);
         stage.addActor(modeButton);
         stage.addActor(shootButton);
+        stage.addActor(pauseButton);
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -101,6 +116,7 @@ public class ControlsOverlay {
         return shootButton;
     }
 
+    public ImageButton getPauseButton() { return pauseButton; }
     public Stage getStage() {
         return stage;
     }

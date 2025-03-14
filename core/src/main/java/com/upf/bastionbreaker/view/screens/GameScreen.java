@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.upf.bastionbreaker.controller.input.TouchpadController;
@@ -35,6 +36,8 @@ import com.upf.bastionbreaker.controller.input.GyroscopeController;
 import com.upf.bastionbreaker.view.ui.ControlsOverlay;
 import com.upf.bastionbreaker.controller.gameplay.TransformationManager;
 import com.upf.bastionbreaker.model.physics.WorldManager;
+import com.upf.bastionbreaker.view.ui.PauseMenu;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +67,7 @@ public class GameScreen implements Screen {
 
     // Dictionnaire pour les ChainLinks
     private Map<String, ChainLink> chainLinkMap;
+    private PauseMenu menuPause;
 
     private Player player;
 
@@ -84,6 +88,8 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
     private TextureAtlas gameAtlas;
 
+    private Stage stage;
+
     public GameScreen(String inputMode, TextureAtlas gameAtlas) {
         this.inputMode = inputMode;
         this.gameAtlas = gameAtlas;
@@ -94,6 +100,8 @@ public class GameScreen implements Screen {
         System.out.println("✅ Initialisation de GameScreen...");
         TextureManager.load();
 
+        menuPause = new PauseMenu();
+        stage = new Stage();
         backgroundAtlas = new TextureAtlas(Gdx.files.internal("atlas/background/background.atlas"));
 
         TextureRegion[] parallaxLayers = new TextureRegion[]{
@@ -177,6 +185,14 @@ public class GameScreen implements Screen {
             }
         });
 
+
+        controlsOverlay.getPauseButton().addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                System.out.println("⏸️ Pause activée !");
+                menuPause.togglePause(controlsOverlay.getStage());
+            }
+        });
 
         try {
 
@@ -296,6 +312,7 @@ public class GameScreen implements Screen {
             e.printStackTrace();
         }
 
+
         // Initialiser la physique
         WorldManager.initialize();
         mapManager.createFloorBodies(WorldManager.getWorld());
@@ -325,6 +342,11 @@ public class GameScreen implements Screen {
             return;
         }
 
+        if (menuPause.getIsVisible()) {
+            menuPause.render(delta);  // ✅ Assurer le rendu du menu pause
+            return;  // ❌ Ne pas exécuter le reste du jeu pendant la pause
+        }
+        
         // Mettre à jour la physique Box2D
         WorldManager.update(delta);
 
@@ -340,7 +362,6 @@ public class GameScreen implements Screen {
             handleInput();
         }
 
-        // Mise à jour du joueur (positions via la simulation physique)
         player.update(delta);
 
         updateCameraPosition();

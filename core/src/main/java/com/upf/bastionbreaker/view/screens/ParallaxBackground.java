@@ -43,9 +43,9 @@ public class ParallaxBackground {
             float viewportWidth = camera.viewportWidth;
             float viewportHeight = camera.viewportHeight;
 
-            float scaleX = viewportWidth / textureWidth;  // Ajuste la largeur pour remplir l'écran
-            float scaleY = viewportHeight / textureHeight; // Ajuste la hauteur pour éviter l'étirement
-            float scale = Math.max(scaleX, scaleY); // Garde le bon ratio
+            float scaleX = viewportWidth / textureWidth;
+            float scaleY = viewportHeight / textureHeight;
+            float scale = Math.max(scaleX, scaleY);
 
             float x = (camera.position.x - viewportWidth / 2) + _offsets[i];
             float y = camera.position.y - viewportHeight / 2;
