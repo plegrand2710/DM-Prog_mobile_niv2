@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.upf.bastionbreaker.view.screens.GameScreen;
 import com.upf.bastionbreaker.model.graphics.TextureManager;
 import com.upf.bastionbreaker.view.animation.AnimationHandler;
+import com.upf.bastionbreaker.view.screens.SplashScreen;
 
 public class Main extends Game {
     @Override
@@ -24,7 +25,7 @@ public class Main extends Game {
             AnimationHandler.loadAnimations();
 
             // 🔹 Étape 4 : Définir l'écran principal après avoir tout chargé
-            setScreen(new GameScreen("touchpad"));
+            setScreen(new SplashScreen(this));
             Gdx.app.log("Main", "✅ GameScreen défini comme écran principal");
 
         } catch (Exception e) {

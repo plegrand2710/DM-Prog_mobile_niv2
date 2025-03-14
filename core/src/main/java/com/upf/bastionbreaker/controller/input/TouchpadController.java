@@ -1,43 +1,66 @@
 package com.upf.bastionbreaker.controller.input;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.upf.bastionbreaker.model.entities.Player;
 
 public class TouchpadController {
     private Stage stage;
     private Touchpad touchpad;
-    private TouchpadStyle touchpadStyle;
-    private Skin touchpadSkin;
-    private Drawable touchBackground;
-    private Drawable touchKnob;
 
-    public TouchpadController(float x, float y, float width, float height) {
-        // Création du Skin avec les textures du Touchpad
-        touchpadSkin = new Skin();
-        touchpadSkin.add("touchBackground", new Texture("assets/images/touchBackground.png"));
-        touchpadSkin.add("touchKnob", new Texture("assets/images/touchKnob.png"));
+    // Ajout de paramètres pour la position et la taille
+    public TouchpadController(TextureAtlas gameAtlas, float x, float y, float width, float height) {
+        if (gameAtlas.findRegion("touchBackground") == null || gameAtlas.findRegion("touchKnob") == null) {
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : Textures du touchpad introuvables !");
+            return;
+        }
 
-        // Création du style du Touchpad
-        touchpadStyle = new TouchpadStyle();
-        touchBackground = touchpadSkin.getDrawable("touchBackground");
-        touchKnob = touchpadSkin.getDrawable("touchKnob");
-        touchpadStyle.background = touchBackground;
-        touchpadStyle.knob = touchKnob;
+        Gdx.app.log("DEBUG_GAME", "✅ Touchpad textures chargées avec succès !");
 
-        // Création du Touchpad avec une deadzone de 10
+        // Création du Stage propre (note : on ne définit pas ici l'input processor)
+        stage = new Stage(new ScreenViewport());
+
+        // Création du Touchpad
+        Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
+        touchpadStyle.background = new TextureRegionDrawable(gameAtlas.findRegion("touchBackground"));
+        touchpadStyle.knob = new TextureRegionDrawable(gameAtlas.findRegion("touchKnob"));
+
         touchpad = new Touchpad(10, touchpadStyle);
         touchpad.setBounds(x, y, width, height);
+        touchpad.setTouchable(Touchable.enabled); // Permet de capter les événements tactiles
 
-        // Création du Stage et ajout du Touchpad
-        stage = new Stage();
         stage.addActor(touchpad);
-        // Mettre le touchpad au premier plan (positionne cet acteur en haut)
-        touchpad.setZIndex(stage.getRoot().getChildren().size - 1);
+        Gdx.app.log("DEBUG_GAME", "✅ Touchpad ajouté au stage !");
+    }
+
+    public void handleInput(Player player, float delta) {
+        if (player == null) return;
+
+        float moveX = getKnobPercentX();
+        if (Math.abs(moveX) > 0.1f) {
+            float adjustedSpeed = moveX * 3.0f * delta; // Augmentation pour plus de réactivité
+            player.move(adjustedSpeed);
+            player.setMovingForward(moveX > 0);
+            player.setMovingBackward(moveX < 0);
+        } else {
+            player.setMovingForward(false);
+            player.setMovingBackward(false);
+        }
+    }
+
+    public float getKnobPercentX() {
+        if (touchpad == null) {
+            Gdx.app.error("DEBUG_GAME", "❌ ERREUR : `touchpad` est NULL dans `getKnobPercentX()` !");
+            return 0f;
+        }
+        float value = touchpad.getKnobPercentX();
+        Gdx.app.log("DEBUG_GAME", "🎮 Valeur touchpad X: " + value);
+        return value;
     }
 
     public void update(float delta) {
@@ -48,20 +71,11 @@ public class TouchpadController {
         stage.draw();
     }
 
-    public boolean isTouched() {
-        return touchpad.isTouched();
-    }
-
-    public float getKnobPercentX() {
-        return touchpad.getKnobPercentX();
-    }
-
-    public float getKnobPercentY() {
-        return touchpad.getKnobPercentY();
+    public Stage getStage() {
+        return stage;
     }
 
     public void dispose() {
         stage.dispose();
-        touchpadSkin.dispose();
     }
 }

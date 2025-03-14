@@ -17,10 +17,6 @@ public class ControlsOverlay {
     private Stage stage;
     private Skin skin;
 
-    // Touchpads pour déplacement et orientation
-    private Touchpad movementTouchpad;
-    private Touchpad aimTouchpad;
-
     // Boutons
     private TextButton jumpButton;
     private TextButton modeButton;
@@ -43,20 +39,13 @@ public class ControlsOverlay {
         touchpadStyle.knob = knob;
 
         // Création du touchpad d'orientation (toujours affiché) en bas à droite
-        aimTouchpad = new Touchpad(10, touchpadStyle);
         float screenWidth = Gdx.graphics.getWidth();
-        aimTouchpad.setBounds(screenWidth - 170, 20, 150, 150);
-        // Ajout du touchpad d'orientation au stage
-        stage.addActor(aimTouchpad);
 
         if (showMovement) {
             // Création du touchpad de mouvement (affiché uniquement si demandé) en bas à gauche
-            movementTouchpad = new Touchpad(10, touchpadStyle);
-            movementTouchpad.setBounds(20, 20, 150, 150);
             Table table = new Table();
             table.setFillParent(true);
             table.bottom().left();
-            table.add(movementTouchpad).pad(20).size(150);
             table.row();
             stage.addActor(table);
         }
@@ -92,25 +81,8 @@ public class ControlsOverlay {
         stage.draw();
     }
 
-    // Accesseurs pour le touchpad de mouvement
-    public float getMovementKnobX() {
-        return (showMovement && movementTouchpad != null) ? movementTouchpad.getKnobPercentX() : 0;
-    }
 
-    public float getMovementKnobY() {
-        return (showMovement && movementTouchpad != null) ? movementTouchpad.getKnobPercentY() : 0;
-    }
 
-    // Accesseurs pour le touchpad d'orientation
-    public float getAimKnobX() {
-        return aimTouchpad.getKnobPercentX();
-    }
-
-    public float getAimKnobY() {
-        return aimTouchpad.getKnobPercentY();
-    }
-
-    // Accesseurs pour les boutons
     public TextButton getJumpButton() {
         return jumpButton;
     }
