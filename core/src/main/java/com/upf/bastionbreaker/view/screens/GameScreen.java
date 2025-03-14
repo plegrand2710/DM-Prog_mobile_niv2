@@ -346,6 +346,7 @@ public class GameScreen implements Screen {
         updateCameraPosition();
 
         camera.update();
+        parallaxBackground.update(delta, camera);
 
         batch.begin();
         parallaxBackground.render(batch, camera);

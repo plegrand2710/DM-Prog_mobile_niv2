@@ -1,34 +1,57 @@
 package com.upf.bastionbreaker.view.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ParallaxBackground {
-    private TextureRegion[] layers;
-    private float[] speeds;
-    private float cameraStartX;
+    private TextureRegion[] _layers;
+    private float[] _speeds;
+    private float[] _offsets;
 
     public ParallaxBackground(TextureRegion[] layers, float[] speeds) {
-        this.layers = layers;
-        this.speeds = speeds;
-        this.cameraStartX = 0;
+        _layers = layers;
+        _speeds = speeds;
+        _offsets = new float[layers.length];
+
+        for (TextureRegion layer : _layers) {
+            if (layer != null) {
+                layer.getTexture().setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
+            }
+        }
+    }
+
+    public void update(float delta, OrthographicCamera camera) {
+        for (int i = 0; i < _layers.length; i++) {
+            if (_layers[i] == null) continue;
+
+            _offsets[i] -= _speeds[i] * delta; // Ajuste la vitesse de défilement
+            _offsets[i] %= _layers[i].getRegionWidth(); // Assure une boucle continue
+        }
     }
 
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         batch.setProjectionMatrix(camera.combined);
 
-        for (int i = 0; i < layers.length; i++) {
-            if (layers[i] == null) continue; // 🔹 Vérifie que la texture existe
+        for (int i = 0; i < _layers.length; i++) {
+            if (_layers[i] == null) continue;
 
-            float x = (camera.position.x * speeds[i]) - (camera.viewportWidth / 2);
-            float y = camera.position.y - (camera.viewportHeight / 2);
+            float textureWidth = _layers[i].getRegionWidth();
+            float textureHeight = _layers[i].getRegionHeight();
 
-            // 🔹 Dessiner la couche avec une taille ajustée à l'écran
-            batch.draw(layers[i], x, y, camera.viewportWidth, camera.viewportHeight);
+            float viewportWidth = camera.viewportWidth;
+            float viewportHeight = camera.viewportHeight;
+
+            float scaleX = viewportWidth / textureWidth;  // Ajuste la largeur pour remplir l'écran
+            float scaleY = viewportHeight / textureHeight; // Ajuste la hauteur pour éviter l'étirement
+            float scale = Math.max(scaleX, scaleY); // Garde le bon ratio
+
+            float x = (camera.position.x - viewportWidth / 2) + _offsets[i];
+            float y = camera.position.y - viewportHeight / 2;
+
+            batch.draw(_layers[i], x, y, textureWidth * scale, viewportHeight);
+            batch.draw(_layers[i], x + textureWidth * scale, y, textureWidth * scale, viewportHeight);
         }
-
     }
-
 }
