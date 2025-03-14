@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="270" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="41" nextobjectid="407">
+ <tileset firstgid="1" name="dungeon" tilewidth="32" tileheight="32" tilecount="54" columns="9">
+  <image source="Ground/dungeon_.png" width="288" height="192"/>
+ </tileset>
+ <tileset firstgid="55" name="winter_" tilewidth="32" tileheight="32" spacing="2" tilecount="54" columns="6">
+  <image source="Ground/winter_.png" width="224" height="320"/>
+ </tileset>
+ <tileset firstgid="109" name="RockTile" tilewidth="32" tileheight="32" tilecount="36" columns="6">
+  <image source="Ground/RockTile.png" width="192" height="192"/>
+ </tileset>
+ <tileset firstgid="145" name="rock" tilewidth="32" tileheight="32" tilecount="32" columns="8">
+  <image source="Ground/rock.png" width="258" height="128"/>
+ </tileset>
+ <tileset firstgid="177" name="summer_" tilewidth="32" tileheight="32" tilecount="70" columns="7">
+  <image source="Ground/summer_.png" width="224" height="320"/>
+ </tileset>
+ <tileset firstgid="247" name="obstacle" tilewidth="32" tileheight="32" tilecount="12" columns="4">
+  <image source="object/obstacle.png" width="128" height="96"/>
+ </tileset>
+ <tileset firstgid="259" name="lava " tilewidth="32" tileheight="32" tilecount="14" columns="7">
+  <image source="Ground/lava.png" width="224" height="64"/>
+ </tileset>
+ <tileset firstgid="273" name="checkpoint" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="object/checkpoint.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="274" name="chain" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="object/chain.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="275" name="water" tilewidth="32" tileheight="32" tilecount="112" columns="8">
+  <image source="Ground/TileSet_V1.png" width="256" height="448"/>
+ </tileset>
+ <tileset firstgid="387" name="Ladders" tilewidth="32" tileheight="32" tilecount="24" columns="6">
+  <image source="object/tileset_ladders.png" width="192" height="128"/>
+ </tileset>
+ <tileset firstgid="411" name="tnt" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+  <image source="object/tnt.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="412" name="bushes" tilewidth="32" tileheight="32" tilecount="40" columns="8">
+  <image source="decor/bushes.png" width="256" height="160"/>
+ </tileset>
+ <tileset firstgid="452" name="ground" tilewidth="32" tileheight="32" tilecount="40" columns="8">
+  <image source="background/ground.png" width="283" height="160"/>
+ </tileset>
+ <layer id="10" name="Ground" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1lGqwjAQBdAU/wTFJbqUWYpLcWn2IYIflabTmjzsOXChH23nhkBIKQAAAAAAAAAAAAAA8JtiIgBTYiYAL7EgwL5FMsD+xAYB1osvp+WsTKce/TJadVvTvcd/1s7qJaR6z3p3+dQr2+04TGfp7BqZft/IFh3ntO7dWsii/erd5VO3zLevM+IwlNt5KPe/jM/3mrMjI7vG/5g5vea2EDvOZXim5t13vXtvlfe7xXhWlNOY8/P5WnPvyOi95i0zp9fcFuJH8gBFTa1t
+  </data>
+ </layer>
+ <layer id="36" name="Soil" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20ON6AAAAAAAAAAAAAAAAAAAAAAAAAAAIBXA1RgAAE=
+  </data>
+ </layer>
+ <layer id="2" name="FloorTiles" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt2NEKgjAUBuA9as8UQtJ9PccerY2KRiCVbTbz++CgeOORnf0DQwAAAAAAAAAAAACAdTilOqc63urw23aAjt3zIlVM9/H+POVGlB1AaSovSrIDyN7Ji5LsgO36NC9KsgPq2Teumu+akxelV9kxhsc/1ZY1xxJ9fdt7ze+v0WuemV7PijxrrffeUvt6C6ayY7xWXLgdGktruustO8zaOj1nh3X8bzk7ejkjcx9mbb3yLA3pOgTrCACtXQB42pm6
+  </data>
+ </layer>
+ <layer id="14" name="Lava" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1NEKgyAYBlCltkar9Yp71B5tP1hLdrFdyuIc+FD0Rj/ElAAAAAAAAAAAAAAAAAAAAAAAAIB/NeSUrrmMFF100UcuVTf1+Dm/nay77sudY29tfT7ae+QjFGN0cY9MkXnrZqjSb9n3lpN1t5T/4X2/uXojsf5sfT5+ewGKfALl
+  </data>
+ </layer>
+ <layer id="29" name="Water" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1DEKACAMA0B9rY/w864KUsdSuYNsWZPWAAAAAAAAAAAAAAAAAAAAAAAA4DR7foBasj/Db0A9tx2PLdHeR5DXV+zdXyzcYi7x
+  </data>
+ </layer>
+ <layer id="30" name="Decor" width="270" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt2E0LgkAQgOH219elDp26VFBRVERfJ4sK64+1Iosii6upOer7wLCQkbPb7LDa6wEAAAAAAAAA6vJSYQAB6iEf1gsAADipWAi10LktVTQCSFf1M0Dw+33he3Gn89uraGybYwvnhPaT3jfMOeOi4yo8V6ArBsL3ojln3HTchecKdMXIshe3gvanOWe8dXwE5YXmk1TnTWN7TjkLWk9zzuC8gbJJqvOmGQrvG+acEYxrS17jCnNd/fDbkt9zZsntVFL+/1qHWYH7VFXnyblPLPd56M+egmvFJr7Wyb4RzDm5nnXuBZ5PAAAoxlNRZPkuumvD/5/LVK/XXIVjMprOV1G4+oLfgvkCKC7eN9L6gue4juJs71yBOqTV4kFl7xuu612o+S+NDEUQ
+  </data>
+ </layer>
+ <objectgroup id="38" name="Floor" class="Floor">
+  <object id="330" name="floor" type="Floor" x="0" y="480" width="768" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="331" name="floor" type="Floor" x="864" y="480" width="512" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="332" name="floor" type="Floor" x="2016" y="576" width="64" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="333" name="floor" type="Floor" x="2176" y="480" width="800" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="334" name="floor" type="Floor" x="3392" y="480" width="1088" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="335" name="floor" type="Floor" x="4704" y="480" width="320" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="336" name="floor" type="Floor" x="5312" y="480" width="576" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="337" name="floor" type="Floor" x="7136" y="480" width="1504" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="340" name="floor" type="Floor" x="7264" y="224" width="96" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="349" name="floor" type="Floor" x="4480" y="480" width="224" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="351" name="floor" type="Floor" x="5024" y="512" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="357" name="floor" type="Floor" x="1696" y="320" width="64" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="359" name="floor" type="Floor" x="736" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="360" name="floor" type="Floor" x="864" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="361" name="floor" type="Floor" x="2944" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="362" name="floor" type="Floor" x="3392" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="363" name="floor" type="Floor" x="4448" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="364" name="floor" type="Floor" x="4704" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="365" name="floor" type="Floor" x="4992" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="366" name="floor" type="Floor" x="5280" y="512" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="367" name="floor" type="Floor" x="5952" y="544" width="32" height="96">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="368" name="floor" type="Floor" x="7040" y="544" width="32" height="96">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="369" name="floor" type="Floor" x="8640" y="352" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="370" name="floor" type="Floor" x="-32" y="352" width="32" height="128">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="372" name="floor" type="Floor" x="1376" y="480" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="373" name="floor" type="Floor" x="1408" y="448" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="374" name="floor" type="Floor" x="1440" y="448" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="375" name="floor" type="Floor" x="1472" y="416" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="376" name="floor" type="Floor" x="1568" y="384" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="377" name="floor" type="Floor" x="1536" y="384" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="378" name="floor" type="Floor" x="1504" y="416" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="379" name="floor" type="Floor" x="1600" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="380" name="floor" type="Floor" x="1664" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="381" name="floor" type="Floor" x="1824" y="416" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="382" name="floor" type="Floor" x="1632" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="383" name="floor" type="Floor" x="1792" y="384" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="384" name="floor" type="Floor" x="1760" y="352" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="385" name="floor" type="Floor" x="1952" y="544" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="386" name="floor" type="Floor" x="1920" y="512" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="387" name="floor" type="Floor" x="1888" y="480" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="388" name="floor" type="Floor" x="1856" y="448" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="389" name="floor" type="Floor" x="1984" y="576" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="390" name="floor" type="Floor" x="2080" y="544" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="391" name="floor" type="Floor" x="2112" y="512" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="392" name="floor" type="Floor" x="2144" y="480" width="32" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="394" name="floor" type="Floor" x="2976" y="480" width="416" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="399" name="floor" type="Floor" x="2976" y="608" width="416" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="401" name="floor" type="Floor" x="4480" y="608" width="224" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="404" name="floor" type="Floor" x="768" y="608" width="96" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="405" name="floor" type="Floor" x="5024" y="608" width="256" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="406" name="floor" type="Floor" x="5984" y="608" width="1055" height="32">
+   <properties>
+    <property name="collision" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="22" name="WaterZones">
+  <object id="166" name="water_1" type="Water" x="5984" y="544" width="1056" height="96">
+   <properties>
+    <property name="buoyancy" type="float" value="0.5"/>
+    <property name="drag" type="float" value="0.8"/>
+    <property name="jump_boost" type="float" value="1.5"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="24" name="Ladders">
+  <object id="182" name="ladder_1" type="Ladder" x="7296" y="224" width="36.7143" height="256">
+   <properties>
+    <property name="height" type="int" value="8"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="25" name="Explosives">
+  <object id="294" name="tnt" type="TNT" x="7328" y="192" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="1"/>
+    <property name="blast_radius" type="float" value="5"/>
+    <property name="damage" type="int" value="1000"/>
+    <property name="pushable" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="30"/>
+    <property name="sprite" value="tnt"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="26" name="Boss">
+  <object id="187" name="boss_1" x="8384" y="224" width="96" height="258">
+   <properties>
+    <property name="HP" type="int" value="1000"/>
+    <property name="damage" type="int" value="50"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="21" name="Drawbridges">
+  <object id="155" name="drawbridge" type="Drawbridge" x="5112.02" y="293.174" width="288" height="32" rotation="45">
+   <properties>
+    <property name="fall_speed" type="float" value="3"/>
+    <property name="linked_top" value="chainlink8"/>
+    <property name="sprite" value="drawbridge"/>
+    <property name="state" value="closed"/>
+    <property name="x_position" type="int" value="5296"/>
+    <property name="y_position " type="int" value="496"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="16" name="WindZones">
+  <object id="113" name="wind_zone" type="Wind" x="3488.33" y="193" width="383.33" height="287">
+   <properties>
+    <property name="force" type="float" value="-2"/>
+    <property name="weight_limit" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="15" name="Ice">
+  <object id="295" name="ice_bridge" type="Breakable" x="2976" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="296" name="ice_bridge" type="Breakable" x="3008" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="297" name="ice_bridge" type="Breakable" x="3040" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="298" name="ice_bridge" type="Breakable" x="3072" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="299" name="ice_bridge" type="Breakable" x="3104" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="300" name="ice_bridge" type="Breakable" x="3136" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="301" name="ice_bridge" type="Breakable" x="3168" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="302" name="ice_bridge" type="Breakable" x="3200" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="303" name="ice_bridge" type="Breakable" x="3232" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="304" name="ice_bridge" type="Breakable" x="3264" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="305" name="ice_bridge" type="Breakable" x="3296" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="306" name="ice_bridge" type="Breakable" x="3328" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+  <object id="307" name="ice_bridge" type="Breakable" x="3360" y="480" width="32" height="32">
+   <properties>
+    <property name="fragile" type="bool" value="true"/>
+    <property name="sprite" value="ice_bridge"/>
+    <property name="weight_limite" type="int" value="100"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="27" name="FlyingBox">
+  <object id="244" name="flyingbox_heal" type="FlyingBox" x="960" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="246" name="flyingbox_heal" type="FlyingBox" x="2496" y="192" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="247" name="flyingbox_heal" type="FlyingBox" x="3168" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="248" name="flyingbox_heal" type="FlyingBox" x="4224" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="249" name="flyingbox_heal" type="FlyingBox" x="5696" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="250" name="flyingbox_heal" type="FlyingBox" x="7072" y="128" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="251" name="flyingbox_heal" type="FlyingBox" x="8512" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="252" name="flyingbox_heal" type="FlyingBox" x="8128" y="224" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="253" name="flyingbox_shield" type="FlyingBox" x="1088" y="128" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="254" name="flyingbox_shield" type="FlyingBox" x="2016" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="255" name="flyingbox_shield" type="FlyingBox" x="1728" y="192" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="256" name="flyingbox_shield" type="FlyingBox" x="2912" y="224" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="257" name="flyingbox_shield" type="FlyingBox" x="3680" y="288" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="258" name="flyingbox_shield" type="FlyingBox" x="4832" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="259" name="flyingbox_shield" type="FlyingBox" x="6496" y="192" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="260" name="flyingbox_shield" type="FlyingBox" x="7808" y="128" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="261" name="flyingbox_shield" type="FlyingBox" x="7520" y="160" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+  <object id="313" name="flyingbox_shield" type="FlyingBox" x="288" y="256" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="respawn_time" type="int" value="60"/>
+    <property name="sprite" value="flyingbox"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="Hill">
+  <object id="48" name="hill_1" type="Slide" x="1696" y="320">
+   <properties>
+    <property name="climb" type="float" value="1"/>
+    <property name="difficulty" type="bool" value="false"/>
+    <property name="slide" type="float" value="1"/>
+   </properties>
+   <polygon points="0,0 -321.333,159.333 -1.33333,159.333"/>
+  </object>
+  <object id="51" name="hill_2" type="Slide" x="1760" y="320">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="difficulty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 -2.66667,256.667 254,255.34"/>
+  </object>
+  <object id="52" name="hill_3" type="Slide" x="2079.33" y="576">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="diffuculty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 96.6667,3.33333 96.6667,-96"/>
+  </object>
+  <object id="169" name="hill_4" type="Slide" x="5888.66" y="479.333">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="difficulty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 -0.664936,62.0003 63.3351,61.6798"/>
+  </object>
+  <object id="358" name="hill_5" type="Slide" x="7072" y="544.161">
+   <properties>
+    <property name="climb" type="float" value="0.5"/>
+    <property name="diffuculty" type="bool" value="true"/>
+    <property name="slide" type="float" value="1.5"/>
+   </properties>
+   <polygon points="0,0 64.7517,2.23281 64.7517,-64.3051"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="Obstacles" class="Obstacle">
+  <object id="205" name="box" x="352" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="218" name="box" x="384" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="219" name="box" x="416" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="220" name="box" x="416" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="221" name="box" x="384" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="222" name="box" x="416" y="384" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="223" name="barrel" x="512" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="229" name="barrel" x="576" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="230" name="barrel" x="544" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="231" name="barrel" x="576" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="232" name="barrel" x="544" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="233" name="barrel" x="576" y="384" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="234" name="barrel" x="4896" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="235" name="barrel" x="4928" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="236" name="barrel" x="4928" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="barrel"/>
+   </properties>
+  </object>
+  <object id="237" name="bridgelock" x="5280" y="160" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="false"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="238" name="box" x="2240" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="239" name="box" x="2272" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="240" name="box" x="2272" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="241" name="box" x="2304" y="448" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="242" name="box" x="2304" y="416" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+  <object id="243" name="box" x="2304" y="384" width="32" height="32">
+   <properties>
+    <property name="HP" type="int" value="20"/>
+    <property name="destructible" type="bool" value="true"/>
+    <property name="movable" type="bool" value="true"/>
+    <property name="sprite" value="box"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Checkpoints" class="Checkpoint">
+  <object id="200" name="checkpoint1" type="CheckPoint" x="1216" y="448" width="32" height="32">
+   <properties>
+    <property name="active" type="bool" value="false"/>
+    <property name="sprite" value="checkpoint"/>
+   </properties>
+  </object>
+  <object id="308" name="checkpoint0" type="CheckPoint" x="160" y="448" width="32" height="32">
+   <properties>
+    <property name="active" type="bool" value="false"/>
+    <property name="sprite" value="checkpoint"/>
+   </properties>
+  </object>
+  <object id="309" name="checkpoint2" type="CheckPoint" x="2816" y="448" width="32" height="32">
+   <properties>
+    <property name="active" type="bool" value="false"/>
+    <property name="sprite" value="checkpoint"/>
+   </properties>
+  </object>
+  <object id="310" name="checkpoint3" type="CheckPoint" x="4096" y="448" width="32" height="32">
+   <properties>
+    <property name="active" type="bool" value="false"/>
+    <property name="sprite" value="checkpoint"/>
+   </properties>
+  </object>
+  <object id="311" name="checkpoint4" type="CheckPoint" x="5440" y="448" width="32" height="32">
+   <properties>
+    <property name="active" type="bool" value="false"/>
+    <property name="sprite" value="checkpoint"/>
+   </properties>
+  </object>
+  <object id="312" name="checkpoint5" type="CheckPoint" x="7904" y="448" width="32" height="32">
+   <properties>
+    <property name="active" type="bool" value="false"/>
+    <property name="sprite" value="checkpoint"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="Enemies">
+  <object id="60" name="enemy_tank" type="Enemy" x="2369.33" y="414" width="128" height="64">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+   </properties>
+  </object>
+  <object id="116" name="enemy_helicopter_1" type="Enemy" x="4544" y="128" width="96" height="96">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+    <property name="sprite" value="helicopter.gif"/>
+   </properties>
+  </object>
+  <object id="173" name="enemy_helicopter_2" type="Enemy" x="5952" y="256" width="96" height="96">
+   <properties>
+    <property name="HP" type="int" value="50"/>
+    <property name="height_y" type="int" value="256"/>
+    <property name="path_end_x" type="int" value="6976"/>
+    <property name="path_start_x" type="int" value="5952"/>
+    <property name="patrol" type="bool" value="true"/>
+    <property name="speed" type="float" value="2"/>
+    <property name="sprite" value="helicopter.gif"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="23" name="UnstablePlatforms" class="UnstablePlatform">
+  <object id="174" name="unstable_platform" type="UnstablePlatform" x="5920" y="480" width="160" height="32">
+   <properties>
+    <property name="instability" type="float" value="2.5"/>
+    <property name="linked_top" value="chainlink15"/>
+    <property name="max_angle" type="float" value="10"/>
+    <property name="slippery" type="bool" value="true"/>
+    <property name="sprite" value="unstable_platform"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="18" name="Chains">
+  <object id="263" name="chainlink9" type="ChainLink" x="5984" y="352" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chainlink10"/>
+    <property name="linked_top" value="enemy_helicopter_2"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="264" name="chainlink10" type="ChainLink" x="5984" y="384" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chainlink11"/>
+    <property name="linked_top" value="chainlink9"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="265" name="chainlink11" type="ChainLink" x="5984" y="416" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chainlink12"/>
+    <property name="linked_top" value="chainlink10"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="266" name="chainlink12" type="ChainLink" x="5984" y="448" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="unstable_platform_1"/>
+    <property name="linked_top" value="chainlink11"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="267" name="chainlink5" type="ChainLink" x="5280" y="192" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chainlink6"/>
+    <property name="linked_top" value="bridgelock"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="268" name="chainlink1" type="ChainLink" x="4576" y="224" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chainlink2"/>
+    <property name="linked_top" value="enemy_helicopter_1"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="269" name="chainlink2" type="ChainLink" x="4576" y="256" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chainlink3"/>
+    <property name="linked_top" value="chainlink1"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="270" name="chainlink3" type="ChainLink" x="4576" y="288" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="chainlink4"/>
+    <property name="linked_top" value="chainlink2"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="271" name="chainlink4" type="ChainLink" x="4576" y="320" width="32" height="32">
+   <properties>
+    <property name="linked_bottom" value="falling_block"/>
+    <property name="linked_top" value="chainlink4"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="272" name="chainlink6" type="ChainLink" x="5248" y="224" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chainlink7"/>
+    <property name="linked_top" value="chainlink5"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="273" name="chainlink7" type="ChainLink" x="5216" y="256" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="chainlink8"/>
+    <property name="linked_top" value="chainlink6"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+  <object id="274" name="chainlink8" type="ChainLink" x="5184" y="288" width="32" height="32" rotation="45">
+   <properties>
+    <property name="linked_bottom" value="drawbridge1"/>
+    <property name="linked_top" value="chainlink7"/>
+    <property name="sprite" value="chain"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Bastion">
+  <object id="68" name="Bastion2" type="Destructible" x="2688" y="64" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+    <property name="sprite" value="wall"/>
+   </properties>
+  </object>
+  <object id="114" name="Bastion3" type="Destructible" x="3968" y="64" width="92.6667" height="319.333">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="153" name="Bastion4" type="Destructible" x="5312" y="160" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="180" name="Bastion5" type="Destructible" x="7776" y="64" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="2000"/>
+   </properties>
+  </object>
+  <object id="393" name="Bastion1" type="Destructible" x="1088" y="32" width="96" height="320">
+   <properties>
+    <property name="HP" type="int" value="200"/>
+    <property name="sprite" value="wall"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="20" name="FallingBlock">
+  <object id="129" name="container" type="FallingBlock" x="4480" y="352" width="224" height="96">
+   <properties>
+    <property name="fall_speed" type="float" value="7"/>
+    <property name="gravity" type="bool" value="false"/>
+    <property name="linked_top" value="chainlink4"/>
+    <property name="sprite" value="container"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Lava">
+  <object id="70" name="lava" type="Mortal" x="768" y="575.833" width="95.5" height="63.1667">
+   <properties>
+    <property name="kill_player" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="71" name="lava" type="Mortal" x="2977.25" y="576.417" width="415.5" height="63.1667">
+   <properties>
+    <property name="kill_player" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="152" name="lava" type="Mortal" x="5024" y="576" width="256" height="64">
+   <properties>
+    <property name="kill_player" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
