@@ -301,9 +301,18 @@ public class GameScreen implements Screen {
         mapManager.createFloorBodies(WorldManager.getWorld());
         debugRenderer = new Box2DDebugRenderer();
 
-        camera = mapRenderer.getCamera(); // 🎯 On utilise la caméra de la map !
-        viewport = new FitViewport(1555, 720, camera);
+//        camera = mapRenderer.getCamera(); // 🎯 On utilise la caméra de la map !
+//        viewport = new FitViewport(1555, 720, camera);
+//        viewport.apply();
+
+        camera = new OrthographicCamera();
+        // Dans GameScreen.show()
+        viewport = new FitViewport(MapRenderer.VIEWPORT_WIDTH, MapRenderer.VIEWPORT_HEIGHT, camera);
         viewport.apply();
+        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+        camera.update();
+
+        camera.update();
 
         batch = new SpriteBatch();
 
@@ -334,19 +343,16 @@ public class GameScreen implements Screen {
         // Mise à jour du joueur (positions via la simulation physique)
         player.update(delta);
 
-        // Mise à jour de la caméra pour suivre le joueur
         updateCameraPosition();
 
-        //viewport.apply();
-
-        camera.position.set(player.getX(), player.getY(), 0);
         camera.update();
 
-        batch.setProjectionMatrix(mapRenderer.getCamera().combined);
         batch.begin();
-        //parallaxBackground.render(batch, camera);
-
+        parallaxBackground.render(batch, camera);
+        batch.end();
+        mapRenderer.setView(camera);
         mapRenderer.render();
+        batch.begin();
 
         // Mise à jour des objets dynamiques
         updateChainLinks(delta);
@@ -490,15 +496,26 @@ public class GameScreen implements Screen {
     }
 
 
+//    private void updateCameraPosition() {
+//        OrthographicCamera cam = mapRenderer.getCamera();
+//        float halfViewportWidth = cam.viewportWidth / 2;
+//        float halfViewportHeight = cam.viewportHeight / 2;
+//        float targetX = player.getX() + player.getCurrentMode().getWidth() / 2;
+//        float targetY = player.getY() + player.getCurrentMode().getHeight() / 2;
+//        cam.position.x = MathUtils.clamp(targetX, halfViewportWidth, mapWidth - halfViewportWidth);
+//        cam.position.y = MathUtils.clamp(targetY, halfViewportHeight, mapHeight - halfViewportHeight);
+//        cam.update();
+//    }
+
+
     private void updateCameraPosition() {
-        OrthographicCamera cam = mapRenderer.getCamera();
-        float halfViewportWidth = cam.viewportWidth / 2;
-        float halfViewportHeight = cam.viewportHeight / 2;
+        float halfViewportWidth = camera.viewportWidth / 2;
+        float halfViewportHeight = camera.viewportHeight / 2;
         float targetX = player.getX() + player.getCurrentMode().getWidth() / 2;
         float targetY = player.getY() + player.getCurrentMode().getHeight() / 2;
-        cam.position.x = MathUtils.clamp(targetX, halfViewportWidth, mapWidth - halfViewportWidth);
-        cam.position.y = MathUtils.clamp(targetY, halfViewportHeight, mapHeight - halfViewportHeight);
-        cam.update();
+        camera.position.x = MathUtils.clamp(targetX, halfViewportWidth, mapWidth - halfViewportWidth);
+        camera.position.y = MathUtils.clamp(targetY, halfViewportHeight, mapHeight - halfViewportHeight);
+        camera.update();
     }
 
     private void updateChainLinks(float delta) {

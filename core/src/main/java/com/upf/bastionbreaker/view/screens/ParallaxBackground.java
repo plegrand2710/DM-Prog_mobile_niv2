@@ -19,7 +19,6 @@ public class ParallaxBackground {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         batch.setProjectionMatrix(camera.combined);
 
-
         for (int i = 0; i < layers.length; i++) {
             if (layers[i] == null) continue; // 🔹 Vérifie que la texture existe
 
