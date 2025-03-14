@@ -1,65 +1,34 @@
 package com.upf.bastionbreaker.view.screens;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.upf.bastionbreaker.model.graphics.TextureManager;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ParallaxBackground {
-    private static class Layer {
-        TextureAtlas.AtlasRegion texture;
-        float speed;
-        Vector2 position;
+    private TextureRegion[] layers;
+    private float[] speeds;
+    private float cameraStartX;
 
-        Layer(TextureAtlas.AtlasRegion texture, float speed) {
-            this.texture = texture;
-            this.speed = speed;
-            this.position = new Vector2(0, 0);
-        }
+    public ParallaxBackground(TextureRegion[] layers, float[] speeds) {
+        this.layers = layers;
+        this.speeds = speeds;
+        this.cameraStartX = 0;
     }
 
-    private final List<Layer> layers = new ArrayList<>();
+    public void render(SpriteBatch batch, OrthographicCamera camera) {
+        batch.setProjectionMatrix(camera.combined);
 
-    public ParallaxBackground() {
-        TextureAtlas backgroundAtlas = TextureManager.getBackgroundAtlas();
+        for (int i = 0; i < layers.length; i++) {
+            if (layers[i] == null) continue; // 🔹 Vérifie que la texture existe
 
-        // Vérifier si l'atlas est bien chargé
-        if (backgroundAtlas == null) {
-            System.out.println("❌ ERREUR: `background.atlas` non chargé !");
-            return;
+            float x = (camera.position.x * speeds[i]) - (camera.viewportWidth / 2);
+            float y = camera.position.y - (camera.viewportHeight / 2);
+
+            // 🔹 Dessiner la couche avec une taille ajustée à l'écran
+            batch.draw(layers[i], x, y, camera.viewportWidth, camera.viewportHeight);
         }
 
-        // Charger les couches avec les bonnes vitesses (du plus lointain au plus proche)
-        layers.add(new Layer(backgroundAtlas.findRegion("background", 1), 0.1f)); // Couche la plus lointaine
-        layers.add(new Layer(backgroundAtlas.findRegion("background", 2), 0.2f));
-        layers.add(new Layer(backgroundAtlas.findRegion("background", 3), 0.3f));
-        layers.add(new Layer(backgroundAtlas.findRegion("background", 4), 0.4f));
-        layers.add(new Layer(backgroundAtlas.findRegion("background", 5), 0.5f)); // Couche la plus proche
-
-        // Vérifier que les textures existent
-        for (Layer layer : layers) {
-            if (layer.texture == null) {
-                System.out.println("❌ ERREUR: Une texture de fond est introuvable !");
-            } else {
-                System.out.println("✅ Texture chargée : " + layer.texture.name);
-            }
-        }
     }
 
-    public void update(float cameraX) {
-        for (Layer layer : layers) {
-            layer.position.x = -cameraX * layer.speed; // Appliquer l'effet parallaxe
-        }
-    }
-
-    public void render(SpriteBatch batch) {
-        for (Layer layer : layers) {
-            if (layer.texture != null) { // Sécurité pour éviter un crash
-                batch.draw(layer.texture, layer.position.x, layer.position.y);
-            }
-        }
-    }
 }

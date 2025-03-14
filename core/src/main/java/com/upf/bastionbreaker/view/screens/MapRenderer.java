@@ -65,6 +65,19 @@ public class MapRenderer {
         if (mapRenderer != null) mapRenderer.dispose();
     }
 
+    public void setView(OrthographicCamera camera) {
+        if (camera == null) {
+            System.out.println("❌ ERREUR : La caméra fournie est NULL !");
+            return;
+        }
+        this.camera = camera;
+        if (mapRenderer != null) {
+            mapRenderer.setView(camera);
+        } else {
+            System.out.println("❌ ERREUR : `mapRenderer` est NULL, impossible de définir la vue.");
+        }
+    }
+
     public OrthographicCamera getCamera() {
         return camera;
     }

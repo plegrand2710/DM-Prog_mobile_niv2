@@ -59,7 +59,7 @@ public class TouchpadController {
             return 0f;
         }
         float value = touchpad.getKnobPercentX();
-        Gdx.app.log("DEBUG_GAME", "🎮 Valeur touchpad X: " + value);
+        //Gdx.app.log("DEBUG_GAME", "🎮 Valeur touchpad X: " + value);
         return value;
     }
 
