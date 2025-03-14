@@ -346,7 +346,7 @@ public class GameScreen implements Screen {
             menuPause.render(delta);  // ✅ Assurer le rendu du menu pause
             return;  // ❌ Ne pas exécuter le reste du jeu pendant la pause
         }
-        
+
         // Mettre à jour la physique Box2D
         WorldManager.update(delta);
 
@@ -468,7 +468,7 @@ public class GameScreen implements Screen {
 
 
         // Affichage du debug de Box2D (optionnel)
-        debugRenderer.render(WorldManager.getWorld(), mapRenderer.getCamera().combined);
+        //debugRenderer.render(WorldManager.getWorld(), mapRenderer.getCamera().combined);
 
 
     }
